@@ -28,7 +28,26 @@ function transformBusStop(inputBusStop) {
     }
 }
 
-let transformedStops = Object.values(metroBusStops.map(transformBusStop).reduce((acc, busStop) => {
+function mergeBusStops(allBusStops) {
+    let final = {};
+
+    allBusStops.forEach(busStop => {
+        if (Object.keys(final).includes(busStop.properties.STOP_ID)) {
+            final[busStop.properties.STOP_ID].properties.ROUTEUSSP += ',' + busStop.properties.ROUTEUSSP;
+            final[busStop.properties.STOP_ID].properties.STOP_NAME =
+                [final[busStop.properties.STOP_ID].properties.STOP_NAME, busStop.properties.STOP_NAME]
+                .sort((a, b) => b.length - a.length)[0];
+
+            final[busStop.properties.STOP_ID];
+        } else {
+            final[busStop.properties.STOP_ID] = busStop;
+        }
+    });
+
+    return Object.values(final);
+}
+
+let transformedStops = Object.values(mergeBusStops(metroBusStops).map(transformBusStop).reduce((acc, busStop) => {
     if (acc[busStop.busStopName + busStop.suburb]) {
         let svc = acc[busStop.busStopName + busStop.suburb];
 
