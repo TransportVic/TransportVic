@@ -1,13 +1,13 @@
 const ptvAPI = require('./ptv-api');
 
 function getServiceNumber(service) {
-    if (service.startsWith('Telebus'))
+    if (service.toLowerCase().startsWith('telebus'))
         return 'Telebus'
     return service.replace(/[A-Za-z#]/g, '');
 }
 
 function getServiceVariant(service) {
-    if (service.startsWith('Telebus'))
+    if (service.toLowerCase().startsWith('telebus'))
         return service.match(/([0-9]+)/)[1];
     return service.replace(/[0-9]/g, '');
 }

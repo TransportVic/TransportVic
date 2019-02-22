@@ -62,13 +62,14 @@ function transformBusServices(inputBusService, serviceType) {
         stops: [],
         lastUpdated: new Date(),
         skeleton: true,
-        gtfsID: inputBusService.properties.ROUTE_ID.match(/(\d-\w+)/)[1]
+        gtfsID: serviceType === 'telebus' ? '7-TB' + getServiceVariant(inputBusService.properties.ROUTESHTNM) : inputBusService.properties.ROUTE_ID.match(/(\d-\w+)/)[1]
     }
 }
 
 function loadRouteIDs(callback) {
     ptvAPI.makeRequest('/v3/routes', (err, data) => {
         data.routes.forEach(routeData => {
+            routeIDs[routeData.route_number] = routeData.route_id;
             routeIDs[routeData.route_gtfs_id] = routeData.route_id;
         });
 
@@ -89,7 +90,8 @@ database.connect({
         allServices.forEach(serviceDirections => {
             serviceDirections.forEach(direction => {
                 promises.push(new Promise(resolve => {
-                    direction.ptvRouteID = routeIDs[direction.gtfsID];
+                    if (!routeIDs[direction.gtfsID]) console.log(direction.fullService)
+                    direction.ptvRouteID = routeIDs[direction.gtfsID] || routeIDs[direction.fullService];
 
                     busServices.countDocuments({ fullService: direction.fullService, destination: direction.destination }, (err, present) => {
                         if (present) {
