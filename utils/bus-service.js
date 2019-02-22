@@ -29,7 +29,7 @@ function populateService(skeleton, callback) {
             let directionID = data.directions.map(e => {
                 e.direction_name = adjustDestination(e.direction_name);
                 return e;
-            }).filter(service => service.direction_name === skeleton.destination)[0].direction_id;
+            }).filter(service => skeleton.destination.startsWith(service.direction_name))[0].direction_id;
 
             skeleton.directionID = directionID;
 
