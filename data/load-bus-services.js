@@ -2,12 +2,14 @@ const DatabaseConnection = require('../application/database/DatabaseConnection')
 const metroBusServices = require('./metro-bus-services.json').features;
 const config = require('../config.json');
 const { getServiceNumber, getServiceVariant, adjustDestination } = require('../utils/bus-service');
+const ptvAPI = require('../utils/ptv-api');
 
 let database = new DatabaseConnection(config.databaseURL, 'TransportVic');
 let busServices = null;
 
 let promises = [];
 let allServices = [];
+let routeIDs = {};
 
 function findBestServices(serviceServices) {
     let max = 2;
@@ -41,56 +43,72 @@ function fixOperator(operator) {
     return operator;
 }
 
-function transformBusServices(inputBusServices, routeType) {
-    if (inputBusServices.properties.ROUTESHTNM.toLowerCase().includes('telebus')) {
-        routeType = 'telebus';
-        inputBusServices.properties.OPERATOR = 'Ventura Bus Lines';
+function transformBusServices(inputBusService, serviceType) {
+    if (inputBusService.properties.ROUTESHTNM.toLowerCase().includes('telebus')) {
+        serviceType = 'telebus';
+        inputBusService.properties.OPERATOR = 'Ventura Bus Lines';
     }
 
     return {
-        fullService: inputBusServices.properties.ROUTESHTNM,
-        serviceNumber: getServiceNumber(inputBusServices.properties.ROUTESHTNM),
-        serviceVariant: getServiceVariant(inputBusServices.properties.ROUTESHTNM),
-        operators: inputBusServices.properties.OPERATOR.split(',').map(fixOperator),
-        routeType: routeType || 'metro',
-        destination: adjustDestination(inputBusServices.properties.TRIPHDSIGN),
+        fullService: inputBusService.properties.ROUTESHTNM,
+        serviceNumber: getServiceNumber(inputBusService.properties.ROUTESHTNM),
+        serviceVariant: getServiceVariant(inputBusService.properties.ROUTESHTNM),
+        operators: inputBusService.properties.OPERATOR.split(',').map(fixOperator),
+        serviceType: serviceType || 'metro',
+        destination: adjustDestination(inputBusService.properties.TRIPHDSIGN),
         directionID: 0,
-        interchanges: [],
         ptvRouteID: 0,
 
         stops: [],
-        lastUpdated: new Date()
+        lastUpdated: new Date(),
+        skeleton: true,
+        gtfsID: inputBusService.properties.ROUTE_ID.match(/(\d-\w+)/)[1]
     }
+}
+
+function loadRouteIDs(callback) {
+    ptvAPI.makeRequest('/v3/routes', (err, data) => {
+        data.routes.forEach(routeData => {
+            routeIDs[routeData.route_gtfs_id] = routeData.route_id;
+        });
+
+        callback();
+    });
 }
 
 getAllBusServices(metroBusServices).forEach(e=>{
     allServices.push(findBestServices(metroBusServices.filter(f=>f.properties.ROUTESHTNM == e)).map(transformBusServices));
 });
 
-
 database.connect({
     poolSize: 100
 }, (err) => {
     busServices = database.getCollection('bus services');
 
-    allServices.forEach(serviceDirections => {
-        serviceDirections.forEach(direction => {
-            promises.push(new Promise(resolve => {
-                busServices.countDocuments({ fullService: direction.fullService, destination: direction.destination }, (err, present) => {
-                    if (present) {
-                        busServices.updateDocument({ fullService: direction.fullService, destination: direction.destination }, {
-                            $set: direction
-                        }, resolve);
-                    } else {
-                        busServices.createDocument(direction, resolve);
-                    }
-                });
-            }));
-        });
-    });
+    loadRouteIDs(() => {
+        allServices.forEach(serviceDirections => {
+            serviceDirections.forEach(direction => {
+                promises.push(new Promise(resolve => {
+                    direction.ptvRouteID = routeIDs[direction.gtfsID];
 
-    Promise.all(promises).then(() => {
-        console.log('Loaded ' + promises.length + ' bus services');
-        process.exit();
+                    busServices.countDocuments({ fullService: direction.fullService, destination: direction.destination }, (err, present) => {
+                        if (present) {
+                            busServices.updateDocument({ fullService: direction.fullService, destination: direction.destination }, {
+                                $set: direction
+                            }, resolve);
+                        } else {
+                            busServices.createDocument(direction, resolve);
+                        }
+                    });
+                }));
+            });
+        });
+
+        Promise.all(promises).then(() => {
+            loadRouteIDs(() => {
+                console.log('Loaded ' + promises.length + ' bus services');
+                process.exit();
+            });
+        });
     });
 });

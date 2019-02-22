@@ -20,6 +20,10 @@ module.exports = class MongoDatabaseCollection {
         return this.collection.findOne(query, projection, callback);
     }
 
+    updateDocuments(query, update, callback) {
+        this.collection.updateMany(query, update, callback);
+    }
+
     updateDocument(query, update, callback) {
         this.collection.updateOne(query, update, callback);
     }
