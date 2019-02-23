@@ -2,7 +2,8 @@ const express = require('express');
 const router = new express.Router();
 const safeRegex = require('safe-regex');
 const { getServiceData } = require('../../utils/bus-service');
-const { updateBusStopsAsNeeded } = require('../../utils/bus-stop');
+const { updateBusStopsAsNeeded, getBusStop } = require('../../utils/bus-stop');
+const { getTimings } = require('../timings/bus-timings');
 
 router.get('/', (req, res) => {
     res.render('index');
@@ -30,5 +31,19 @@ router.get('/search', (req, res) => {
         });
     });
 });
+
+router.get('/timings', (req, res) => {
+    let gftsBusStopCode = req.url.query.q;
+    getBusStop(gftsBusStopCode, res.db, busStop => {
+        if (!busStop) {
+            res.end(':(');
+            return;
+        }
+
+        getTimings(busStop.busStopCode, res.db, timings => {
+            res.render('timings', { timings, busStop });
+        });
+    });
+})
 
 module.exports = router;

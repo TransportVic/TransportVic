@@ -1,14 +1,12 @@
 const ptvAPI = require('./ptv-api');
 
 function getServiceNumber(service) {
-    if (service.toLowerCase().startsWith('telebus'))
-        return 'Telebus'
-    return service.replace(/[A-Za-z#]/g, '');
+    return service.replace(/[A-Za-z# ]/g, '');
 }
 
 function getServiceVariant(service) {
     if (service.toLowerCase().startsWith('telebus'))
-        return service.match(/([0-9]+)/)[1];
+        return 'TeleBus';
     return service.replace(/[0-9]/g, '');
 }
 
@@ -61,10 +59,14 @@ function populateService(skeleton, callback) {
 }
 
 function getServiceData(serviceNumber, db, callback) {
+    queryServiceData({ fullService: serviceNumber }, db, callback);
+}
+
+function queryServiceData(query, db, callback) {
     let finalServices = [];
     let promises = [];
 
-    db.getCollection('bus services').findDocuments({ fullService: serviceNumber }).toArray((err, services) => {
+    db.getCollection('bus services').findDocuments(query).toArray((err, services) => {
         services.forEach(service => {
             promises.push(new Promise(resolve => {
                 if (service.skeleton) {
@@ -87,5 +89,6 @@ module.exports = {
     getServiceNumber,
     getServiceVariant,
     adjustDestination,
-    getServiceData
+    getServiceData,
+    queryServiceData
 };

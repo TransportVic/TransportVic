@@ -8,8 +8,8 @@ function populateBusStopData(busStop, callback) {
     });
 }
 
-function getBusStop(busStopCode, db, callback) {
-    db.getCollection('bus stops').findDocument({ busStopCode }, (err, busStop) => {
+function getBusStop(gtfsBusStopCode, db, callback) {
+    db.getCollection('bus stops').findDocument({ gtfsBusStopCodes: gtfsBusStopCode }, (err, busStop) => {
         if (!busStop) {
             callback(null);
             return;

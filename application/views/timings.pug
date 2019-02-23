@@ -1,0 +1,22 @@
+-
+    function getTimingsDifference(a, b) {
+        let d = new Date(Math.abs(a - b));
+        return {minutes: d.getUTCMinutes() + d.getUTCHours() * 60, seconds: d.getUTCSeconds()}
+    };
+
+
+html
+    body
+        h1='Bus timings for ' + busStop.busStopName
+        -
+            let services = Object.keys(timings);
+            service = services.sort((a, b) => a - b);
+        
+        for serviceNumber in services
+            - let destinations = Object.keys(timings[serviceNumber]);
+            for destinationName in destinations
+                - let destinationTimings = timings[serviceNumber][destinationName];
+                h3=serviceNumber + ' towards ' + destinationName
+                for timing in destinationTimings
+                    - let timeToArrival = getTimingsDifference(timing.arrivalTime, +new Date());
+                    p=timeToArrival.minutes + 'min'
