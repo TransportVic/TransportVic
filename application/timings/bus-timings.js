@@ -20,9 +20,9 @@ function getServiceInfo(serviceID, directionID, db, callback) {
     locks[id] = new EventEmitter();
     locks[id].setMaxListeners(30);
 
-    queryServiceData({ ptvRouteID: serviceID }, db, services => {
-        let serviceData = services.filter(service => service.directionID == directionID)[0];
-        services[serviceID] = serviceData;
+    queryServiceData({ ptvRouteID: serviceID }, db, loadedServices => {
+        let serviceData = loadedServices.filter(service => service.directionID == directionID)[0];
+        services[id] = serviceData;
 
         callback(serviceData);
 

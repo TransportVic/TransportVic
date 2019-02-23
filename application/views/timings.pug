@@ -17,6 +17,10 @@ html
             for destinationName in destinations
                 - let destinationTimings = timings[serviceNumber][destinationName];
                 h3=serviceNumber + ' towards ' + destinationName
-                for timing in destinationTimings
+                for timing in destinationTimings.slice(0, 5)
                     - let timeToArrival = getTimingsDifference(timing.arrivalTime, +new Date());
-                    p=timeToArrival.minutes + 'min'
+                    if timeToArrival.minutes == 0
+                        p Arr
+                    else
+                        
+                        p=timeToArrival.minutes + 'min'

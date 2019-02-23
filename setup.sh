@@ -15,7 +15,7 @@ enabled=1
 gpgkey=https://www.mongodb.org/static/pgp/server-4.0.asc" | sudo tee /etc/yum.repos.d/mongodb-org-4.0.repo
 sudo yum install -y mongodb-org
 
-sudo yum install git
+sudo yum install -y git
 
 sudo amazon-linux-extras install epel -y
 sudo yum install certbot-apache -y
