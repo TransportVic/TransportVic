@@ -3,7 +3,14 @@ const ptvAPI = require('./ptv-api');
 function populateBusStopData(busStop, callback) {
     ptvAPI.makeRequest(`/v3/stops/${busStop.gtfsBusStopCodes[0]}/route_type/2?gtfs=true`, (err, data) => {
         let stopData = data.stop;
-        busStop.busStopCode = stopData.stop_id;
+        busStop.busStopCodes.push(stopData.stop_id);
+
+        if (busStop.busStopName === 'Monash University/Wellington Rd') {
+            if (!busStop.busStopCodes.includes(33430))
+                busStop.busStopCodes.push(33430);
+        }
+
+        
         callback(busStop);
     });
 }
@@ -20,7 +27,7 @@ function getBusStop(gtfsBusStopCode, db, callback) {
 }
 
 function updateBusStopIfNeeded(busStop, db, callback) {
-    if (!busStop.busStopCode) {
+    if (!busStop.busStopCodes.length) {
         populateBusStopData(busStop, updatedBusStop => {
             db.getCollection('bus stops').updateDocument({_id: busStop._id}, { $set: updatedBusStop }, () => {
                 callback(updatedBusStop);

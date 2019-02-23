@@ -25,7 +25,7 @@ function transformBusStop(inputBusStop) {
                 inputBusStop.properties.LATITUDE]
             ]
         },
-        busStopCode: 0
+        busStopCodes: []
     }
 }
 

@@ -40,7 +40,7 @@ router.get('/timings', (req, res) => {
             return;
         }
 
-        getTimings(busStop.busStopCode, res.db, timings => {
+        getTimings(busStop.busStopCodes, res.db, timings => {
             res.render('timings', { timings, busStop });
         });
     });

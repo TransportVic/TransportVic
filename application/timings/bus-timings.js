@@ -27,13 +27,11 @@ function getServiceInfo(serviceID, directionID, db, callback) {
         callback(serviceData);
 
         locks[id].emit('loaded', serviceData);
-        setTimeout(() => {
-            delete locks[id];
-        }, 100);
+        delete locks[id];
     })
 }
 
-function getTimings(busStopCode, db, callback) {
+function getTimingsForBusStop(busStopCode, db, callback) {
     if (timingsCache.get(busStopCode)) {
         callback(timingsCache.get(busStopCode));
         return;
@@ -96,6 +94,29 @@ function getTimings(busStopCode, db, callback) {
             timingsCache.put(busStopCode, timings);
             callback(timings);
         });
+    });
+}
+
+function getTimings(busStopCodes, db, callback) {
+    let promises = [];
+    let allTimings = [];
+    busStopCodes.forEach((busStopCode, i) => {
+        promises.push(new Promise(resolve => {
+            setTimeout(() => {
+                getTimingsForBusStop(busStopCode, db, timings => {
+                    allTimings.push(timings);
+
+                    resolve();
+                });
+            }, i * 100);
+        }));
+    });
+
+    Promise.all(promises).then(() => {
+        let finalTimings = {};
+        allTimings.forEach(timing => finalTimings = Object.assign(finalTimings, timing));
+
+        callback(finalTimings);
     });
 }
 

@@ -12,6 +12,10 @@ function getServiceVariant(service) {
 }
 
 function adjustDestination(dest) {
+    if (dest === 'Stud Park SC (Rowville)') {
+        return 'Stud Park SC'
+    }
+
     if (dest.includes('Monash University')) {
         let campus = dest.match(/\((\w+)/);
         campus = campus ? campus[1] : 'Clayton';
@@ -46,9 +50,7 @@ function populateService(skeleton, callback) {
 
             skeleton.directionID = directionID;
             directionLocks[id].emit('loaded', directionID);
-            setTimeout(() => {
-                delete directionLocks[id];
-            }, 100);
+            delete directionLocks[id];
 
             cb();
         });
@@ -67,9 +69,7 @@ function populateService(skeleton, callback) {
             skeleton.skeleton = false;
 
             serviceLocks[id].emit('loaded', skeleton);
-            setTimeout(() => {
-                delete serviceLocks[id];
-            }, 100);
+            delete serviceLocks[id];
 
             callback(skeleton);
         });
