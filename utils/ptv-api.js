@@ -10,6 +10,7 @@ function getURL(request) {
 
 function makeRequest(url, callback) {
     let fullURL = getURL(url);
+    console.log(fullURL);
     request(fullURL, (err, resp, body) => {
         callback(err, JSON.parse(body));
     });

@@ -1,4 +1,5 @@
 const ptvAPI = require('./ptv-api');
+const EventEmitter = require('events');
 
 function getServiceNumber(service) {
     return service.replace(/[A-Za-z# ]/g, '');
@@ -21,8 +22,22 @@ function adjustDestination(dest) {
     return dest;
 }
 
+let serviceLocks = {};
+let directionLocks = {};
+
 function populateService(skeleton, callback) {
+
     function getDirectionID(cb) {
+        if (directionLocks[id]) {
+            directionLocks[id].on('loaded', directionID => {
+                cb(directionID);
+            });
+            return;
+        }
+
+        directionLocks[id] = new EventEmitter();
+        directionLocks[id].setMaxListeners(30);
+
         ptvAPI.makeRequest('/v3/directions/route/' + ptvRouteID, (err, data) => {
             let directionID = data.directions.map(e => {
                 e.direction_name = adjustDestination(e.direction_name);
@@ -30,6 +45,10 @@ function populateService(skeleton, callback) {
             }).filter(service => skeleton.destination.startsWith(service.direction_name))[0].direction_id;
 
             skeleton.directionID = directionID;
+            directionLocks[id].emit('loaded', directionID);
+            setTimeout(() => {
+                delete directionLocks[id];
+            }, 100);
 
             cb();
         });
@@ -47,11 +66,26 @@ function populateService(skeleton, callback) {
             });
             skeleton.skeleton = false;
 
+            serviceLocks[id].emit('loaded', skeleton);
+            setTimeout(() => {
+                delete serviceLocks[id];
+            }, 100);
+
             callback(skeleton);
         });
     }
+    let {ptvRouteID, fullService, serviceType} = skeleton;
+    let id = fullService + '-' + serviceType;
 
-    let {ptvRouteID} = skeleton;
+    if (serviceLocks[id]) {
+        serviceLocks[id].on('loaded', updatedService => {
+            callback(updatedService);
+        });
+        return;
+    }
+
+    serviceLocks[id] = new EventEmitter();
+    serviceLocks[id].setMaxListeners(30);
 
     let directionID = skeleton.directionID || 0;
     if (directionID) loadStops(); else getDirectionID(loadStops);

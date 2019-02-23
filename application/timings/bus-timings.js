@@ -1,12 +1,35 @@
 const ptvAPI = require('../../utils/ptv-api');
 const {queryServiceData} = require('../../utils/bus-service');
 const TimedCache = require('timed-cache');
+const EventEmitter = require('events');
 
 let timingsCache = new TimedCache({ defaultTtl: 1000 * 60 * 1.5 });
+let locks = {};
+let services = {};
 
 function getServiceInfo(serviceID, directionID, db, callback) {
+    let id = serviceID + '-' + directionID;
+
+    if (locks[id]) {
+        locks[id].on('loaded', data => {
+            callback(data);
+        });
+        return;
+    }
+
+    locks[id] = new EventEmitter();
+    locks[id].setMaxListeners(30);
+
     queryServiceData({ ptvRouteID: serviceID }, db, services => {
-        callback(services.filter(service => service.directionID == directionID)[0]);
+        let serviceData = services.filter(service => service.directionID == directionID)[0];
+        services[serviceID] = serviceData;
+
+        callback(serviceData);
+
+        locks[id].emit('loaded', serviceData);
+        setTimeout(() => {
+            delete locks[id];
+        }, 100);
     })
 }
 
@@ -18,7 +41,6 @@ function getTimings(busStopCode, db, callback) {
 
     let promises = [];
     let timings = {};
-    let services = {};
 
     ptvAPI.makeRequest('/v3/departures/route_type/2/stop/' + busStopCode, (err, data) => {
         let {departures} = data;
@@ -62,7 +84,6 @@ function getTimings(busStopCode, db, callback) {
 
                 if (!serviceData) {
                     getServiceInfo(departure.route_id, departure.direction_id, db, serviceData => {
-                        services[serviceID] = serviceData;
                         transformData();
                     });
                 } else {
