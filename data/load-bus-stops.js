@@ -12,7 +12,7 @@ function transformBusStop(inputBusStop) {
     if (!stopNameData) stopNameData = [inputBusStop.properties.STOP_NAME, '']
 
     return {
-        busStopCodes: [inputBusStop.properties.STOP_ID],
+        gtfsBusStopCodes: [inputBusStop.properties.STOP_ID],
         busStopName: stopNameData[1],
         suburb: stopNameData[2],
         mykiZones: inputBusStop.properties.TICKETZONE.split(','),
@@ -24,7 +24,8 @@ function transformBusStop(inputBusStop) {
                 [inputBusStop.properties.LONGITUDE,
                 inputBusStop.properties.LATITUDE]
             ]
-        }
+        },
+        busStopCode: 0
     }
 }
 
@@ -51,7 +52,7 @@ let transformedStops = Object.values(mergeBusStops(metroBusStops).map(transformB
     if (acc[busStop.busStopName + busStop.suburb]) {
         let svc = acc[busStop.busStopName + busStop.suburb];
 
-        svc.busStopCodes.push(busStop.busStopCodes[0]);
+        svc.gtfsBusStopCodes.push(busStop.gtfsBusStopCodes[0]);
         svc.routes = svc.routes.concat(busStop.routes).filter((e, i, a) => a.indexOf(e) == i).sort((a, b) => a*1 - b*1);
         svc.location.coordinates = svc.location.coordinates.concat(busStop.location.coordinates);
 

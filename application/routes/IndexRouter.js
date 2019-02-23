@@ -2,6 +2,7 @@ const express = require('express');
 const router = new express.Router();
 const safeRegex = require('safe-regex');
 const { getServiceData } = require('../../utils/bus-service');
+const { updateBusStopsAsNeeded } = require('../../utils/bus-stop');
 
 router.get('/', (req, res) => {
     res.render('index');
@@ -15,16 +16,17 @@ router.get('/search', (req, res) => {
         return;
     }
 
-
     res.db.getCollection('bus stops').findDocuments({
         $or: [
             { busStopName: new RegExp(query, 'i') },
-            { busStopCodes: query }
+            { gtfsBusStopCodes: query }
         ]
     }).toArray((err, busStops) => {
         busStops = busStops.slice(0, 20);
-        getServiceData(query, res.db, services => {
-            res.end(JSON.stringify(busStops.concat(services), null, 2));
+        updateBusStopsAsNeeded(busStops, res.db, updatedBusStops => {
+            getServiceData(query, res.db, services => {
+                res.end(JSON.stringify(updatedBusStops.concat(services), null, 2));
+            });
         });
     });
 });

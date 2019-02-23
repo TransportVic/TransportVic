@@ -95,6 +95,10 @@ database.connect({
 
                     busServices.countDocuments({ fullService: direction.fullService, destination: direction.destination }, (err, present) => {
                         if (present) {
+                            delete direction.directionID;
+                            delete direction.ptvRouteID;
+                            delete direction.stops;
+
                             busServices.updateDocument({ fullService: direction.fullService, destination: direction.destination }, {
                                 $set: direction
                             }, resolve);
