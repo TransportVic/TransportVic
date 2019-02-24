@@ -122,7 +122,6 @@ function queryServiceData(query, db, callback) {
                                     suburb: busStop.suburb
                                 }})
                             }).toArray((err, termini) => {
-                                console.log(termini)
                                 updateBusStopsAsNeeded(termini, db, resolve);
                             });
                         });
