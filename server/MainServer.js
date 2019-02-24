@@ -101,7 +101,7 @@ module.exports = class MainServer {
         };
 
         Object.keys(routers).forEach(routerName => {
-            let router = require(`../application/routes/${routerName}Router`);
+            let router = require(`../application/routes/${routerName}`);
             app.use(routers[routerName], router);
         });
 
