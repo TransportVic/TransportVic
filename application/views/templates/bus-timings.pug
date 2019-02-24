@@ -44,11 +44,11 @@ for serviceNumber in services
                             span Arr
                         else
                             span=timeToArrival.minutes
-                            
+                        
                         if Math.abs(timing.headwayDeviance) > 90
                             -
-                                let minutes = Math.floor(timing.headwayDeviance / 60);
-                                let seconds = [0].concat([...(timing.headwayDeviance % 60).toFixed(0)]).slice(-2).join('');
+                                let minutes = Math.floor(Math.abs(timing.headwayDeviance) / 60);
+                                let seconds = [0].concat([...(Math.abs(timing.headwayDeviance) % 60).toFixed(0)]).slice(-2).join('');
                                 
                             span=minutes + ':' + seconds
                                 
