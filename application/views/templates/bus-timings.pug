@@ -24,10 +24,20 @@ for serviceNumber in services
                 span=destinationName
                 
             div.timings
-                for i in Array(4 - destinationTimings.length)
+                for i in Array(4 - destinationTimings.slice(0, 4).length)
                     div.busArrival(style='display: none')
                 for timing in destinationTimings.slice(0, 4)
-                    div.busArrival
+                    -
+                        let headwayDevianceClass = 'unknown'
+                        
+                        if (timing.headwayDeviance > 1.5)
+                            headwayDevianceClass = 'early'
+                        else if (timing.headwayDeviance < -1.5)
+                            headwayDevianceClass = 'late'
+                        else if (timing.headwayDeviance !== null)
+                            headwayDevianceClass = 'on-time'
+                    
+                    div(class='busArrival ' + headwayDevianceClass)
                         - let timeToArrival = getTimingsDifference(timing.arrivalTime, +new Date());
                         if timeToArrival.minutes == 0
                             span Arr

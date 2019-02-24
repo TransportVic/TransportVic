@@ -57,7 +57,7 @@ function getTimingsForBusStop(busStopCode, db, callback) {
                     let arrivalTime = departure.estimated_departure_utc || departure.scheduled_departure_utc;
                     arrivalTime = new Date(arrivalTime);
 
-                    if (new Date() - arrivalTime > 0 || arrivalTime - new Date() > 1000 * 60 * 60 * 2) { // bus arrives beyond 4hrs
+                    if (new Date() - arrivalTime > 1000 * 60 * 1 || arrivalTime - new Date() > 1000 * 60 * 60 * 2) { // bus arrives beyond 2hrs
                         resolve();
                         return;
                     }
@@ -65,10 +65,17 @@ function getTimingsForBusStop(busStopCode, db, callback) {
                     timings[serviceData.fullService] = timings[serviceData.fullService] || {};
                     timings[serviceData.fullService][serviceData.destination] = timings[serviceData.fullService][serviceData.destination] || [];
 
+                    let headwayDeviance = null
+
+                    if (departure.estimated_departure_utc) {
+                        headwayDeviance = (new Date(departure.scheduled_departure_utc) - new Date(departure.estimated_departure_utc)) / (1000 * 60);
+                    }
+
                     timings[serviceData.fullService][serviceData.destination].push({
                         service: serviceData.fullService,
                         destination: serviceData.destination,
                         arrivalTime,
+                        headwayDeviance,
                         operators: serviceData.operators,
                         serviceNumber: serviceData.serviceNumber,
                         serviceVariant: serviceData.serviceVariant
