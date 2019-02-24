@@ -1,6 +1,7 @@
 const ptvAPI = require('./ptv-api');
 const EventEmitter = require('events');
 const safeRegex = require('safe-regex');
+const { updateBusStopsAsNeeded } = require('./bus-stop');
 
 function getServiceNumber(service) {
     if (service.toLowerCase().startsWith('telebus'))
@@ -112,7 +113,18 @@ function queryServiceData(query, db, callback) {
                 if (service.skeleton) {
                     populateService(service, updatedService => {
                         finalServices.push(updatedService);
-                        db.getCollection('bus services').updateDocument({_id: service._id}, { $set: updatedService }, resolve);
+                        db.getCollection('bus services').updateDocument({_id: service._id}, { $set: updatedService }, () => {
+                            let termini = [updatedService.stops[0], updatedService.stops.slice(-1)[0]];
+
+                            db.getCollection('bus stops').findDocuments({
+                                $or: termini.map(busStop => {return {
+                                    busStopName: busStop.busStopName,
+                                    suburb: busStop.suburb
+                                }})
+                            }).toArray((err, termini) => {
+                                updateBusStopsAsNeeded(termini, db, resolve);
+                            });
+                        });
                     });
                 } else {
                     finalServices.push(service);

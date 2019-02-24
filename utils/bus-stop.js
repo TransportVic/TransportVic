@@ -10,7 +10,7 @@ function populateBusStopData(busStop, callback) {
                 busStop.busStopCodes.push(33430);
         }
 
-        
+
         callback(busStop);
     });
 }

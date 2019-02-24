@@ -2,7 +2,8 @@
     function getTimingsDifference(a, b) {
         let d = new Date(Math.abs(a - b));
         return {minutes: d.getUTCMinutes() + d.getUTCHours() * 60, seconds: d.getUTCSeconds()}
-    };    
+    };
+    
 
 -
     let services = Object.keys(timings);
@@ -19,7 +20,7 @@ for serviceNumber in services
                 if destinationTimings[0].serviceVariant
                     span=destinationTimings[0].serviceVariant
                     
-            a.destination
+            a(href=`/bus/timings/${destinationTimings[0].destinationGTFSBusStopCode}`).destination
                 span Towards
                 span=destinationName
                 
@@ -30,9 +31,9 @@ for serviceNumber in services
                     -
                         let headwayDevianceClass = 'unknown'
                         
-                        if (timing.headwayDeviance > 1.5)
+                        if (timing.headwayDeviance > 90)
                             headwayDevianceClass = 'early'
-                        else if (timing.headwayDeviance < -1.5)
+                        else if (timing.headwayDeviance < -90)
                             headwayDevianceClass = 'late'
                         else if (timing.headwayDeviance !== null)
                             headwayDevianceClass = 'on-time'
@@ -43,3 +44,12 @@ for serviceNumber in services
                             span Arr
                         else
                             span=timeToArrival.minutes
+                            
+                        if Math.abs(timing.headwayDeviance) > 90
+                            -
+                                let minutes = Math.floor(timing.headwayDeviance / 60);
+                                let seconds = [0].concat([...(timing.headwayDeviance % 60).toFixed(0)]).slice(-2).join('');
+                                
+                            span=minutes + ':' + seconds
+                                
+                        

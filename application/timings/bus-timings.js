@@ -68,23 +68,28 @@ function getTimingsForBusStop(busStopCode, db, callback) {
                     let headwayDeviance = null
 
                     if (departure.estimated_departure_utc) {
-                        headwayDeviance = (new Date(departure.scheduled_departure_utc) - new Date(departure.estimated_departure_utc)) / (1000 * 60);
+                        headwayDeviance = (new Date(departure.scheduled_departure_utc) - new Date(departure.estimated_departure_utc)) / 1000;
                     }
 
-                    timings[serviceData.fullService][serviceData.destination].push({
-                        service: serviceData.fullService,
-                        destination: serviceData.destination,
-                        arrivalTime,
-                        headwayDeviance,
-                        operators: serviceData.operators,
-                        serviceNumber: serviceData.serviceNumber,
-                        serviceVariant: serviceData.serviceVariant
+                    db.getCollection('bus stops').findDocument({
+                        busStopCodes: serviceData.stops.slice(-1)[0].busStopCode
+                    }, (err, destinationBusStop) => {
+                        timings[serviceData.fullService][serviceData.destination].push({
+                            service: serviceData.fullService,
+                            destination: serviceData.destination,
+                            destinationGTFSBusStopCode: destinationBusStop.gtfsBusStopCodes[0],
+                            arrivalTime,
+                            headwayDeviance,
+                            operators: serviceData.operators,
+                            serviceNumber: serviceData.serviceNumber,
+                            serviceVariant: serviceData.serviceVariant
+                        });
+
+                        timings[serviceData.fullService][serviceData.destination] =
+                            timings[serviceData.fullService][serviceData.destination].sort((a,b) => a.arrivalTime - b.arrivalTime);
+
+                        resolve();
                     });
-
-                    timings[serviceData.fullService][serviceData.destination] =
-                        timings[serviceData.fullService][serviceData.destination].sort((a,b) => a.arrivalTime - b.arrivalTime);
-
-                    resolve();
                 }
 
                 let serviceID = departure.route_id + '-' + departure.direction_id;
