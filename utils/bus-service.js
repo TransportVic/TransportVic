@@ -1,5 +1,6 @@
 const ptvAPI = require('./ptv-api');
 const EventEmitter = require('events');
+const safeRegex = require('safe-regex');
 
 function getServiceNumber(service) {
     if (service.toLowerCase().startsWith('telebus'))
@@ -95,10 +96,10 @@ function populateService(skeleton, callback) {
 }
 
 function getServiceData(serviceNumber, db, callback) {
-    if (serviceNumber.toLowerCase().startsWith('telebus'))
-        queryServiceData({ serviceType: 'telebus', serviceVariant: serviceNumber.match(/(\d)/)[1] }, db, callback);
-    else
-        queryServiceData({ fullService: serviceNumber }, db, callback);
+    if (serviceNumber.match(/[a-z]/i) && safeRegex(serviceNumber))
+        serviceNumber = new RegExp(serviceNumber, 'i');
+
+    queryServiceData({ fullService: serviceNumber }, db, callback);
 }
 
 function queryServiceData(query, db, callback) {
@@ -120,7 +121,7 @@ function queryServiceData(query, db, callback) {
             }));
         });
 
-        Promise.all(promises).then(() => callback(finalServices));
+        Promise.all(promises).then(() => callback(finalServices.sort((a, b) => (a.serviceNumber*1 || a.serviceVariant) - (b.serviceNumber*1 || b.serviceVariant))));
     });
 }
 
