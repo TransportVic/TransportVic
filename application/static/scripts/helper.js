@@ -1,0 +1,54 @@
+HTMLElement.prototype.on = HTMLElement.prototype.addEventListener;
+Window.prototype.on = Window.prototype.addEventListener;
+
+Object.defineProperty(XMLHttpRequest.prototype, 'responseJSON', {
+    get: function() {
+        try {
+            return JSON.parse(this.responseText);
+        } catch (e) {
+            return undefined;
+        }
+    },
+    enumerable: false
+});
+
+function $(query) {
+    return document.querySelector(query);
+}
+
+$.delete = function(query) {
+    if ($(query))
+        $(query).parentElement.removeChild($(query));
+}
+
+// consider using fetch in future
+$.ajax = function(options, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.addEventListener('load', function() {
+        callback(xhr.status, xhr.responseJSON || xhr.responseXML || xhr.responseText);
+    });
+
+    xhr.addEventListener('error', function(err) {
+        callback(xhr.status, null);
+    })
+
+    xhr.open(options.method || 'GET', options.url || location.toString());
+    if (options.data) {
+        xhr.setRequestHeader('Content-Type', 'application/json');
+    }
+    xhr.send(JSON.stringify(options.data));
+}
+
+$.ready = function(callback) {
+    if (document.readyState !== 'loading')
+        setTimeout(callback, 10);
+    else
+        document.addEventListener("DOMContentLoaded", callback);
+}
+
+var query = location.query;
+
+window.search = {};
+
+search.hash = (location.hash.match(/#(\w+[=]\w+&?)+/)||[]).slice(1).map(e=>e.split('=')).reduce((a, e) => {a[e[0]] = e[1]; return a;}, {});
+search.query = (location.search.match(/\?(\w+[=]\w+&?)+/)||[]).slice(1).map(e=>e.split('=')).reduce((a, e) => {a[e[0]] = e[1]; return a;}, {});

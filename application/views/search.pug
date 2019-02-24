@@ -1,0 +1,23 @@
+extends layout
+
+block head
+    title TransportVic - General Search
+
+block css
+    link(rel='stylesheet' href='/static/css/search.css')
+    link(rel='stylesheet' href='/static/css/loading.css')
+    link(rel='stylesheet' href='/static/css/bus/operator-colours.css')
+
+block scripts
+    script(src='/static/scripts/search.js' async)
+
+block header
+    img#page-icon(src='/static/images/magnifying-glass.svg')
+    span#title General Search
+
+block content
+    div#searchbar
+        input(aria-label='Search Query')#input
+    div#loading(style='display: none')
+        div#loadingBar
+    div#results

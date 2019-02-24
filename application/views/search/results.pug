@@ -1,0 +1,26 @@
+-
+    let distinctBusServices = busServices.map(service => service.fullService).filter((e, i, a) => a.indexOf(e) === i);
+    let busServiceTypes = {
+        metro: 'Metropolitian',
+        telebus: 'TeleBus'
+    };
+
+for serviceNumber in distinctBusServices
+    - let service = busServices.filter(svc => svc.fullService === serviceNumber);
+    
+    a.busService.result
+        div(class='leftContainer ' + service[0].operators[0].toLowerCase().replace(/[^\w]/g, '-'))
+            span.serviceNumber=service[0].serviceNumber
+            span.serviceVariant=service[0].serviceVariant
+        div.result-details
+            if service[0].serviceType === 'telebus'
+                span='TeleBus Area ' + service[0].serviceVariant
+            else
+                span=busServiceTypes[service[0].serviceType] + ' Bus Service ' + service[0].fullService
+
+for busStop in busStops
+    a(href=`/bus/timings/${busStop.gtfsBusStopCodes[0]}`).busStop.result
+        div.leftContainer
+            img(src='/static/images/bus-stop.svg')
+        div.result-details
+            span=busStop.busStopName

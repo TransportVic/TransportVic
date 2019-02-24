@@ -26,7 +26,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.7"
-     inkscape:cx="183.56061"
+     inkscape:cx="240.70346"
      inkscape:cy="585.26402"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -93,7 +93,7 @@
          style="fill:#e30613;fill-opacity:1;stroke-width:0.26458332">TransDev</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'bree serif';-inkscape-font-specification:'bree serif';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#d00056;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'bree serif';-inkscape-font-specification:'bree serif';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#d00071;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
        x="36.348656"
        y="85.589798"
        id="text831"><tspan
@@ -101,7 +101,7 @@
          id="tspan829"
          x="36.348656"
          y="85.589798"
-         style="stroke-width:0.26458332;fill:#d00056;fill-opacity:1;">Panorama</tspan></text>
+         style="stroke-width:0.26458332;fill:#d00071;fill-opacity:1;">Panorama</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'bree serif';-inkscape-font-specification:'bree serif';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#2eb130;fill-opacity:1;stroke:none;stroke-width:0.26458332"
@@ -261,7 +261,7 @@
        height="11.90625"
        width="12.473214"
        id="rect2806"
-       style="opacity:1;vector-effect:none;fill:#93003d;fill-opacity:1;stroke:none;stroke-width:0.24650925;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" />
+       style="opacity:1;vector-effect:none;fill:#930050;fill-opacity:1;stroke:none;stroke-width:0.24650925;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" />
     <rect
        style="opacity:1;vector-effect:none;fill:#259027;fill-opacity:1;stroke:none;stroke-width:0.24650925;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
        id="rect2808"

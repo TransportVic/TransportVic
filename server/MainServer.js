@@ -24,8 +24,8 @@ module.exports = class MainServer {
     initDatabaseConnection(app, callback) {
         let database = new DatabaseConnection(config.databaseURL, 'TransportVic');
         database.connect((err) => {
-            // database.createCollection('bus services').createIndex({ serviceNumber: 1 });
-            database.createCollection('bus stops').createIndex({ location: "2dsphere", busStopName: 1, busStopCodes: 1 });
+            database.createCollection('bus services').createIndex({ fullService: 1 });
+            database.createCollection('bus stops').createIndex({ location: "2dsphere", busStopName: 1, gtfsBusStopCodes: 1, busStopCodes: 1 });
 
             app.use((req, res, next) => {
                 res.db = database;
@@ -82,9 +82,6 @@ module.exports = class MainServer {
             res.setHeader('Referrer-Policy', 'no-referrer');
             res.setHeader('Feature-Policy', "geolocation 'self'; document-write 'none'; microphone 'none'; camera 'none';");
 
-            req.url = url.parse(req.url);
-            req.url.query = querystring.parse(req.url.query);
-
             next();
         });
 
@@ -98,7 +95,9 @@ module.exports = class MainServer {
 
     configRoutes(app) {
         let routers = {
-            Index: '/'
+            Index: '/',
+            BusTimings: '/bus/timings',
+            Search: '/search'
         };
 
         Object.keys(routers).forEach(routerName => {

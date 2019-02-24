@@ -2,12 +2,14 @@ const ptvAPI = require('./ptv-api');
 const EventEmitter = require('events');
 
 function getServiceNumber(service) {
+    if (service.toLowerCase().startsWith('telebus'))
+        return 'TB';
     return service.replace(/[A-Za-z# ]/g, '');
 }
 
 function getServiceVariant(service) {
     if (service.toLowerCase().startsWith('telebus'))
-        return 'TeleBus';
+        return service.replace(/[A-Za-z# ]/g, '');
     return service.replace(/[0-9]/g, '');
 }
 
@@ -75,7 +77,7 @@ function populateService(skeleton, callback) {
         });
     }
     let {ptvRouteID, fullService, serviceType} = skeleton;
-    let id = fullService + '-' + serviceType;
+    let id = fullService + '-' + serviceType.toLowerCase();
 
     if (serviceLocks[id]) {
         serviceLocks[id].on('loaded', updatedService => {
@@ -93,7 +95,10 @@ function populateService(skeleton, callback) {
 }
 
 function getServiceData(serviceNumber, db, callback) {
-    queryServiceData({ fullService: serviceNumber }, db, callback);
+    if (serviceNumber.toLowerCase().startsWith('telebus'))
+        queryServiceData({ serviceType: 'telebus', serviceVariant: serviceNumber.match(/(\d)/)[1] }, db, callback);
+    else
+        queryServiceData({ fullService: serviceNumber }, db, callback);
 }
 
 function queryServiceData(query, db, callback) {

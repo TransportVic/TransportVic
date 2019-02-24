@@ -43,7 +43,7 @@ function fixOperator(operator) {
     return operator;
 }
 
-function transformBusServices(inputBusService, serviceType) {
+function transformBusService(inputBusService, serviceType) {
     if (inputBusService.properties.ROUTESHTNM.toLowerCase().includes('telebus')) {
         serviceType = 'telebus';
         inputBusService.properties.OPERATOR = 'Ventura Bus Lines';
@@ -78,7 +78,9 @@ function loadRouteIDs(callback) {
 }
 
 getAllBusServices(metroBusServices).forEach(e=>{
-    allServices.push(findBestServices(metroBusServices.filter(f=>f.properties.ROUTESHTNM == e)).map(transformBusServices));
+    allServices.push(findBestServices(metroBusServices.filter(f=>f.properties.ROUTESHTNM == e)).map(service => {
+        return transformBusService(service, 'metro');
+    }));
 });
 
 database.connect({
@@ -90,13 +92,15 @@ database.connect({
         allServices.forEach(serviceDirections => {
             serviceDirections.forEach(direction => {
                 promises.push(new Promise(resolve => {
+                    if (direction.serviceType === 'telebus')
+                        direction.gtfsID = '7-TB' + direction.serviceVariant;
+
                     if (!routeIDs[direction.gtfsID]) console.log(direction.fullService)
                     direction.ptvRouteID = routeIDs[direction.gtfsID] || routeIDs[direction.fullService];
 
                     busServices.countDocuments({ fullService: direction.fullService, destination: direction.destination }, (err, present) => {
                         if (present) {
                             delete direction.directionID;
-                            delete direction.ptvRouteID;
                             delete direction.stops;
 
                             busServices.updateDocument({ fullService: direction.fullService, destination: direction.destination }, {
