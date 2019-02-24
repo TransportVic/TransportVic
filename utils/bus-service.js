@@ -78,8 +78,8 @@ function populateService(skeleton, callback) {
             callback(skeleton);
         });
     }
-    let {ptvRouteID, fullService, serviceType} = skeleton;
-    let id = fullService + '-' + serviceType.toLowerCase();
+    let {ptvRouteID, fullService, serviceType, destination} = skeleton;
+    let id = fullService + destination + '-' + serviceType.toLowerCase();
 
     if (serviceLocks[id]) {
         serviceLocks[id].on('loaded', updatedService => {
