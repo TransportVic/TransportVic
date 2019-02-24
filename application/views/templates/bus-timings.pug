@@ -1,0 +1,33 @@
+-
+    function getTimingsDifference(a, b) {
+        let d = new Date(Math.abs(a - b));
+        return {minutes: d.getUTCMinutes() + d.getUTCHours() * 60, seconds: d.getUTCSeconds()}
+    };    
+
+-
+    let services = Object.keys(timings);
+    service = services.sort((a, b) => a - b);
+
+for serviceNumber in services
+    - let destinations = Object.keys(timings[serviceNumber]);
+    for destinationName in destinations
+        - let destinationTimings = timings[serviceNumber][destinationName];
+        div.busService
+            a(class='busServiceNumber ' + destinationTimings[0].operators[0].toLowerCase().replace(/[^\w]/g, '-'))
+                span=destinationTimings[0].serviceNumber
+                
+                if destinationTimings[0].serviceVariant
+                    span=destinationTimings[0].serviceVariant
+                    
+            a.destination
+                span Towards
+                span=destinationName
+                
+            div.timings
+                for timing in destinationTimings.slice(0, 4)
+                    div.busArrival
+                        - let timeToArrival = getTimingsDifference(timing.arrivalTime, +new Date());
+                        if timeToArrival.minutes == 0
+                            span Arr
+                        else
+                            span=timeToArrival.minutes

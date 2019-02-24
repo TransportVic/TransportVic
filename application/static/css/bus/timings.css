@@ -1,0 +1,102 @@
+div.busService {
+    background-color: #2a2a2a;
+
+    display: flex;
+    height: calc(7vw + 7vh);
+}
+
+div.busService:nth-child(even) {
+    background-color: #202020;
+}
+
+a.busServiceNumber {
+    width: calc(5vw + 5vh);
+    height: calc(7vw + 7vh);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    color: #d2d2d2;
+}
+
+a.busServiceNumber:visited {
+    color: #d2d2d2;
+}
+
+a.busServiceNumber span {
+    width: calc(5vw + 5vh);
+    text-align: center;
+}
+
+a.busServiceNumber span:nth-child(1) {
+    font-size: calc(3vw + 3vh);
+    margin-top: calc(-0.5vw - 0.5vh);
+}
+
+a.busServiceNumber span:nth-child(2) {
+    font-size: calc(2vw + 2vh);
+    margin-top: calc(-0.5vw - 0.5vh);
+}
+
+a.destination {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+
+    width: 100%;
+}
+
+a.destination span {
+    margin-left: calc(1vw + 1vh);
+}
+
+a.destination span:nth-child(1) {
+    font-size: calc(0.7vw + 0.7vh);
+
+    color: #8f8f8f;
+}
+
+a.destination span:nth-child(2) {
+    font-size: calc(1.6vw + 1.6vh);
+    margin-top: calc(-0.4vw - 0.4vh);
+
+    color: #c5c5c5;
+}
+
+div.timings {
+    margin-left: auto;
+
+    display: flex;
+}
+
+div.busArrival {
+    display: flex;
+    flex-direction: column;
+
+    width: calc(2.6vw + 2.6vh);
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: calc(1.05vw + 1.05vh);
+    color: #101010;
+}
+
+div.busService:nth-child(odd) div.busArrival:nth-child(odd) {
+    background-color: #9c9c9c;
+}
+
+div.busService:nth-child(odd) div.busArrival:nth-child(even) {
+    background-color: #a8a8a8;
+}
+
+div.busService:nth-child(even) div.busArrival:nth-child(odd) {
+    background-color: #a8a8a8;
+}
+
+div.busService:nth-child(even) div.busArrival:nth-child(even) {
+    background-color: #9c9c9c;
+}

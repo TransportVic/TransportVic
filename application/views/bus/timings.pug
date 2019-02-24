@@ -1,0 +1,11 @@
+extends ../layout
+
+block header
+    span#title=busStop.busStopName
+
+block content
+    include ../templates/bus-timings
+    
+block css
+    link(rel='stylesheet' href='/static/css/bus/timings.css')
+    link(rel='stylesheet' href='/static/css/bus/operator-colours.css')

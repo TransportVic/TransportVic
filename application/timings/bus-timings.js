@@ -68,7 +68,10 @@ function getTimingsForBusStop(busStopCode, db, callback) {
                     timings[serviceData.fullService][serviceData.destination].push({
                         service: serviceData.fullService,
                         destination: serviceData.destination,
-                        arrivalTime
+                        arrivalTime,
+                        operators: serviceData.operators,
+                        serviceNumber: serviceData.serviceNumber,
+                        serviceVariant: serviceData.serviceVariant
                     });
 
                     timings[serviceData.fullService][serviceData.destination] =

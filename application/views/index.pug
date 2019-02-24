@@ -1,12 +1,16 @@
-html
-    body
-        form(method='GET' action='/search')
-            p search
-            input(name='q')
-            input(type='submit' value='go')
+extends layout
 
-        form(method='GET' action='/timings')
-            p get timings
-            input(name='q')
-            input(type='submit' value='go')
+block header
+    span#title TransportVic
+
+block content
+    form(method='GET' action='/timings')
+        p get timings
+        input(name='q')
+        input(type='submit' value='go')
             
+            
+    form(method='GET' action='/search')
+        p search
+        input(name='q')
+        input(type='submit' value='go')
