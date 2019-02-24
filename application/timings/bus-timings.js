@@ -3,7 +3,7 @@ const {queryServiceData} = require('../../utils/bus-service');
 const TimedCache = require('timed-cache');
 const EventEmitter = require('events');
 
-let timingsCache = new TimedCache({ defaultTtl: 1000 * 60 * 1.5 });
+let timingsCache = new TimedCache({ defaultTtl: 1000 * 60 * 1 });
 let locks = {};
 let services = {};
 
@@ -40,7 +40,7 @@ function getTimingsForBusStop(busStopCode, db, callback) {
     let promises = [];
     let timings = {};
 
-    ptvAPI.makeRequest('/v3/departures/route_type/2/stop/' + busStopCode, (err, data) => {
+    ptvAPI.makeRequest('/v3/departures/route_type/2/stop/' + busStopCode + '?max_results=6', (err, data) => {
         let {departures} = data;
 
         departures = departures.sort((a, b) => a.direction_id - b.direction_id);
@@ -57,13 +57,13 @@ function getTimingsForBusStop(busStopCode, db, callback) {
                     let arrivalTime = departure.estimated_departure_utc || departure.scheduled_departure_utc;
                     arrivalTime = new Date(arrivalTime);
 
-                    timings[serviceData.fullService] = timings[serviceData.fullService] || {};
-                    timings[serviceData.fullService][serviceData.destination] = timings[serviceData.fullService][serviceData.destination] || [];
-
-                    if (new Date() - arrivalTime > 0) {
+                    if (new Date() - arrivalTime > 0 || arrivalTime - new Date() > 1000 * 60 * 60 * 2) { // bus arrives beyond 4hrs
                         resolve();
                         return;
                     }
+
+                    timings[serviceData.fullService] = timings[serviceData.fullService] || {};
+                    timings[serviceData.fullService][serviceData.destination] = timings[serviceData.fullService][serviceData.destination] || [];
 
                     timings[serviceData.fullService][serviceData.destination].push({
                         service: serviceData.fullService,

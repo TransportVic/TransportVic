@@ -10,7 +10,7 @@
 
 for serviceNumber in services
     - let destinations = Object.keys(timings[serviceNumber]);
-    for destinationName in destinations
+    for destinationName in destinations.sort((a, b) => a.length - b.length)
         - let destinationTimings = timings[serviceNumber][destinationName];
         div.busService
             a(class='busServiceNumber ' + destinationTimings[0].operators[0].toLowerCase().replace(/[^\w]/g, '-'))
