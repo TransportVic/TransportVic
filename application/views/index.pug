@@ -2,6 +2,16 @@ extends layout
 
 block header
     span#title TransportVic
+    
+block css
+    link(rel='stylesheet' href='/static/css/index.css')
 
 block content
-    a(href='/search') Search
+    div.wrap
+        a(href='/search').feature
+            img(src='/static/images/home/search.svg' alt='Search')
+            span Search
+        a.feature
+            img(src='/static/images/home/dk-yet.svg' alt='???')
+            span This button does nothing
+        
