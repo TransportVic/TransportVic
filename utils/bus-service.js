@@ -113,15 +113,16 @@ function queryServiceData(query, db, callback) {
                 if (service.skeleton) {
                     populateService(service, updatedService => {
                         finalServices.push(updatedService);
+
                         db.getCollection('bus services').updateDocument({_id: service._id}, { $set: updatedService }, () => {
                             let termini = [updatedService.stops[0], updatedService.stops.slice(-1)[0]];
-
                             db.getCollection('bus stops').findDocuments({
                                 $or: termini.map(busStop => {return {
-                                    busStopName: busStop.busStopName,
+                                    busStopName: new RegExp(busStop.busStopName, 'i'),
                                     suburb: busStop.suburb
                                 }})
                             }).toArray((err, termini) => {
+                                console.log(termini)
                                 updateBusStopsAsNeeded(termini, db, resolve);
                             });
                         });
