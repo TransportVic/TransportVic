@@ -1,0 +1,33 @@
+-
+    function getDistanceCssClass(distance) {
+        if (distance >= 0 && distance < 0.1) return 'nearby';
+        if (distance >= 0.1 && distance < 0.3) return 'close';
+        else return 'far';
+    }
+    function distance(lat1, lon1, lat2, lon2) {
+        var p = 0.017453292519943295;    // Math.PI / 180
+        var c = Math.cos;
+        var a = 0.5 - c((lat2 - lat1) * p)/2 +
+              c(lat1 * p) * c(lat2 * p) *
+              (1 - c((lon2 - lon1) * p))/2;
+
+        return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
+    }
+    function getClosestDistance(positions) {
+        let userLat = position.latitude, userLong = position.longitude;
+        let distances = positions.map(position => distance(position[1], position[0], userLat, userLong));
+        
+        return distances.sort((a,  b) => a - b)[0];
+    }
+
+for busStop in busStops
+    - let busStopPositions = busStop.location.coordinates;
+    - let distanceToBusStop = getClosestDistance(busStopPositions);
+    
+    div.busStop
+        a(href=`/bus/timings/${busStop.gtfsBusStopCodes[0]}`)
+            div(class='distanceMeter ' + getDistanceCssClass(distanceToBusStop))
+                span=Math.round(distanceToBusStop * 1000)
+                span metres
+            div.busStopInfo
+                span.busStopName=busStop.busStopName

@@ -97,7 +97,8 @@ module.exports = class MainServer {
         let routers = {
             Index: '/',
             BusTimings: '/bus/timings',
-            Search: '/search'
+            Search: '/search',
+            NearbyPTStops: '/nearby'
         };
 
         Object.keys(routers).forEach(routerName => {

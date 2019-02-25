@@ -1,0 +1,64 @@
+div.busStop {
+    background-color: #2a2a2a;
+}
+
+div.busStop:nth-child(even) {
+    background-color: #202020;
+}
+
+a.busStopLink {
+    display: flex;
+}
+
+.distanceMeter {
+    order: 0;
+    width: calc(5.2vw + 5.2vh);
+    height: calc(7vw + 7vh);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    font-size: calc(2vw + 2vh);
+    color: #d2d2d2;
+}
+
+.distanceMeter span:nth-child(2) {
+    font-size: calc(0.6vw + 0.6vh);
+}
+
+.nearby {
+    background-color: #4ebe45;
+}
+
+.busStop:nth-child(even) .nearby {
+    background-color: #43a93b;
+}
+
+.close {
+    background-color: #d7832c;
+}
+
+.busStop:nth-child(even) .close {
+    background-color: #c47625;
+}
+
+.far {
+    background-color: #c63d3d;
+}
+
+.busStop:nth-child(even) .far {
+    background-color: #b43535;
+}
+
+.busStopInfo {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: calc(1vw + 1vh);
+}
+
+.busStopName {
+    margin-top: calc(1.5vw + 1.5vh);
+    font-size: calc(1.5vw + 1.5vh);
+}
