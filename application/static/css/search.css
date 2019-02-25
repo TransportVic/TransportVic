@@ -58,7 +58,7 @@ div#results {
   height: calc(3vw + 3vh);
 }
 
-.result-details {
+.resultDetails {
   width: calc(95vw - 5vh);
   display: flex;
   align-items: left;
@@ -66,6 +66,16 @@ div#results {
   flex-direction: column;
   margin-left: calc(1vw + 1vh);
   font-size: calc(2vh + 1.2vw);
+}
+
+.routeDetails > span:nth-child(1) {
+  color: #8f8f8f;
+  font-size: calc(1.6vh + 0.9vw);
+}
+
+.routeDetails > span:nth-child(2) {
+  font-size: calc(2vh + 1.2vw);
+  margin-top: calc(-0.4vh - 0.2vw);
 }
 
 .left-container span {
