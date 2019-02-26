@@ -13,8 +13,8 @@
         width:  calc(13vw + 7vh);
         height: calc(13vw + 7vh);
 
-        margin-top: calc(((96vh - 4vw) - (12vw + 7vh) * 2) / 16) !important;
-        margin-bottom: calc(((96vh - 4vw) - (12vw + 7vh) * 2) / 16) !important;
+        margin-top: calc(((96vh - 4vw) - (13vw + 7vh) * 2) / 16) !important;
+        margin-bottom: calc(((96vh - 4vw) - (13vw + 7vh) * 2) / 16) !important;
     }
 }
 
@@ -44,7 +44,7 @@
 
     flex-direction: column;
 
-    margin: calc(2.6vw + 2.6vh);
+    margin: calc(2vw + 2vh);
 }
 
 .feature span {
