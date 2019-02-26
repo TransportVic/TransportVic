@@ -26,6 +26,7 @@ router.post('/', (req, res) => {
     res.db.getCollection('bus stops').findDocuments({
         $or: busStopsQueries
     }).toArray((err, busStops) => {
+        busStops = busStops.slice(0, 15);
         updateBusStopsAsNeeded(busStops, res.db, updatedBusStops => {
 
             getServiceData(query, res.db, busServices => {

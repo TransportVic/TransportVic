@@ -1,5 +1,9 @@
 extends ../layout.pug
 
+block header
+    title TransportVic - Bookmarks
+    span#title Bookmarks
+    
 block css
     link(rel='stylesheet' href='/static/css/search.css')
     link(rel='stylesheet' href='/static/css/loading.css')
@@ -22,9 +26,6 @@ block css
 block scripts    
     script(src='/static/scripts/bookmark-helper.js')
     script(src='/static/scripts/bookmarks.js' async)
-
-block header
-    span#title Bookmarks
     
 block content
     div#loading
