@@ -99,7 +99,7 @@ module.exports = class MainServer {
             BusTimings: '/bus/timings',
             Search: '/search',
             NearbyPTStops: '/nearby',
-            bookmarks: '/bookmarks'
+            Bookmarks: '/bookmarks'
         };
 
         Object.keys(routers).forEach(routerName => {
