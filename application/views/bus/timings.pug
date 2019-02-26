@@ -10,3 +10,11 @@ block content
 block css
     link(rel='stylesheet' href='/static/css/bus/timings.css')
     link(rel='stylesheet' href='/static/css/bus/operator-colours.css')
+
+block scripts
+    script(src='/static/scripts/bookmark-helper.js' async)
+    script(src='/static/scripts/bookmark-toggle.js' async)
+    script window.bookmarkCode = "#{busStop.bookmarkCode}";
+    
+block links
+    img(onclick=`toggleBookmark(bookmarkCode)` src='/static/images/bookmark/empty.svg')#bookmark-status

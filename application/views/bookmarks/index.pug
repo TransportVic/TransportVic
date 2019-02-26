@@ -1,0 +1,32 @@
+extends ../layout.pug
+
+block css
+    link(rel='stylesheet' href='/static/css/search.css')
+    link(rel='stylesheet' href='/static/css/loading.css')
+    style.
+        #no-bookmarks {
+            width: 100vw;
+            height: calc(100vh - (4vw + 4vh));
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #no-bookmarks span {
+            width: 100vw;
+            font-size: calc(2vw + 2vh);
+            text-align: center;
+        }
+
+block scripts    
+    script(src='/static/scripts/bookmark-helper.js')
+    script(src='/static/scripts/bookmarks.js' async)
+
+block header
+    span#title Bookmarks
+    
+block content
+    div#loading
+        div#loadingBar
+    

@@ -1,11 +1,19 @@
 const DatabaseConnection = require('../application/database/DatabaseConnection');
 const metroBusStops = require('./metro-bus-stops.json').features;
 const config = require('../config.json');
+const crypto = require('crypto');
 
 let database = new DatabaseConnection(config.databaseURL, 'TransportVic');
 let busStops = null;
 
 let promises = [];
+
+function hashBusStop(busStop) {
+    let hash = crypto.createHash('sha1');
+    hash.update(busStop.busStopName + busStop.suburb);
+
+    return hash.digest('hex').slice(0, 6);
+}
 
 function transformBusStop(inputBusStop) {
     let stopNameData = inputBusStop.properties.STOP_NAME.match(/([^\(]+) \((.+)+\)/);
@@ -70,8 +78,12 @@ database.connect({
 
     transformedStops.forEach(stop => {
         promises.push(new Promise(resolve => {
+            stop.bookmarkCode = hashBusStop(stop);
+
             busStops.countDocuments({ busStopName: stop.busStopName, suburb: stop.suburb }, (err, present) => {
                 if (present) {
+                    delete stop.busStopCodes;
+                    
                     busStops.updateDocument({ busStopName: stop.busStopName, suburb: stop.suburb }, {
                         $set: stop
                     }, resolve);

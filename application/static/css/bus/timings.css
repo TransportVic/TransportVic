@@ -150,3 +150,13 @@ div.busService:nth-child(even) div.busArrival.unknown:nth-child(even) {
 div.busService:nth-child(even) div.busArrival.unknown:nth-child(odd) {
     background-color: #a8a8a8;
 }
+
+img#bookmark-status {
+    width: calc(2.8vw + 2.8vh);
+    height: calc(2.8vw + 2.8vh);
+}
+
+#header > span {
+    font-size: calc((100vw + 100vh) * .013);
+    margin: calc(-.3vw - .3vh) 0 0 calc(1vw + 1vh);
+}

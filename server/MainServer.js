@@ -98,7 +98,8 @@ module.exports = class MainServer {
             Index: '/',
             BusTimings: '/bus/timings',
             Search: '/search',
-            NearbyPTStops: '/nearby'
+            NearbyPTStops: '/nearby',
+            bookmarks: '/bookmarks'
         };
 
         Object.keys(routers).forEach(routerName => {
