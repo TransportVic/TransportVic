@@ -67,7 +67,7 @@ function transformBusService(inputBusService, serviceType) {
 }
 
 function loadRouteIDs(callback) {
-    ptvAPI.makeRequest('/v3/routes', (err, data) => {
+    ptvAPI.makeRequest('/v3/routes?route_types=2', (err, data) => {
         data.routes.forEach(routeData => {
             routeIDs[routeData.route_number] = routeData.route_id;
             routeIDs[routeData.route_gtfs_id] = routeData.route_id;
@@ -115,10 +115,8 @@ database.connect({
         });
 
         Promise.all(promises).then(() => {
-            loadRouteIDs(() => {
-                console.log('Loaded ' + promises.length + ' bus services');
-                process.exit();
-            });
+            console.log('Loaded ' + promises.length + ' bus services');
+            process.exit();
         });
     });
 });
