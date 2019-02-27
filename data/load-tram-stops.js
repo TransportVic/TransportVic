@@ -23,7 +23,7 @@ function transformTramStop(inputTramStop) {
     if (!stopNameData) stopNameData = [0, inputTramStop.properties.STOP_NAME, ''];
     return {
         tramStopCodes: [inputTramStop.properties.STOP_ID],
-        tramStopNumber: stopNameData[1],
+        tramStopNumber: stopNameData[1].toUpperCase(),
         tramStopName: stopNameData[2],
         suburb: stopNameData[3],
         mykiZones: inputTramStop.properties.TICKETZONE.split(','),
