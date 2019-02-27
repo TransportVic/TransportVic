@@ -1,5 +1,5 @@
 const DatabaseConnection = require('../application/database/DatabaseConnection');
-const metroTrainStations = require('./metro-train-stations.json').features;
+const metroTrainStations = require('./data/metro-train-stations.json').features;
 const config = require('../config.json');
 const crypto = require('crypto');
 

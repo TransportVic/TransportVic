@@ -1,5 +1,5 @@
 const DatabaseConnection = require('../application/database/DatabaseConnection');
-const metroBusServices = require('./metro-bus-services.json').features;
+const metroBusServices = require('./data/metro-bus-services.json').features;
 const config = require('../config.json');
 const { getServiceNumber, getServiceVariant, adjustDestination } = require('../utils/bus-service');
 const ptvAPI = require('../utils/ptv-api');

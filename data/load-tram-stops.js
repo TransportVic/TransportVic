@@ -1,8 +1,8 @@
 const DatabaseConnection = require('../application/database/DatabaseConnection');
-const metroTramStops = require('./metro-tram-stops.json').features;
+const metroTramStops = require('./data/metro-tram-stops.json').features;
 const config = require('../config.json');
 const crypto = require('crypto');
-const freeTramZonePolygon = require('./free-tram-zone');
+const freeTramZonePolygon = require('./data/free-tram-zone');
 
 let database = new DatabaseConnection(config.databaseURL, 'TransportVic');
 let tramStops = null;

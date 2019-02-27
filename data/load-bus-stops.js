@@ -1,5 +1,5 @@
 const DatabaseConnection = require('../application/database/DatabaseConnection');
-const metroBusStops = require('./metro-bus-stops.json').features;
+const metroBusStops = require('./data/metro-bus-stops.json').features;
 const config = require('../config.json');
 const crypto = require('crypto');
 
@@ -83,7 +83,7 @@ database.connect({
             busStops.countDocuments({ busStopName: stop.busStopName, suburb: stop.suburb }, (err, present) => {
                 if (present) {
                     delete stop.busStopCodes;
-                    
+
                     busStops.updateDocument({ busStopName: stop.busStopName, suburb: stop.suburb }, {
                         $set: stop
                     }, resolve);
