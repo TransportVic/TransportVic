@@ -97,16 +97,6 @@ database.connect({
     });
 
     Promise.all(promises).then(() => {
-        tramStops.findDocuments({
-            location: {
-                $geoWithin: {
-                    $geometry: {
-                        type: 'Polygon',
-                        coordinates: freeTramZonePolygon
-                    }
-                }
-            }
-        }).toArray((err, stops)=>console.log(err, stops));
         tramStops.updateDocuments({
             location: {
                 $geoWithin: {
