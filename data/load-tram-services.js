@@ -65,6 +65,7 @@ database.connect({
     poolSize: 100
 }, (err) => {
     tramServices = database.getCollection('tram services');
+    tramServices.createIndex({ serviceNumber: 1, destination: 1 });
 
     loadRouteIDs(() => {
         allServices.forEach(serviceDirections => {
@@ -74,8 +75,10 @@ database.connect({
 
                     tramServices.countDocuments({ serviceNumber: direction.serviceNumber }, (err, present) => {
                         if (present == 2) {
-                            delete direction.stops;
-                            delete direction.destination;
+                            if (new Date() - (direction.lastUpdated || new Date()) < 1000 * 60 * 60 * 24 * 7) { // last update less than a week
+                                delete direction.stops;
+                                delete direction.ptvRouteID;
+                            }
 
                             tramServices.updateDocument({ serviceNumber: direction.serviceNumber }, {
                                 $set: direction

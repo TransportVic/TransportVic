@@ -33,7 +33,8 @@ function transformBusStop(inputBusStop) {
                 inputBusStop.properties.LATITUDE]
             ]
         },
-        busStopCodes: []
+        busStopCodes: [],
+        lastUpdated: new Date()
     }
 }
 
@@ -75,6 +76,7 @@ database.connect({
     poolSize: 100
 }, (err) => {
     busStops = database.getCollection('bus stops');
+    busStops.createIndex({ location: "2dsphere", busStopName: 1, gtfsBusStopCodes: 1, busStopCodes: 1 });
 
     transformedStops.forEach(stop => {
         promises.push(new Promise(resolve => {
@@ -82,7 +84,10 @@ database.connect({
 
             busStops.countDocuments({ busStopName: stop.busStopName, suburb: stop.suburb }, (err, present) => {
                 if (present) {
-                    delete stop.busStopCodes;
+
+                    if (new Date() - (stop.lastUpdated || new Date()) < 1000 * 60 * 60 * 24 * 7) { // last update less than a week
+                        delete stop.busStopCodes;
+                    }
 
                     busStops.updateDocument({ busStopName: stop.busStopName, suburb: stop.suburb }, {
                         $set: stop

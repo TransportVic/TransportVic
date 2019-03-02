@@ -41,9 +41,11 @@ database.connect({
             promises.push(new Promise(resolve => {
                 trainStations.countDocuments({ lineName: trainLine.lineName }, (err, present) => {
                     if (present) {
-                        delete trainLine.directions;
-                        delete trainLine.stations;
-                        trainLine.skeleton = false;
+                        if (new Date() - (trainLine.lastUpdated || new Date()) < 1000 * 60 * 60 * 24 * 7) { // last update less than a week
+                            delete trainLine.directions;
+                            delete trainLine.stations;
+                            trainLine.skeleton = false;
+                        }
 
                         trainStations.updateDocument({ lineName: trainLine.lineName }, {
                             $set: trainLine

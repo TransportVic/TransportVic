@@ -32,7 +32,8 @@ function transformTrainStation(inputTrainStation) {
                 inputTrainStation.properties.LATITUDE]
             ]
         },
-        trainStationID: 0
+        trainStationID: 0,
+        lastUpdated: new Date()
     }
 }
 
@@ -50,6 +51,10 @@ database.connect({
 
             trainStations.countDocuments({ stationName: station.stationName, suburb: station.suburb }, (err, present) => {
                 if (present) {
+                    if (new Date() - (station.lastUpdated || new Date()) < 1000 * 60 * 60 * 24 * 7) { // last update less than a week
+                        delete station.trainStationID;
+                    }
+
                     trainStations.updateDocument({ stationName: station.stationName, suburb: station.suburb }, {
                         $set: station
                     }, resolve);

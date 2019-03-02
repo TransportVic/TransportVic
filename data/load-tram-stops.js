@@ -36,7 +36,8 @@ function transformTramStop(inputTramStop) {
                 inputTramStop.properties.LATITUDE]
             ]
         },
-        tramTrackerID: 0
+        tramTrackerID: 0,
+        lastUpdated: new Date()
     }
 }
 

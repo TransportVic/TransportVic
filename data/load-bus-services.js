@@ -87,6 +87,7 @@ database.connect({
     poolSize: 100
 }, (err) => {
     busServices = database.getCollection('bus services');
+    busServices.createIndex({ fullService: 1 });
 
     loadRouteIDs(() => {
         allServices.forEach(serviceDirections => {
@@ -100,8 +101,12 @@ database.connect({
 
                     busServices.countDocuments({ fullService: direction.fullService, destination: direction.destination }, (err, present) => {
                         if (present) {
-                            delete direction.directionID;
-                            delete direction.stops;
+                            if (new Date() - direction.lastUpdated < 1000 * 60 * 60 * 24 * 7) { // last update less than a week
+                                delete direction.ptvRouteID;
+                                delete direction.directionID;
+                                delete direction.stops;
+                                direction.skeleton = false;
+                            }
 
                             busServices.updateDocument({ fullService: direction.fullService, destination: direction.destination }, {
                                 $set: direction
