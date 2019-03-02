@@ -4,6 +4,13 @@
         metro: 'Metropolitian',
         telebus: 'TeleBus'
     };
+    
+for trainStation in trainStations
+    a.trainStation.result
+        div.leftContainer
+            img(src='/static/images/bus-stop.svg')
+        div.resultDetails
+            span=trainStation.stationName
 
 for serviceNumber in distinctBusServices
     - let service = busServices.filter(svc => svc.fullService === serviceNumber);

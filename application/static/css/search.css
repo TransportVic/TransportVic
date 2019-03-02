@@ -53,6 +53,14 @@ div#results {
   background-color: #353799;
 }
 
+.trainStation .leftContainer {
+    background-color: #3483db;
+}
+
+.trainStation:nth-child(even) .leftContainer {
+    background-color: #2370c5;
+}
+
 .leftContainer img {
   width: calc(3vw + 3vh);
   height: calc(3vw + 3vh);

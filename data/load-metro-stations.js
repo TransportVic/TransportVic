@@ -32,7 +32,8 @@ function transformTrainStation(inputTrainStation) {
                 inputTrainStation.properties.LATITUDE]
             ]
         },
-        trainStationID: 0,
+        ptvTrainStationID: 0,
+        gtfsTrainStationCode: inputTrainStation.properties.STOP_ID,
         lastUpdated: new Date()
     }
 }
@@ -52,7 +53,7 @@ database.connect({
             trainStations.countDocuments({ stationName: station.stationName, suburb: station.suburb }, (err, present) => {
                 if (present) {
                     if (new Date() - (station.lastUpdated || new Date()) < 1000 * 60 * 60 * 24 * 7) { // last update less than a week
-                        delete station.trainStationID;
+                        delete station.ptvTrainStationID;
                     }
 
                     trainStations.updateDocument({ stationName: station.stationName, suburb: station.suburb }, {
