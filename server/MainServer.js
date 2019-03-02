@@ -24,8 +24,12 @@ module.exports = class MainServer {
     initDatabaseConnection(app, callback) {
         let database = new DatabaseConnection(config.databaseURL, 'TransportVic');
         database.connect((err) => {
-            database.createCollection('bus services').createIndex({ fullService: 1 });
-            database.createCollection('bus stops').createIndex({ location: "2dsphere", busStopName: 1, gtfsBusStopCodes: 1, busStopCodes: 1 });
+            database.getCollection('bus services').createIndex({ fullService: 1 });
+            database.getCollection('bus stops').createIndex({ location: "2dsphere", busStopName: 1, gtfsBusStopCodes: 1, busStopCodes: 1 });
+            database.getCollection('train lines').createIndex({ lineName: 1 });;
+            database.getCollection('train stations').createIndex({ location: "2dsphere", stationName: 1 });;
+            database.getCollection('tram services').createIndex({ serviceNumber: 1, destination: 1 });;
+            database.getCollection('tram stops').createIndex({ location: "2dsphere", tramStopName: 1, tramStopCodes: 1, tramTrackerID: 1 });;
 
             app.use((req, res, next) => {
                 res.db = database;
