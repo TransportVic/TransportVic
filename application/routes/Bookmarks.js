@@ -19,7 +19,7 @@ router.post('/', (req, res) => {
             return { bookmarkCode };
         })
     }).toArray((err, busStops) => {
-        res.render('search/results', {busStops, busServices: []});
+        res.render('search/results', {busStops, busServices: [], trainStations: []});
     });;
 
 });

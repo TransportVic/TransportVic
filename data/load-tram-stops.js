@@ -11,7 +11,7 @@ let promises = [];
 
 function hashTramStop(tramStop) {
     let hash = crypto.createHash('sha1');
-    hash.update(tramStop.tramStopName + tramStop.suburb);
+    hash.update('tramstop-' + tramStop.tramStopName + tramStop.suburb);
 
     return hash.digest('hex').slice(0, 6);
 }

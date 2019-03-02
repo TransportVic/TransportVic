@@ -10,7 +10,7 @@ let promises = [];
 
 function hashTrainStation(trainStation) {
     let hash = crypto.createHash('sha1');
-    hash.update(trainStation.stationName + trainStation.suburb);
+    hash.update('trainstation-' + trainStation.stationName + trainStation.suburb);
 
     return hash.digest('hex').slice(0, 6);
 }
