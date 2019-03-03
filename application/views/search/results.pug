@@ -8,7 +8,7 @@
 for trainStation in trainStations
     a.trainStation.result
         div.leftContainer
-            img(src='/static/images/bus-stop.svg')
+            img(src='/static/images/metro-icon.svg')
         div.resultDetails
             span=trainStation.stationName
 
@@ -33,6 +33,6 @@ for serviceNumber in distinctBusServices
 for busStop in busStops
     a(href=`/bus/timings/${busStop.gtfsBusStopCodes[0]}`).busStop.result
         div.leftContainer
-            img(src='/static/images/bus-stop.svg')
+            img(src='/static/images/bus-icon.svg')
         div.resultDetails
             span=busStop.busStopName
