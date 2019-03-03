@@ -12,7 +12,7 @@ for platform in Object.keys(timings).sort((a, b) => a - b)
             - let departures = timings[platform][lineName][destinationName];
             
             div.trainService
-                span(class='trainPlatformData ' + lineName.toLowerCase().replace(/ /g, '-') + '-line')
+                span(class='trainPlatformData ' + lineName.toLowerCase().replace(/[ &]/g, '-').replace(/--+/g, '-') + '-line')
                     span Platform
                     span=platform
                 
@@ -37,9 +37,9 @@ for platform in Object.keys(timings).sort((a, b) => a - b)
                         div(class='trainArrival ' + headwayDevianceClass)
                             - let timeToArrival = getTimingsDifference(timing.arrivalTime, +new Date());
                             if timeToArrival.minutes == 0
-                                span Arr
+                                span='Arr' + (timing.hasExpress ? ' *' : '')
                             else
-                                span=timeToArrival.minutes
+                                span=timeToArrival.minutes + (timing.hasExpress ? ' *' : '')
                 
                             if Math.abs(timing.headwayDeviance) > 90
                                 -

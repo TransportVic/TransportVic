@@ -30,7 +30,6 @@ function getTimings(trainStationID, db, callback) {
                         return;
                     }
 
-                    // console.log(runData)
                     let headwayDeviance = null
 
                     if (departure.estimated_departure_utc) {
@@ -46,7 +45,8 @@ function getTimings(trainStationID, db, callback) {
                         arrivalTime,
                         headwayDeviance,
                         reachedPlatform,
-                        trainType
+                        trainType,
+                        hasExpress: !!runData.express_stop_count
                     });
 
                     timings[platform][lineData.lineName][destination] =

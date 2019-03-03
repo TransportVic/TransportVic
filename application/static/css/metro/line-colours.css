@@ -78,11 +78,11 @@ div.trainService:nth-child(even) .werribee-line {
     background-color: #1b8013;
 }
 
-.willamstown-line {
+.williamstown-line {
     background-color: #219f18;
 }
 
-div.trainService:nth-child(even) .willamstown-line {
+div.trainService:nth-child(even) .williamstown-line {
     background-color: #1b8013;
 }
 
@@ -124,4 +124,12 @@ div.trainService:nth-child(even) .pakenham-line {
 
 div.trainService:nth-child(even) .sandringham-line {
     background-color: #d639cc;
+}
+
+.showgrounds-flemington-line {
+    background-color: #8f8f8f;
+}
+
+div.trainService:nth-child(even) .showgrounds-flemington-line {
+    background-color: #636363;
 }
