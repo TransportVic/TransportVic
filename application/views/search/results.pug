@@ -12,6 +12,13 @@ for trainStation in trainStations
         div.resultDetails
             span=trainStation.stationName
 
+for tramStop in tramStops
+    a.tramStop.result
+        div.leftContainer
+            img(src='/static/images/tram-icon.svg')
+        div.resultDetails
+            span=tramStop.tramStopName
+
 for serviceNumber in distinctBusServices
     - let service = busServices.filter(svc => svc.fullService === serviceNumber);
     

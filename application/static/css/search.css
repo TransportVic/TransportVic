@@ -61,6 +61,14 @@ div#results {
     background-color: #2370c5;
 }
 
+.tramStop .leftContainer {
+    background-color: #1a942a;
+}
+
+.tramStop:nth-child(even) .leftContainer {
+    background-color: #20b734;
+}
+
 .leftContainer img {
   width: calc(3vw + 3vh);
   height: calc(3vw + 3vh);

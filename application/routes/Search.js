@@ -41,6 +41,20 @@ function getTrainStations(query, db, callback) {
     }
 }
 
+function getTramStops(query, db, callback) {
+    let tramStopQueries = [{ tramTrackerID: query }];
+    if (query.length > 4) {
+        tramStopQueries.push({ tramStopName: new RegExp(query, 'i') });
+    }
+
+    db.getCollection('tram stops').findDocuments({
+        $or: tramStopQueries
+    }).toArray((err, tramStops) => {
+        tramStops = tramStops.slice(0, 10);
+        callback(tramStops); // need to update
+    });
+}
+
 router.post('/', (req, res) => {
     let {query} = req.body;
 
@@ -54,7 +68,8 @@ router.post('/', (req, res) => {
     let fields = {
         busServices: getServiceData,
         busStops: getBusStops,
-        trainStations: getTrainStations
+        trainStations: getTrainStations,
+        tramStops: getTramStops
     };
 
     Object.keys(fields).forEach(fieldName => {

@@ -37,6 +37,7 @@ function transformTramStop(inputTramStop) {
             ]
         },
         tramTrackerID: 0,
+        ptvTramStopID: 0,
         lastUpdated: new Date()
     }
 }
