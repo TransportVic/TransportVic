@@ -101,6 +101,7 @@ module.exports = class MainServer {
         let routers = {
             Index: '/',
             BusTimings: '/bus/timings',
+            MetroTimings: '/metro/timings',
             Search: '/search',
             NearbyPTStops: '/nearby',
             Bookmarks: '/bookmarks'

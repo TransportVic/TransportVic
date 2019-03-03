@@ -1,0 +1,49 @@
+-
+    function getTimingsDifference(a, b) {
+        let d = new Date(Math.abs(a - b));
+        return {minutes: d.getUTCMinutes() + d.getUTCHours() * 60, seconds: d.getUTCSeconds()}
+    };
+
+for platform in Object.keys(timings).sort((a, b) => a - b)
+    - let lines = Object.keys(timings[platform]);
+    for lineName in lines.sort((a, b) => a.length - b.length)
+        - let destinations = timings[platform][lineName];
+        for destinationName in Object.keys(destinations).sort((a, b) => a.length - b.length)
+            - let departures = timings[platform][lineName][destinationName];
+            
+            div.trainService
+                span(class='trainPlatformData ' + lineName.toLowerCase().replace(/ /g, '-') + '-line')
+                    span Platform
+                    span=platform
+                
+                a(href=`/metro/timings/${destinationName.toLowerCase().replace(/ /g, '-')}`).destination
+                    span=lineName + ' Line Towards'
+                    span=destinationName
+
+                div.timings
+                    for i in Array(4 - departures.slice(0, 4).length)
+                        div.trainArrival(style='display: none')
+                    for timing in departures.slice(0, 4)
+                        -
+                            let headwayDevianceClass = 'unknown'
+                
+                            if (timing.headwayDeviance > 90)
+                                headwayDevianceClass = 'early'
+                            else if (timing.headwayDeviance < -90)
+                                headwayDevianceClass = 'late'
+                            else if (timing.headwayDeviance !== null)
+                                headwayDevianceClass = 'on-time'
+                
+                        div(class='trainArrival ' + headwayDevianceClass)
+                            - let timeToArrival = getTimingsDifference(timing.arrivalTime, +new Date());
+                            if timeToArrival.minutes == 0
+                                span Arr
+                            else
+                                span=timeToArrival.minutes
+                
+                            if Math.abs(timing.headwayDeviance) > 90
+                                -
+                                    let minutes = Math.floor(Math.abs(timing.headwayDeviance) / 60);
+                                    let seconds = [0].concat([...(Math.abs(timing.headwayDeviance) % 60).toFixed(0)]).slice(-2).join('');
+                
+                                span=minutes + ':' + seconds

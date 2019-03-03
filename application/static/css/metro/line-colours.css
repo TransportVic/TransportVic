@@ -1,0 +1,127 @@
+.glen-waverley-line {
+    background-color: #1c1e97;
+}
+
+div.trainService:nth-child(even) .glen-waverley-line {
+    background-color: #151670;
+}
+
+.alamein-line {
+    background-color: #1c1e97;
+}
+
+div.trainService:nth-child(even) .alamein-line {
+    background-color: #151670;
+}
+
+.belgrave-line {
+    background-color: #1c1e97;
+}
+
+div.trainService:nth-child(even) .belgrave-line {
+    background-color: #151670;
+}
+
+.lilydale-line {
+    background-color: #1c1e97;
+}
+
+div.trainService:nth-child(even) .lilydale-line {
+    background-color: #151670;
+}
+
+.mernda-line {
+    background-color: #ef2c20;
+}
+
+div.trainService:nth-child(even) .mernda-line {
+    background-color: #c31e14;
+}
+
+.hurstbridge-line {
+    background-color: #ef2c20;
+}
+
+div.trainService:nth-child(even) .hurstbridge-line {
+    background-color: #c31e14;
+}
+
+.upfield-line {
+    background-color: #cace29;
+}
+
+div.trainService:nth-child(even) .upfield-line {
+    background-color: #aaad23;
+}
+
+.craigieburn-line {
+    background-color: #cace29;
+}
+
+div.trainService:nth-child(even) .craigieburn-line {
+    background-color: #aaad23;
+}
+
+.sunbury-line {
+    background-color: #cace29;
+}
+
+div.trainService:nth-child(even) .sunbury-line {
+    background-color: #aaad23;
+}
+
+.werribee-line {
+    background-color: #219f18;
+}
+
+div.trainService:nth-child(even) .werribee-line {
+    background-color: #1b8013;
+}
+
+.willamstown-line {
+    background-color: #219f18;
+}
+
+div.trainService:nth-child(even) .willamstown-line {
+    background-color: #1b8013;
+}
+
+.frankston-line {
+    background-color: #219f18;
+}
+
+div.trainService:nth-child(even) .frankston-line {
+    background-color: #1b8013;
+}
+
+.stony-point-line {
+    background-color: #219f18;
+}
+
+div.trainService:nth-child(even) .stony-point-line {
+    background-color: #1b8013;
+}
+
+.cranbourne-line {
+    background-color: #56b7d6;
+}
+
+div.trainService:nth-child(even) .cranbourne-line {
+    background-color: #31a4c8;
+}
+
+.pakenham-line {
+    background-color: #56b7d6;
+}
+
+div.trainService:nth-child(even) .pakenham-line {
+    background-color: #31a4c8;
+}
+
+.sandringham-line {
+    background-color: #ee67e6;
+}
+
+div.trainService:nth-child(even) .sandringham-line {
+    background-color: #d639cc;
+}

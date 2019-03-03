@@ -1,0 +1,158 @@
+div.trainService {
+    background-color: #2a2a2a;
+
+    display: flex;
+    height: calc(7vw + 7vh);
+}
+
+div.trainService:nth-child(even) {
+    background-color: #202020;
+}
+
+span.trainPlatformData {
+    width: calc(5vw + 5vh);
+    height: calc(7vw + 7vh);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    color: #d2d2d2;
+}
+
+span.trainPlatformData span {
+    width: calc(5vw + 5vh);
+    text-align: center;
+}
+
+span.trainPlatformData span:nth-child(1) {
+    font-size: calc(1vw + 1vh);
+    margin-top: calc(-0.5vw - 0.5vh);
+}
+
+span.trainPlatformData span:nth-child(2) {
+    font-size: calc(2.5vw + 2.5vh);
+    margin-top: calc(-0.5vw - 0.5vh);
+}
+
+a.destination {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+
+    width: 100%;
+}
+
+a.destination span {
+    margin-left: calc(1vw + 1vh);
+}
+
+a.destination span:nth-child(1) {
+    font-size: calc(0.7vw + 0.7vh);
+
+    color: #8f8f8f;
+}
+
+a.destination span:nth-child(2) {
+    font-size: calc(1.6vw + 1.6vh);
+    margin-top: calc(-0.4vw - 0.4vh);
+
+    color: #c5c5c5;
+}
+
+div.timings {
+    margin-left: auto;
+
+    display: flex;
+}
+
+div.trainArrival {
+    display: flex;
+    flex-direction: column;
+
+    width: calc(2.6vw + 2.6vh);
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: calc(1.05vw + 1.05vh);
+    color: #101010;
+}
+
+div.trainService:nth-child(odd) div.trainArrival.early:nth-child(odd) {
+    background-color: #6fd6e7;
+}
+
+div.trainService:nth-child(odd) div.trainArrival.early:nth-child(even) {
+    background-color: #64c0cf;
+}
+
+div.trainService:nth-child(odd) div.trainArrival.on-time:nth-child(odd) {
+    background-color: #60bd29;
+}
+
+div.trainService:nth-child(odd) div.trainArrival.on-time:nth-child(even) {
+    background-color: #58ad25;
+}
+
+div.trainService:nth-child(odd) div.trainArrival.late:nth-child(odd) {
+    background-color: #b23624;
+}
+
+div.trainService:nth-child(odd) div.trainArrival.late:nth-child(even) {
+    background-color: #a13121;
+}
+
+div.trainService:nth-child(odd) div.trainArrival.unknown:nth-child(odd) {
+    background-color: #9c9c9c;
+}
+
+div.trainService:nth-child(odd) div.trainArrival.unknown:nth-child(even) {
+    background-color: #a8a8a8;
+}
+
+
+
+div.trainService:nth-child(even) div.trainArrival.early:nth-child(even) {
+    background-color: #6fd6e7;
+}
+
+div.trainService:nth-child(even) div.trainArrival.early:nth-child(odd) {
+    background-color: #64c0cf;
+}
+
+div.trainService:nth-child(even) div.trainArrival.on-time:nth-child(even) {
+    background-color: #60bd29;
+}
+
+div.trainService:nth-child(even) div.trainArrival.on-time:nth-child(odd) {
+    background-color: #58ad25;
+}
+
+div.trainService:nth-child(even) div.trainArrival.late:nth-child(even) {
+    background-color: #b23624;
+}
+
+div.trainService:nth-child(even) div.trainArrival.late:nth-child(odd) {
+    background-color: #a13121;
+}
+
+div.trainService:nth-child(even) div.trainArrival.unknown:nth-child(even) {
+    background-color: #9c9c9c;
+}
+
+div.trainService:nth-child(even) div.trainArrival.unknown:nth-child(odd) {
+    background-color: #a8a8a8;
+}
+
+img#bookmark-status {
+    width: calc(2.8vw + 2.8vh);
+    height: calc(2.8vw + 2.8vh);
+}
+
+#header > span {
+    font-size: calc((100vw + 100vh) * .013);
+    margin: calc(-.3vw - .3vh) 0 0 calc(1vw + 1vh);
+}
