@@ -6,7 +6,7 @@
     };
     
 for trainStation in trainStations
-    a.trainStation.result
+    a(href=`/metro/timings/${trainStation.stationName.slice(0, -16).toLowerCase().replace(/ /g, '-')}`).trainStation.result
         div.leftContainer
             img(src='/static/images/metro-icon.svg')
         div.resultDetails
