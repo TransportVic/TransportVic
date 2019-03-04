@@ -2,6 +2,7 @@ const DatabaseConnection = require('../application/database/DatabaseConnection')
 const metroBusStops = require('./data/metro-bus-stops.json').features;
 const config = require('../config.json');
 const crypto = require('crypto');
+const busStopOverrides = require('./data/bus-stop-override');
 
 let database = new DatabaseConnection(config.databaseURL, 'TransportVic');
 let busStops = null;
@@ -17,10 +18,20 @@ function hashBusStop(busStop) {
 
 function transformBusStop(inputBusStop) {
     let stopNameData = inputBusStop.properties.STOP_NAME.match(/([^\(]+) \((.+)+\)/);
-    if (!stopNameData) stopNameData = [inputBusStop.properties.STOP_NAME, '']
+    if (!stopNameData) stopNameData = [inputBusStop.properties.STOP_NAME, ''];
+
+    let stopID = inputBusStop.properties.STOP_ID;
+    let additionalGTFSBSCs = [];
+
+    if (stopID in busStopOverrides) {
+        if (busStopOverrides[stopID] == null)
+            return null;
+        if (busStopOverrides[stopID] instanceof Array)
+            additionalGTFSBSCs = busStopOverrides[stopID];
+    }
 
     return {
-        gtfsBusStopCodes: [inputBusStop.properties.STOP_ID],
+        gtfsBusStopCodes: [stopID].concat(additionalGTFSBSCs),
         busStopName: stopNameData[1],
         suburb: stopNameData[2],
         mykiZones: inputBusStop.properties.TICKETZONE.split(','),
@@ -57,7 +68,9 @@ function mergeBusStops(allBusStops) {
     return Object.values(final);
 }
 
-let transformedStops = Object.values(mergeBusStops(metroBusStops).map(transformBusStop).reduce((acc, busStop) => {
+let transformedStops = Object.values(mergeBusStops(metroBusStops.concat(Object.values(busStopOverrides).filter(e => e && !!e.geometry))).map(transformBusStop).reduce((acc, busStop) => {
+    if (!busStop) return acc;
+
     if (acc[busStop.busStopName + busStop.suburb]) {
         let svc = acc[busStop.busStopName + busStop.suburb];
 
