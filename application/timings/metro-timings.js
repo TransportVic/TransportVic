@@ -25,6 +25,11 @@ function getTimings(trainStationID, db, callback) {
                     let reachedPlatform = departure.at_platform;
                     let trainType = (runData.vehicle_descriptor || {}).description;
 
+                    if (departure.route_id === 13) {
+                        if (trainStationID === 1073) platform = 3;
+                        else platform = 1;
+                    }
+
                     if (new Date() - arrivalTime > 1000 * 60 * 1 || arrivalTime - new Date() > 1000 * 60 * 60 * 3 || platform == null) { // train arrives beyond 3hrs
                         resolve();
                         return;
