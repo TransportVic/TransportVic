@@ -1,3 +1,37 @@
+div#destinationBar {
+    background-color: #0f0f0f;
+    width: 100vw;
+    height: calc(5vw + 5vh);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+div#destinationBar > * {
+    margin-left: calc(.6vw + .6vh);
+    margin-right: calc(.6vw + .6vh);
+}
+
+div#destinationBar > span {
+    font-size: calc(1.4vw + 1.4vh);
+}
+
+input#destination {
+    height: calc(3.3vw + 3.3vh);
+    width: calc(20vw + 20vh);
+    border: none;
+    border-radius: calc(1vw + 1vh);
+    outline: none;
+    text-align: center;
+    font-size: calc(2.2vw + 2.2vh);
+    padding-bottom: calc(.2vw + .2vh);
+    background-color: #e0e0e0;
+    appearance: none;
+    -moz-appearance: textfield;
+
+    font-family: BreeSerif;
+}
+
 div.trainService {
     background-color: #2a2a2a;
 

@@ -21,6 +21,7 @@ function getTimings(trainStationID, db, callback) {
                     let platform = departure.platform_number;
                     let runData = data.runs[departure.run_id];
                     let destination = runData.destination_name;
+                    let directionID = runData.direction_id;
                     let arrivalTime = new Date(departure.estimated_departure_utc || departure.scheduled_departure_utc);
                     let reachedPlatform = departure.at_platform;
                     let trainType = (runData.vehicle_descriptor || {}).description;
@@ -44,6 +45,7 @@ function getTimings(trainStationID, db, callback) {
                     timings.push({
                         trainLine: lineData.lineName,
                         destination,
+                        directionID,
                         platform,
                         arrivalTime,
                         headwayDeviance,

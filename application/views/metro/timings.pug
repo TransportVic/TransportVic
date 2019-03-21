@@ -6,6 +6,9 @@ block header
     span#title=trainStation.stationName
 
 block content
+    div#destinationBar
+        span Heading towards
+        input(aria-label='Destination')#destination
     include ../templates/metro-timings
     
 block css
@@ -16,6 +19,7 @@ block scripts
     script(src='/static/scripts/bookmark-helper.js' async)
     script(src='/static/scripts/bookmark-toggle.js' async)
     script window.bookmarkCode = "#{trainStation.bookmarkCode}";
+    script(src='/static/scripts/metro-timings.js' async)
     
 block links
     img(onclick=`toggleBookmark(bookmarkCode)` src='/static/images/bookmark/empty.svg')#bookmark-status

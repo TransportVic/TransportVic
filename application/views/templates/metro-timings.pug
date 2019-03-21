@@ -5,7 +5,7 @@
     };
 
 for timing in timings
-    div.trainService
+    div.trainService(destination=timing.destination.toLowerCase())
         span(class='trainPlatformData ' + timing.trainLine.toLowerCase().replace(/[ &]/g, '-').replace(/--+/g, '-') + '-line')
             span Platform
             span=timing.platform
