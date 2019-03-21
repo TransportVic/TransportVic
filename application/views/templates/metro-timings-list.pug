@@ -3,7 +3,11 @@
         let d = new Date(Math.abs(a - b));
         return {minutes: d.getUTCMinutes() + d.getUTCHours() * 60, seconds: d.getUTCSeconds()}
     };
-
+    
+div#destinationBar
+    span Heading towards
+    input(aria-label='Destination')#destination
+    
 for timing in timings
     div.trainService(destination=timing.destination.toLowerCase())
         span(class='trainPlatformData ' + timing.trainLine.toLowerCase().replace(/[ &]/g, '-').replace(/--+/g, '-') + '-line')

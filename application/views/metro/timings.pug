@@ -6,10 +6,11 @@ block header
     span#title=trainStation.stationName
 
 block content
-    div#destinationBar
-        span Heading towards
-        input(aria-label='Destination')#destination
-    include ../templates/metro-timings
+    if lineCount <= 4
+        include ../templates/metro-timings-list
+    else
+    
+        include ../templates/metro-timings-line
     
 block css
     link(rel='stylesheet' href='/static/css/metro/timings.css')

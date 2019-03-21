@@ -14,8 +14,8 @@ router.get('/:stationName', (req, res) => {
             return;
         }
 
-        getTimings(trainStation.ptvTrainStationID, res.db, timings => {
-            res.render('metro/timings', { timings, trainStation });
+        getTimings(trainStation.ptvTrainStationID, res.db, (timings, lineCount) => {
+            res.render('metro/timings', { timings, trainStation, lineCount });
         });
     });
 });

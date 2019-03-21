@@ -15,6 +15,8 @@ function getTimings(trainStationID, db, callback) {
         let timings = [];
         let promises = [];
 
+        let lines = [];
+
         data.departures.forEach(departure => {
             promises.push(new Promise(resolve => {
                 db.getCollection('train lines').findDocument({ ptvRouteID: departure.route_id }, (err, lineData) => {
@@ -54,7 +56,9 @@ function getTimings(trainStationID, db, callback) {
                         hasExpress: !!runData.express_stop_count
                     });
 
-                    timings = timings.sort((a, b) => a.arrivalTime - b.arrivalTime)
+                    timings = timings.sort((a, b) => a.arrivalTime - b.arrivalTime);
+
+                    if (!lines.includes(lineData.lineName)) lines.push(lineData.lineName);
 
                     resolve();
                 });
@@ -63,7 +67,7 @@ function getTimings(trainStationID, db, callback) {
 
         Promise.all(promises).then(() => {
             timingsCache.put(trainStationID, timings);
-            callback(timings);
+            callback(timings, lines.length);
         });
     });
 }

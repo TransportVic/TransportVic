@@ -115,6 +115,11 @@ div.trainArrival {
     color: #101010;
 }
 
+div.trainArrival.regular {
+    width: calc(2.6vw + 2.6vh);
+    font-size: calc(1.05vw + 1.05vh);
+}
+
 div.trainService:nth-child(odd) div.trainArrival.early:nth-child(odd) {
     background-color: #6fd6e7;
 }
