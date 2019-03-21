@@ -12,7 +12,7 @@ function getTimings(trainStationID, db, callback) {
     }
 
     ptvAPI.makeRequest('/v3/departures/route_type/0/stop/' + trainStationID + '?max_results=6&expand=run', (err, data) => {
-        let timings = {};
+        let timings = [];
         let promises = [];
 
         data.departures.forEach(departure => {
@@ -41,12 +41,10 @@ function getTimings(trainStationID, db, callback) {
                         headwayDeviance = (new Date(departure.scheduled_departure_utc) - new Date(departure.estimated_departure_utc)) / 1000;
                     }
 
-                    timings[platform] = timings[platform] || {};
-                    timings[platform][lineData.lineName] = timings[platform][lineData.lineName] || {};
-                    timings[platform][lineData.lineName][destination] = timings[platform][lineData.lineName][destination] || [];
-                    timings[platform][lineData.lineName][destination].push({
+                    timings.push({
                         trainLine: lineData.lineName,
                         destination,
+                        platform,
                         arrivalTime,
                         headwayDeviance,
                         reachedPlatform,
@@ -54,8 +52,7 @@ function getTimings(trainStationID, db, callback) {
                         hasExpress: !!runData.express_stop_count
                     });
 
-                    timings[platform][lineData.lineName][destination] =
-                        timings[platform][lineData.lineName][destination].sort((a, b) => a.arrivalTime - b.arrivalTime)
+                    timings = timings.sort((a, b) => a.arrivalTime - b.arrivalTime)
 
                     resolve();
                 });

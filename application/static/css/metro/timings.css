@@ -72,12 +72,12 @@ div.trainArrival {
     display: flex;
     flex-direction: column;
 
-    width: calc(2.6vw + 2.6vh);
+    width: calc(4vw + 4vh);
 
     align-items: center;
     justify-content: center;
 
-    font-size: calc(1.05vw + 1.05vh);
+    font-size: calc(1.5vw + 1.5vh);
     color: #101010;
 }
 
