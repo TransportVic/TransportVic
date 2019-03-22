@@ -4,12 +4,11 @@
         return {minutes: d.getUTCMinutes() + d.getUTCHours() * 60, seconds: d.getUTCSeconds()}
     };
     
-div#destinationBar
-    span Heading towards
-    input(aria-label='Destination')#destination
+div#filterBar
+    input(aria-label='Destination or Platform Number' placeholder='Destination or Platform Number')#filter
     
 for timing in timings
-    div.trainService(destination=timing.destination.toLowerCase())
+    div.trainService(destination=timing.destination.toLowerCase() platform=timing.platform)
         span(class='trainPlatformData ' + timing.trainLine.toLowerCase().replace(/[ &]/g, '-').replace(/--+/g, '-') + '-line')
             span Platform
             span=timing.platform

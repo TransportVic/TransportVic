@@ -6,11 +6,7 @@ block header
     span#title=trainStation.stationName
 
 block content
-    if lineCount <= 4
-        include ../templates/metro-timings-list
-    else
-    
-        include ../templates/metro-timings-line
+    include ../templates/metro-timings-list
     
 block css
     link(rel='stylesheet' href='/static/css/metro/timings.css')

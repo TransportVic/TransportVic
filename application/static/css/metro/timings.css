@@ -1,4 +1,4 @@
-div#destinationBar {
+div#filterBar {
     background-color: #0f0f0f;
     width: 100vw;
     height: calc(5vw + 5vh);
@@ -7,16 +7,7 @@ div#destinationBar {
     justify-content: center;
 }
 
-div#destinationBar > * {
-    margin-left: calc(.6vw + .6vh);
-    margin-right: calc(.6vw + .6vh);
-}
-
-div#destinationBar > span {
-    font-size: calc(1.4vw + 1.4vh);
-}
-
-input#destination {
+input#filter {
     height: calc(3.3vw + 3.3vh);
     width: calc(20vw + 20vh);
     border: none;
@@ -30,6 +21,10 @@ input#destination {
     -moz-appearance: textfield;
 
     font-family: BreeSerif;
+}
+
+input#filter::placeholder {
+    font-size: calc(1.3vw + 1.3vh);
 }
 
 div.trainService {
