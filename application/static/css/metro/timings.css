@@ -23,8 +23,8 @@ input#filter {
     font-family: BreeSerif;
 }
 
-input#filter::placeholder {
-    font-size: calc(1.3vw + 1.3vh);
+input#filter:placeholder-shown {
+    font-size: calc(1.3vw + 1.3vh) !important;
 }
 
 div.trainService {
