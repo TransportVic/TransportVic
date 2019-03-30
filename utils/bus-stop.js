@@ -1,7 +1,15 @@
+const crypto = require('crypto');
 const ptvAPI = require('./ptv-api');
 
+function hashBusStop(busStop) {
+    let hash = crypto.createHash('sha1');
+    hash.update('busstop-' + busStop.busStopName + busStop.suburb);
+
+    return hash.digest('hex').slice(0, 6);
+}
+
 function populateBusStopData(busStop, callback) {
-    ptvAPI.makeRequest(`/v3/stops/${busStop.gtfsBusStopCodes[0]}/route_type/2?gtfs=true`, (err, data) => {
+    ptvAPI.makeRequest(`/v3/stops/${busStop.gtfsBusStopCodes[0]}/route_type/2?gtfs=true` + (busStop.suburb == '-TELEBUS' ? '&stop_location=true' : ''), (err, data) => {
         let stopData = data.stop;
         busStop.busStopCodes.push(stopData.stop_id);
 
@@ -10,6 +18,14 @@ function populateBusStopData(busStop, callback) {
                 busStop.busStopCodes.push(33430);
         }
 
+        if (busStop.suburb == '-TELEBUS') {
+            busStop.busStopName = stopData.stop_name.trim();
+            busStop.cleanBusStopName = busStop.busStopName.replace(/[^\w]/g, '-').replace(/-+/g, '-').toLowerCase();
+            busStop.suburb = stopData.stop_location.suburb;
+            busStop.cleanSuburb = busStop.suburb.toLowerCase();
+
+            busStop.bookmarkCode = hashBusStop(busStop);
+        }
 
         callback(busStop);
     });
@@ -56,5 +72,6 @@ function updateBusStopsAsNeeded(busStops, db, callback) {
 
 module.exports = {
     getBusStop,
-    updateBusStopsAsNeeded
+    updateBusStopsAsNeeded,
+    hashBusStop
 };

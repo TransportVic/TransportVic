@@ -1,20 +1,13 @@
 const DatabaseConnection = require('../application/database/DatabaseConnection');
 const metroBusStops = require('./data/metro-bus-stops.json').features;
 const config = require('../config.json');
-const crypto = require('crypto');
 const busStopOverrides = require('./data/bus-stop-override');
+const { hashBusStop } = require('../utils/bus-stop');
 
 let database = new DatabaseConnection(config.databaseURL, 'TransportVic');
 let busStops = null;
 
 let promises = [];
-
-function hashBusStop(busStop) {
-    let hash = crypto.createHash('sha1');
-    hash.update('busstop-' + busStop.busStopName + busStop.suburb);
-
-    return hash.digest('hex').slice(0, 6);
-}
 
 function transformBusStop(inputBusStop) {
     let stopNameData = inputBusStop.properties.STOP_NAME.match(/([^\(]+) \((.+)+\)/);
@@ -36,7 +29,7 @@ function transformBusStop(inputBusStop) {
         cleanBusStopName: stopNameData[1].trim().replace(/[^\w]/g, '-').replace(/-+/g, '-').toLowerCase(),
 
         suburb: stopNameData[2],
-        cleanSuburb: stopNameData[2].toLowerCase(),
+        cleanSuburb: stopNameData[2].toLowerCase().replace(/ /g, '-'),
 
         mykiZones: inputBusStop.properties.TICKETZONE.split(','),
         routes: inputBusStop.properties.ROUTEUSSP.split(','),
