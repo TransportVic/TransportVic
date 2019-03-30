@@ -118,7 +118,7 @@ function queryServiceData(query, db, callback) {
                             let termini = [updatedService.stops[0], updatedService.stops.slice(-1)[0]];
                             db.getCollection('bus stops').findDocuments({
                                 $or: termini.map(busStop => {return {
-                                    busStopName: new RegExp(busStop.busStopName, 'i'),
+                                    busStopName: new RegExp(busStop.busStopName.replace(/([*+?])/g, '\\$1'), 'i'),
                                     suburb: busStop.suburb
                                 }})
                             }).toArray((err, termini) => {
