@@ -38,7 +38,7 @@ for serviceNumber in distinctBusServices
                     span=`${service[0].destination}`
 
 for busStop in busStops
-    a(href=`/bus/timings/${busStop.gtfsBusStopCodes[0]}`).busStop.result
+    a(href=`/bus/timings/${busStop.cleanSuburb}/${busStop.cleanBusStopName}`).busStop.result
         div.leftContainer
             img(src='/static/images/bus-icon.svg')
         div.resultDetails

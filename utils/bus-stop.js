@@ -15,8 +15,8 @@ function populateBusStopData(busStop, callback) {
     });
 }
 
-function getBusStop(gtfsBusStopCode, db, callback) {
-    db.getCollection('bus stops').findDocument({ gtfsBusStopCodes: gtfsBusStopCode }, (err, busStop) => {
+function getBusStop(properties, db, callback) {
+    db.getCollection('bus stops').findDocument(properties, (err, busStop) => {
         if (!busStop) {
             callback(null);
             return;

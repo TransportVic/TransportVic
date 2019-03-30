@@ -3,10 +3,11 @@ const router = new express.Router();
 const { getTimings } = require('../timings/bus-timings');
 const { getBusStop } = require('../../utils/bus-stop');
 
-router.get('/:gftsBusStopCode', (req, res) => {
-    let {gftsBusStopCode} = req.params;
-
-    getBusStop(gftsBusStopCode, res.db, busStop => {
+router.get('/:suburb/:busStopName', (req, res) => {
+    getBusStop({
+        cleanSuburb: req.params.suburb.toLowerCase(),
+        cleanBusStopName: req.params.busStopName.toLowerCase()
+    }, res.db, busStop => {
         if (!busStop) {
             res.end(':(');
             return;

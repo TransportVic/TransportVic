@@ -76,8 +76,7 @@ function getTimingsForBusStop(busStopCode, db, callback) {
                     }, (err, destinationBusStop) => {
                         timings[serviceData.fullService][serviceData.destination].push({
                             service: serviceData.fullService,
-                            destination: serviceData.destination,
-                            destinationGTFSBusStopCode: destinationBusStop.gtfsBusStopCodes[0],
+                            destination: destinationBusStop,
                             arrivalTime,
                             headwayDeviance,
                             operators: serviceData.operators,

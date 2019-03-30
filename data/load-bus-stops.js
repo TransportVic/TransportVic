@@ -18,7 +18,7 @@ function hashBusStop(busStop) {
 
 function transformBusStop(inputBusStop) {
     let stopNameData = inputBusStop.properties.STOP_NAME.match(/([^\(]+) \((.+)+\)/);
-    if (!stopNameData) stopNameData = [inputBusStop.properties.STOP_NAME, ''];
+    if (!stopNameData) stopNameData = ['', inputBusStop.properties.STOP_NAME, '-TELEBUS'];
 
     let stopID = inputBusStop.properties.STOP_ID;
     let additionalGTFSBSCs = [];
@@ -32,8 +32,12 @@ function transformBusStop(inputBusStop) {
 
     return {
         gtfsBusStopCodes: [stopID].concat(additionalGTFSBSCs),
-        busStopName: stopNameData[1],
+        busStopName: stopNameData[1].trim(),
+        cleanBusStopName: stopNameData[1].trim().replace(/[^\w]/g, '-').replace(/-+/g, '-').toLowerCase(),
+
         suburb: stopNameData[2],
+        cleanSuburb: stopNameData[2].toLowerCase(),
+
         mykiZones: inputBusStop.properties.TICKETZONE.split(','),
         routes: inputBusStop.properties.ROUTEUSSP.split(','),
 

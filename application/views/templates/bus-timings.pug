@@ -19,8 +19,7 @@ for serviceNumber in services
                 
                 if destinationTimings[0].serviceVariant
                     span=destinationTimings[0].serviceVariant
-                    
-            a(href=`/bus/timings/${destinationTimings[0].destinationGTFSBusStopCode}`).destination
+            a(href=`/bus/timings/${destinationTimings[0].destination.cleanSuburb}/${destinationTimings[0].destination.cleanBusStopName}`).destination
                 span Towards
                 span=destinationName
                 
