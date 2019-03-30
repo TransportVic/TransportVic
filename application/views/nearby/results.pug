@@ -17,17 +17,37 @@
         let userLat = position.latitude, userLong = position.longitude;
         let distances = positions.map(position => distance(position[1], position[0], userLat, userLong));
         
-        return distances.sort((a,  b) => a - b)[0];
+        return distances.sort((a, b) => a - b)[0];
     }
-
-for busStop in busStops
-    - let busStopPositions = busStop.location.coordinates;
-    - let distanceToBusStop = getClosestDistance(busStopPositions);
+    allStops = allStops.map(stop => {
+        let stopPositions = stop.location.coordinates;
+        let distanceToStop = getClosestDistance(stopPositions);
+        stop.distanceToStop = distanceToStop;
+        
+        stop.name = ['busStopName', 'tramStopName', 'stationName'].map(e => stop[e]).filter(Boolean)[0];
+        
+        return stop;
+    }).sort((a, b) => a.distanceToStop - b.distanceToStop);
     
-    div.busStop
-        a(href=`/bus/timings/${busStop.gtfsBusStopCodes[0]}`)
-            div(class='distanceMeter ' + getDistanceCssClass(distanceToBusStop))
-                span=Math.round(distanceToBusStop * 1000)
+    let stopNames = {
+        busStops: 'Bus stop',
+        trainStations: 'Train station',
+        tramStops: 'Tram stop'
+    };
+
+for stop in allStops
+    -
+        let {stopType, distanceToStop} = stop;
+        let url = '';
+        if (stopType == 'busStops') url = `/bus/timings/${stop.cleanSuburb}/${stop.cleanBusStopName}`
+        else if (stopType == 'trainStations') url = `/metro/timings/${stop.stationName.slice(0, -16).toLowerCase().replace(/ /g, '-')}`
+        else url = '#'
+    
+    a(href=url).stop        
+        div
+            div(class='distanceMeter ' + getDistanceCssClass(distanceToStop))
+                span=Math.round(distanceToStop * 1000)
                 span metres
-            div.busStopInfo
-                span.busStopName=busStop.busStopName
+            div.stopInfo
+                span=stopNames[stop.stopType] + ' in ' + stop.suburb
+                span=stop.name

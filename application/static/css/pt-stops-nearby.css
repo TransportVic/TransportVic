@@ -1,12 +1,12 @@
-div.busStop {
+a.stop {
     background-color: #2a2a2a;
 }
 
-div.busStop:nth-child(even) {
+a.stop:nth-child(even) {
     background-color: #202020;
 }
 
-a.busStopLink {
+a.stop > div {
     display: flex;
 }
 
@@ -31,7 +31,7 @@ a.busStopLink {
     background-color: #4ebe45;
 }
 
-.busStop:nth-child(even) .nearby {
+.stop:nth-child(even) .nearby {
     background-color: #43a93b;
 }
 
@@ -39,7 +39,7 @@ a.busStopLink {
     background-color: #d7832c;
 }
 
-.busStop:nth-child(even) .close {
+.stop:nth-child(even) .close {
     background-color: #c47625;
 }
 
@@ -47,18 +47,26 @@ a.busStopLink {
     background-color: #c63d3d;
 }
 
-.busStop:nth-child(even) .far {
+.stop:nth-child(even) .far {
     background-color: #b43535;
 }
 
-.busStopInfo {
-    display: inline-flex;
-    flex-direction: column;
+.stopInfo {
+    width: calc(95vw - 5vh);
+    display: flex;
+    align-items: left;
     justify-content: center;
-    padding-left: calc(1vw + 1vh);
+    flex-direction: column;
+    margin-left: calc(1vw + 1vh);
+    font-size: calc(2vh + 1.2vw);
 }
 
-.busStopName {
-    margin-top: calc(1.5vw + 1.5vh);
-    font-size: calc(1.5vw + 1.5vh);
+.stopInfo > span:nth-child(1) {
+  color: #8f8f8f;
+  font-size: calc(1.6vh + 0.9vw);
+}
+
+.stopInfo > span:nth-child(2) {
+  font-size: calc(2vh + 1.2vw);
+  margin-top: calc(-0.4vh - 0.2vw);
 }
