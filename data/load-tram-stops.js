@@ -22,7 +22,9 @@ function transformTramStop(inputTramStop) {
     let stopNameData = inputTramStop.properties.STOP_NAME.match(/(\d+\w?)-([^\(]+) \((.+)+\)/);
     if (!stopNameData) stopNameData = [0, inputTramStop.properties.STOP_NAME, ''];
     return {
-        tramStopCodes: [inputTramStop.properties.STOP_ID],
+        gtfsTramStopCodes: [inputTramStop.properties.STOP_ID],
+        tramStopCodes: [],
+
         tramStopNumber: stopNameData[1].toUpperCase(),
         tramStopName: stopNameData[2],
         suburb: stopNameData[3],
@@ -36,8 +38,7 @@ function transformTramStop(inputTramStop) {
                 inputTramStop.properties.LATITUDE]
             ]
         },
-        tramTrackerID: 0,
-        ptvTramStopID: 0,
+        tramTrackerIDs: [],
         lastUpdated: new Date()
     }
 }
@@ -65,7 +66,7 @@ let transformedStops = Object.values(mergeTramStops(metroTramStops).map(transfor
     if (acc[tramStop.tramStopName + tramStop.tramStopNumber]) {
         let svc = acc[tramStop.tramStopName + tramStop.tramStopNumber];
 
-        svc.tramStopCodes.push(tramStop.tramStopCodes[0]);
+        svc.gtfsTramStopCodes.push(tramStop.gtfsTramStopCodes[0]);
         svc.routes = svc.routes.concat(tramStop.routes).filter((e, i, a) => a.indexOf(e) == i).sort((a, b) => a*1 - b*1);
         svc.location.coordinates = svc.location.coordinates.concat(tramStop.location.coordinates);
 
@@ -80,7 +81,7 @@ database.connect({
     poolSize: 100
 }, (err) => {
     tramStops = database.getCollection('tram stops');
-    tramStops.createIndex({ location: "2dsphere", tramStopName: 1, tramStopCodes: 1, tramTrackerID: 1 });
+    tramStops.createIndex({ location: "2dsphere", tramStopName: 1, gtfsTramStopCodes: 1, tramStopCodes: 1, tramTrackerIDs: 1, bookmarkCode: 1 });
 
     transformedStops.forEach(stop => {
         promises.push(new Promise(resolve => {
