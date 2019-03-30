@@ -10,6 +10,7 @@ for trainStation in trainStations
         div.leftContainer
             img(src='/static/images/metro-icon.svg')
         div.resultDetails
+            span='Train station in ' + trainStation.suburb
             span=trainStation.stationName
 
 for tramStop in tramStops
@@ -17,6 +18,7 @@ for tramStop in tramStops
         div.leftContainer
             img(src='/static/images/tram-icon.svg')
         div.resultDetails
+            span='Tram stop in ' + tramStop.suburb
             span=tramStop.tramStopName
 
 for serviceNumber in distinctBusServices
@@ -25,16 +27,23 @@ for serviceNumber in distinctBusServices
     a.busService.result
         div(class='leftContainer ' + service[0].operators[0].toLowerCase().replace(/[^\w]/g, '-'))
             span.serviceNumber=service[0].serviceNumber
-            span.serviceVariant=service[0].serviceVariant
-        div.resultDetails.routeDetails
+            
+            if !service[0].destination.includes('Clockwise')
+                span.serviceVariant=service[0].serviceVariant
+        div.resultDetails
             if service[0].serviceType === 'telebus'
                 span='TeleBus Area ' + service[0].serviceVariant
             else
                 
                 span=busServiceTypes[service[0].serviceType] + ' Bus Service ' + service[0].fullService
                 if service.length === 2
-                    span=`${service[0].destination} - ${service[1].destination}`
+                    if service[0].destination.includes('Clockwise')
+                        span=service[0].destination.replace(/ \([\w-]+\)/, '')
+                    else
+                        
+                        span=`${service[0].destination} - ${service[1].destination}`
                 else
+                    
                     span=`${service[0].destination}`
 
 for busStop in busStops
@@ -42,4 +51,5 @@ for busStop in busStops
         div.leftContainer
             img(src='/static/images/bus-icon.svg')
         div.resultDetails
+            span='Bus stop in ' + busStop.suburb
             span=busStop.busStopName

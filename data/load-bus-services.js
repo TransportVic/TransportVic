@@ -49,13 +49,21 @@ function transformBusService(inputBusService, serviceType) {
         inputBusService.properties.OPERATOR = 'Ventura Bus Lines';
     }
 
+    serviceVariant = getServiceVariant(inputBusService.properties.ROUTESHTNM);
+    destination = adjustDestination(inputBusService.properties.TRIPHDSIGN);
+    if (destination.toLowerCase().includes('anti-clockwise')) {
+        serviceVariant = 'A';
+    } else if (destination.toLowerCase().includes('clockwise')) {
+        serviceVariant = 'C';
+    }
+
     return {
         fullService: inputBusService.properties.ROUTESHTNM,
         serviceNumber: getServiceNumber(inputBusService.properties.ROUTESHTNM),
-        serviceVariant: getServiceVariant(inputBusService.properties.ROUTESHTNM),
+        serviceVariant,
         operators: inputBusService.properties.OPERATOR.split(',').map(fixOperator),
         serviceType: serviceType || 'metro',
-        destination: adjustDestination(inputBusService.properties.TRIPHDSIGN),
+        destination,
         directionID: 0,
         ptvRouteID: 0,
 

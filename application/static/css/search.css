@@ -84,12 +84,12 @@ div#results {
   font-size: calc(2vh + 1.2vw);
 }
 
-.routeDetails > span:nth-child(1) {
+.resultDetails > span:nth-child(1) {
   color: #8f8f8f;
   font-size: calc(1.6vh + 0.9vw);
 }
 
-.routeDetails > span:nth-child(2) {
+.resultDetails > span:nth-child(2) {
   font-size: calc(2vh + 1.2vw);
   margin-top: calc(-0.4vh - 0.2vw);
 }

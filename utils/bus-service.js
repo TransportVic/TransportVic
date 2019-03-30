@@ -27,7 +27,13 @@ function adjustDestination(dest) {
         return `Monash University (${campus} Campus)`;
     }
 
-    return dest;
+    if (dest.toLowerCase().includes('anti-clockwise')) {
+        dest = dest.replace(/\(anti-clockwise\)/i, '') + '(Anti-Clockwise)';
+    } else if (dest.toLowerCase().includes('clockwise')) {
+        dest = dest.replace(/\(clockwise\)/i, '') + '(Clockwise)';
+    }
+
+    return dest.replace(/  +/, ' ');
 }
 
 let serviceLocks = {};
