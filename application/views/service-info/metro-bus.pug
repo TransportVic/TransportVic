@@ -22,9 +22,9 @@ block content
         -
             let url = `/bus/metro/${service.fullService}/`;
             if (otherDest) {
-                url += flattenDest(service.destination);
-            } else {
                 url += flattenDest(otherDest);
+            } else {
+                url += flattenDest(service.destination);
             }
         a(class=service.operators[0].toLowerCase().replace(/[^\w]/g, '-') href=url)#serviceNumber
             span#routeType=serviceTypes[service.serviceType]
