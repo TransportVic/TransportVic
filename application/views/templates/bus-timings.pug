@@ -4,17 +4,20 @@
         return {minutes: d.getUTCMinutes() + d.getUTCHours() * 60, seconds: d.getUTCSeconds()}
     };
     
-
--
     let services = Object.keys(timings);
     service = services.sort((a, b) => a - b);
+    
+    function flattenDest(dest) {
+        return dest.replace(/[^\w]/g, '-').replace(/--+/g, '-').replace(/^-*/, '').replace(/-*$/, '').toLowerCase();
+    }
 
 for serviceNumber in services
     - let destinations = Object.keys(timings[serviceNumber]);
     for destinationName in destinations.sort((a, b) => a.length - b.length)
         - let destinationTimings = timings[serviceNumber][destinationName];
+        - let operatorCSSClass = destinationTimings[0].operators[0].toLowerCase().replace(/[^\w]/g, '-');
         div.busService
-            a(class='busServiceNumber ' + destinationTimings[0].operators[0].toLowerCase().replace(/[^\w]/g, '-'))
+            a(class='busServiceNumber ' + operatorCSSClass href=`/bus/metro/${serviceNumber}/${flattenDest(destinationName)}`)
                 span=destinationTimings[0].serviceNumber
                 
                 if destinationTimings[0].serviceVariant
