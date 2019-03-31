@@ -14,7 +14,7 @@ for trainStation in trainStations
             span=trainStation.stationName
 
 for tramStop in tramStops
-    a.tramStop.result
+    a(href=`/tram/timings/${tramStop.cleanSuburb}/${tramStop.cleanTramStopName}`).tramStop.result
         div.leftContainer
             img(src='/static/images/tram-icon.svg')
         div.resultDetails

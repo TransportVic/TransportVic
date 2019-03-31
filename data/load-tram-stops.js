@@ -26,8 +26,13 @@ function transformTramStop(inputTramStop) {
         tramStopCodes: [],
 
         tramStopNumber: stopNameData[1].toUpperCase(),
+
         tramStopName: stopNameData[2],
+        cleanTramStopName: stopNameData[2].trim().replace(/[^\w]/g, '-').replace(/-+/g, '-').toLowerCase(),
+
         suburb: stopNameData[3],
+        cleanSuburb: stopNameData[3].toLowerCase().replace(/ /g, '-'),
+
         mykiZones: inputTramStop.properties.TICKETZONE.split(','),
         routes: inputTramStop.properties.ROUTEUSSP.split(','),
 

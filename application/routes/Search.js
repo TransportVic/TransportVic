@@ -1,9 +1,12 @@
 const express = require('express');
 const router = new express.Router();
 const safeRegex = require('safe-regex');
-const { getServiceData } = require('../../utils/bus-service');
+const getBusServiceData = require('../../utils/bus-service').getServiceData;
+const getTramServiceData = require('../../utils/tram-service').getServiceData;
+
 const { updateBusStopsAsNeeded } = require('../../utils/bus-stop');
 const { updateTrainStationsAsNeeded } = require('../../utils/train-station');
+const { updateTramStopsAsNeeded } = require('../../utils/tram-stop');
 const { getTimings } = require('../timings/bus-timings');
 
 router.get('/', (req, res) => {
@@ -51,7 +54,9 @@ function getTramStops(query, db, callback) {
         $or: tramStopQueries
     }).toArray((err, tramStops) => {
         tramStops = tramStops.slice(0, 10);
-        callback(tramStops); // need to update
+        updateTramStopsAsNeeded(tramStops, db, updatedTramStops => {
+            callback(tramStops);
+        });
     });
 }
 
@@ -66,10 +71,11 @@ router.post('/', (req, res) => {
     let promises = [];
     let searchResults = {};
     let fields = {
-        busServices: getServiceData,
+        busServices: getBusServiceData,
         busStops: getBusStops,
         trainStations: getTrainStations,
-        tramStops: getTramStops
+        tramServices: getTramServiceData,
+        tramStops: getTramStops,
     };
 
     Object.keys(fields).forEach(fieldName => {

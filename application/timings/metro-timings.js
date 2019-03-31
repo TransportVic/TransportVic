@@ -2,8 +2,6 @@ const ptvAPI = require('../../utils/ptv-api');
 const TimedCache = require('timed-cache');
 
 let timingsCache = new TimedCache({ defaultTtl: 1000 * 60 * 1 });
-let locks = {};
-let services = {};
 
 function getTimings(trainStationID, db, callback) {
     if (timingsCache.get(trainStationID)) {

@@ -102,6 +102,7 @@ module.exports = class MainServer {
             Index: '/',
             BusTimings: '/bus/timings',
             MetroTimings: '/metro/timings',
+            TramTimings: '/tram/timings',
             Search: '/search',
             NearbyPTStops: '/nearby',
             Bookmarks: '/bookmarks'
