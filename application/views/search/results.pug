@@ -24,7 +24,7 @@ for tramStop in tramStops
 for serviceNumber in distinctBusServices
     - let service = busServices.filter(svc => svc.fullService === serviceNumber);
     
-    a.busService.result
+    a(href=`/bus/metro/${serviceNumber}/`).busService.result
         div(class='leftContainer ' + service[0].operators[0].toLowerCase().replace(/[^\w]/g, '-'))
             span.serviceNumber=service[0].serviceNumber
             
