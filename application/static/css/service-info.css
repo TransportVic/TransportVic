@@ -122,20 +122,16 @@
     font-size: calc(1.3vh + 1.4vw);
 }
 
-.table-data.spacing2 > * {
-    width: 30vw;
-}
-
-.spacing2 > span:nth-child(1), .spacing2 > span:nth-child(2) {
+.spacing2 > span:nth-child(1) {
     width: 20vw;
 }
 
-.spacing2 > :nth-child(3) {
-    width: 60vw;
+.spacing2 > span:nth-child(2) {
+    width: 25vw;
 }
 
-.coloured-row > .spacing2 > div:nth-child(3) {
-    display: inline-flex;
+.spacing2 > :nth-child(3) {
+    width: 55vw;
 }
 
 div.stop {
@@ -144,7 +140,5 @@ div.stop {
 }
 
 div.stop > span:nth-child(3) {
-    display: inline-block;
-    margin-left: calc(4vh + 4vw);
     text-align: left;
 }
