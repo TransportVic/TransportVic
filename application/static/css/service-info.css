@@ -47,6 +47,10 @@
     margin-left: calc(1.2vh + 0.5vw);
 }
 
+.table-header {
+    background-color: #171717;
+}
+
 .table-data {
     height: calc(3.3vh + 3.3vw);
     display: flex;
