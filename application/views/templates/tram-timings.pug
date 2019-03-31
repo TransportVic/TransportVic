@@ -14,7 +14,7 @@ for serviceNumber in services
         - let destinationTimings = timings[serviceNumber][destinationName];
         
         div.tramService
-            a(class='tramServiceNumber')
+            a(class='tramServiceNumber tram-' + destinationTimings[0].service)
                 span=destinationTimings[0].service
             a(href=`/tram/timings/${destinationTimings[0].destination.cleanSuburb}/${destinationTimings[0].destination.cleanTramStopName}`).destination
                 span Towards

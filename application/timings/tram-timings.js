@@ -59,7 +59,7 @@ function getTimingsForTramStop(tramStopID, db, callback) {
                         tramStopCodes: serviceData.stops.slice(-1)[0].tramStopCode
                     }, (err, destinationTramStop) => {
                         timings[serviceData.serviceNumber][serviceData.destination].push({
-                            service: serviceData.serviceNumber,
+                            service: serviceData.serviceNumber === '3-3a' ? '3' : serviceData.serviceNumber,
                             destination: destinationTramStop,
                             arrivalTime,
                             headwayDeviance

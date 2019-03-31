@@ -39,7 +39,19 @@ function populateService(skeleton, callback) {
 
     function loadStops() {
         ptvAPI.makeRequest('/v3/stops/route/' + ptvRouteID + '/route_type/1?direction_id=' + skeleton.directionID, (err, data) => {
-            skeleton.stops = data.stops.sort((a, b) => a.stop_sequence - b.stop_sequence).filter(stop => stop.stop_sequence !== 0).map(tramStop => {
+            data.stops = data.stops.sort((a, b) => a.stop_sequence - b.stop_sequence).filter(stop => stop.stop_sequence !== 0).filter(tramStop => {
+                if (tramStop.stop_id == 2970) return false
+                return true;
+            });
+
+            if (skeleton.serviceNumber === '96' && skeleton.directionID === 36) {
+                data.stops.push({
+                    stop_id: 2284,
+                    stop_name: "145 Acland St #2",
+                    stop_suburb: "St Kilda",
+                });
+            }
+            skeleton.stops = data.stops.map((tramStop, i) => {
                 if (tramStop.stop_suburb == 'Docklands') {
                     tramStop.stop_name = tramStop.stop_name.replace(/^D\d+-/, '');
                 }
@@ -48,7 +60,7 @@ function populateService(skeleton, callback) {
                     tramStopCode: tramStop.stop_id,
                     tramStopName: tramStop.stop_name.replace(/ #.+$/, ''),
                     suburb: tramStop.stop_suburb,
-                    stopNumber: tramStop.stop_sequence
+                    stopNumber: i + 1
                 }
             });
             skeleton.skeleton = false;

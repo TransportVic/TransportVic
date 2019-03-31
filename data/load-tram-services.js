@@ -32,11 +32,19 @@ function getAllTramServices(data) {
     return data.reduce((acc, service) => acc.concat(service.properties.ROUTESHTNM), []).filter((e, i, a) => a.indexOf(e) == i);
 }
 
+function adjustDestination(destination) {
+    if (destination == 'Flinders Street Station, City') {
+        destination = 'Flinders Street Station (City)';
+    }
+
+    return destination;
+}
+
 function transformTramService(inputTramService) {
     return {
         serviceNumber: inputTramService.properties.ROUTESHTNM.replace('/', '-'),
         operator: inputTramService.properties.OPERATOR,
-        destination: inputTramService.properties.TRIPHDSIGN.match(/(.+) to /)[1],
+        destination: adjustDestination(inputTramService.properties.TRIPHDSIGN.match(/(.+) to /)[1]),
         ptvRouteID: 0,
 
         stops: [],
