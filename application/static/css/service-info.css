@@ -45,6 +45,7 @@
 
 #terminals > a > span {
     margin-left: calc(1.2vh + 0.5vw);
+        text-transform: uppercase;
 }
 
 .table-header {

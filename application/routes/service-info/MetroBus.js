@@ -17,12 +17,13 @@ router.get('/:fullService', (req, res) => {
     })
 });
 
-router.get('/:fullService/:destination', (req, res, next) => {
+router.get('/:fullService/:destination', (req, res) => {
     queryServiceData({
         fullService: req.params.fullService
     }, res.db, service => {
-        if (!service[0]) next();
-        else {
+        if (!service[0]) {
+            res.redirect('/bus/metro/' + fullService)
+        } else {
             let mainDirection = service.filter(direction => flattenDest(direction.destination) === req.params.destination)[0];
             let otherDirection = service.filter(e => e !== mainDirection)[0];
             let data = {service: mainDirection};

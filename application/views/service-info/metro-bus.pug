@@ -31,16 +31,16 @@ block content
             span#serviceText=service.fullService
             
         div#terminals
-            - let ownURL = `/bus/timings/${termini[0].cleanSuburb}/${termini[0].cleanBusStopName}`;
-            a(href=ownURL).coloured-row
-                span=service.destination
             -
+                let ownURL = `/bus/timings/${termini[0].cleanSuburb}/${termini[0].cleanBusStopName}`;
                 let otherURL = `/bus/timings/${termini[1].cleanSuburb}/${termini[1].cleanBusStopName}`;
                 if (!otherDest) {
                     otherURL = ownURL;
                 }
             a(href=otherURL).coloured-row
-                span=otherDest || service.destination
+                span=otherDest
+            a(href=ownURL).coloured-row
+                span=service.destinationotherDest || service.destination
                 
     div#serviceTimings
         div#keyTimings
@@ -50,16 +50,16 @@ block content
                 span Last Bus
             div.coloured-row.table-data.spacing1
                 span Weekdays
-                span=service.firstLastBus.weekday.firstBus
-                span=service.firstLastBus.weekday.lastBus
+                span=service.firstLastBus.weekday.firstBus || '-'
+                span=service.firstLastBus.weekday.lastBus || '-'
             div.coloured-row.table-data.spacing1
                 span Saturday
-                span=service.firstLastBus.saturday.firstBus
-                span=service.firstLastBus.saturday.lastBus
+                span=service.firstLastBus.saturday.firstBus || '-'
+                span=service.firstLastBus.saturday.lastBus || '-'
             div.coloured-row.table-data.spacing1
                 span Sundays / PH
-                span=service.firstLastBus.sunday.firstBus
-                span=service.firstLastBus.sunday.lastBus
+                span=service.firstLastBus.sunday.firstBus || '-'
+                span=service.firstLastBus.sunday.lastBus || '-'
 
         div#frequency
             -
