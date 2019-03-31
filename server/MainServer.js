@@ -100,12 +100,15 @@ module.exports = class MainServer {
     configRoutes(app) {
         let routers = {
             Index: '/',
-            BusTimings: '/bus/timings',
-            MetroTimings: '/metro/timings',
-            TramTimings: '/tram/timings',
+            'timings/Bus': '/bus/timings',
+            'timings/Metro': '/metro/timings',
+            'timings/Tram': '/tram/timings',
+
             Search: '/search',
             NearbyPTStops: '/nearby',
-            Bookmarks: '/bookmarks'
+            Bookmarks: '/bookmarks',
+
+            'service-info/MetroBus': '/bus/metro'
         };
 
         Object.keys(routers).forEach(routerName => {

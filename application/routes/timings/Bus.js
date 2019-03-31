@@ -1,7 +1,7 @@
 const express = require('express');
 const router = new express.Router();
-const { getTimings } = require('../timings/bus-timings');
-const { getBusStop } = require('../../utils/bus-stop');
+const { getTimings } = require('../../timings/bus-timings');
+const { getBusStop } = require('../../../utils/bus-stop');
 
 router.get('/:suburb/:busStopName', (req, res) => {
     getBusStop({

@@ -78,7 +78,7 @@ function getFrequencies(routeID, routeType, stopID, directionID, day, callback) 
     Object.keys(timeFrames).forEach(timeFrame => {
         promises.push(new Promise(resolve => {
             getFrequenciesInPeriod(routeID, routeType, stopID, directionID, day, timeFrames[timeFrame], (min, max) => {
-                frequencyPeriods[timeFrame] = {min: min / (1000 * 60), max: max / (1000 * 60)};
+                frequencyPeriods[timeFrame] = {min: min / (1000 * 60) || null, max: max / (1000 * 60) || null};
                 resolve();
             });
         }));

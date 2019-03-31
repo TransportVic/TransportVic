@@ -1,7 +1,7 @@
 const express = require('express');
 const router = new express.Router();
-const { getTimings } = require('../timings/tram-timings');
-const { getTramStop } = require('../../utils/tram-stop');
+const { getTimings } = require('../../timings/tram-timings');
+const { getTramStop } = require('../../../utils/tram-stop');
 
 router.get('/:cleanSuburb/:cleanTramStopName', (req, res) => {
     getTramStop(req.params, res.db, tramStop => {
