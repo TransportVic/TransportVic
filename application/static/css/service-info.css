@@ -1,0 +1,134 @@
+* > .coloured-row:nth-child(even) {
+    background-color: #2a2a2a;
+}
+
+* > .coloured-row:nth-child(odd) {
+    background-color: #202020;
+}
+
+* {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+#serviceSummary {
+    display: flex;
+    height: calc(7vh + 6vw);
+}
+
+#serviceNumber {
+    width: calc(9vh + 9vw);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#routeType {
+    font-size: calc(0.8vw + 0.8vh);
+    text-align: center;
+}
+
+#serviceText {
+    font-size: calc(3vh + 3vw);
+    margin-top: calc(-1vh - 0.6vw);
+}
+
+#terminals > a {
+    height: calc(3.5vh + 3vw);
+    display: flex;
+    align-items: center;
+    font-size: calc(1.25vh + 1.4vw);
+    width: calc(100vw - 9vw - 9vh);
+}
+
+#terminals > a > span {
+    margin-left: calc(1.2vh + 0.5vw);
+}
+
+.table-data {
+    height: calc(3.3vh + 3.3vw);
+    display: flex;
+    align-items: center;
+    font-size: calc(1.3vh + 1.3vw);
+    justify-content: center;
+}
+
+.table-data > * {
+    text-align: center;
+    width: 30vw;
+}
+
+.table-data > span {
+    margin-top: calc(-0.3vh - 0.1vw);
+}
+
+.freqTime {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.freqTime > span:nth-child(1) {
+    font-size: calc(1.2vh + 1.2vw);
+}
+
+.freqTime > span:nth-child(2) {
+    font-size: calc(0.7vh + 0.7vw);
+    margin-top: calc(-0.1vh - 0.3vw);
+}
+
+@media (min-width: 700px) {
+    #serviceTimings {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .table-data > * {
+        width: 15vw;
+    }
+
+    .table-data {
+        width: 50vw;
+    }
+
+    .table-header {
+        font-size: calc(1.2vh + 1vw);
+    }
+
+    #keyTimings > div.coloured-row {
+        height: calc((3.3vw + 3.3vh) * 5 / 3);
+        font-size: calc(1.6vw + 1.6vh);
+    }
+
+}
+
+.table-data.spacing2 {
+    width: 100vw;
+}
+
+.table-data.table-header.spacing2 {
+    font-size: calc(0.96vh + 1.1vw);
+}
+
+.table-data.table-header.spacing2 > span:nth-child(3) {
+    font-size: calc(1.3vh + 1.4vw);
+}
+
+.table-data.spacing2 > * {
+    width: 30vw;
+}
+
+.spacing2 > span:nth-child(1), .spacing2 > span:nth-child(2) {
+    width: 20vw;
+}
+
+.spacing2 > :nth-child(3) {
+    width: 60vw;
+}
+
+.coloured-row > .spacing2 > div:nth-child(3) {
+    display: inline-flex;
+}

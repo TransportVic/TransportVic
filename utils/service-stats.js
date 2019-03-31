@@ -36,15 +36,21 @@ function getDepartures(routeID, routeType, stopID, directionID, time, callback) 
     });
 }
 
+function pad2(d) {
+    return [0, 0].concat([...d.toString()]).slice(-2).join('');
+}
+
 function getFirstBus(routeID, routeType, stopID, directionID, day, callback) {
     getDepartures(routeID, routeType, stopID, directionID, day, departures => {
-        callback(departures[0]);
+        if (!departures[0]) callback(null);
+        else callback(pad2(departures[0].getHours()) + '' + pad2(departures[0].getMinutes()));
     });
 }
 
 function getLastBus(routeID, routeType, stopID, directionID, day, callback) {
     getDepartures(routeID, routeType, stopID, directionID, day, departures => {
-        callback(departures.slice(-1)[0]);
+        if (!departures[0]) callback(null);
+        callback(pad2(departures.slice(-1)[0].getHours()) + '' + pad2(departures.slice(-1)[0].getMinutes()));
     });
 }
 
@@ -118,6 +124,9 @@ function getNextSunday() {
 module.exports = {
     getFirstBus,
     getLastBus,
-    getFrequencies
+    getFrequencies,
 
+    getNextWeekday,
+    getNextSaturday,
+    getNextSunday
 }

@@ -1,13 +1,112 @@
 extends ../layout
 
 block head
-    title TransportVic - Metro Bus Service
+    title='TransportVic - Metro Bus Service ' + service.fullService
     
 block header
     img#page-icon(src='/static/images/magnifying-glass.svg')
-    span#title='Metro Bus Service '
+    span#title='Metro Bus Service ' + service.fullService
     
 block css
-    link(rel='stylesheet' href='/static/css/index.css')
+    link(rel='stylesheet' href='/static/css/service-info.css')
+    link(rel='stylesheet' href='/static/css/bus/operator-colours.css')
 
 block content
+    -
+        function flattenDest(dest) {
+            return dest.replace(/[^\w]/g, '-').replace(/--+/g, '-').replace(/^-*/, '').replace(/-*$/, '').toLowerCase();
+        }
+        let serviceTypes = {'metro': 'Metropolitian Bus', 'telebus': 'TeleBus'}
+        
+    div#serviceSummary
+        -
+            let url = `/bus/metro/${service.fullService}/`;
+            if (otherDest) {
+                url += flattenDest(otherDest);
+            } else {
+                url = flattenDest(service.destination);
+            }
+        a(class=service.operators[0].toLowerCase().replace(/[^\w]/g, '-') href=url)#serviceNumber
+            span#routeType=serviceTypes[service.serviceType]
+            span#serviceText=service.fullService
+            
+        div#terminals
+            - let ownURL = `/bus/timings/${termini[0].cleanSuburb}/${termini[0].cleanBusStopName}`;
+            a(href=ownURL).coloured-row
+                span=service.destination
+            -
+                let otherURL = `/bus/timings/${termini[1].cleanSuburb}/${termini[1].cleanBusStopName}`;
+                if (!otherDest) {
+                    otherURL = ownURL;
+                }
+            a(href=otherURL).coloured-row
+                span=otherDest || service.destination
+                
+    div#serviceTimings
+        div#keyTimings
+            div.table-header.table-data.spacing1
+                span Days
+                span First Bus
+                span Last Bus
+            div.coloured-row.table-data.spacing1
+                span Weekdays
+                span=service.firstLastBus.weekday.firstBus
+                span=service.firstLastBus.weekday.lastBus
+            div.coloured-row.table-data.spacing1
+                span Saturday
+                span=service.firstLastBus.saturday.firstBus
+                span=service.firstLastBus.saturday.lastBus
+            div.coloured-row.table-data.spacing1
+                span Sundays / PH
+                span=service.firstLastBus.sunday.firstBus
+                span=service.firstLastBus.sunday.lastBus
+
+        div#frequency
+            -
+                function freqToString(freq) {
+                    let {min, max} = freq;
+                    if (!min) return '-';
+                    if (min == max) return min + ' mins';
+                    return `${min}-${max} mins`
+                }
+            
+            div.table-header.table-data.spacing1
+                span Time
+                span Weekdays
+                span Saturdays
+                span Sundays
+            div.coloured-row.table-data.spacing1
+                div.freqTime
+                    span 0000 - 0630
+                    span Early Morning
+                span=freqToString(service.frequency.weekday.earlyMorning)
+                span=freqToString(service.frequency.saturday.earlyMorning)
+                span=freqToString(service.frequency.sunday.earlyMorning)
+            div.coloured-row.table-data.spacing1
+                div.freqTime
+                    span 0630 - 1000
+                    span Morning Peak
+                span=freqToString(service.frequency.weekday.morningPeak)
+                span=freqToString(service.frequency.saturday.morningPeak)
+                span=freqToString(service.frequency.sunday.morningPeak)
+            div.coloured-row.table-data.spacing1
+                div.freqTime
+                    span 1000 - 1630
+                    span Off Peak
+                span=freqToString(service.frequency.weekday.offPeak)
+                span=freqToString(service.frequency.saturday.offPeak)
+                span=freqToString(service.frequency.sunday.offPeak)
+            div.coloured-row.table-data.spacing1
+                div.freqTime
+                    span 1630 - 2030
+                    span Evening Peak
+                span=freqToString(service.frequency.weekday.eveningPeak)
+                span=freqToString(service.frequency.saturday.eveningPeak)
+                span=freqToString(service.frequency.sunday.eveningPeak)
+            div.coloured-row.table-data.spacing1
+                div.freqTime
+                    span 2030 - 2400
+                    span Night
+                span=freqToString(service.frequency.weekday.night)
+                span=freqToString(service.frequency.saturday.night)
+                span=freqToString(service.frequency.sunday.night)
