@@ -1,0 +1,21 @@
+extends ../layout
+
+block header
+    title='TransportVic - ' + tramStop.tramStopName
+    img#page-icon(src='/static/images/tram-icon.svg')
+    span#title=tramStop.tramStopName
+
+block content
+    include ../templates/tram-timings
+    
+block css
+    link(rel='stylesheet' href='/static/css/tram/timings.css')
+    link(rel='stylesheet' href='/static/css/tram/service-colours.css')
+
+block scripts
+    script(src='/static/scripts/bookmark-helper.js' async)
+    script(src='/static/scripts/bookmark-toggle.js' async)
+    script window.bookmarkCode = "#{tramStop.bookmarkCode}";
+    
+block links
+    img(onclick=`toggleBookmark(bookmarkCode)` src='/static/images/bookmark/empty.svg')#bookmark-status
