@@ -110,3 +110,15 @@ block content
                 span=freqToString(service.frequency.weekday.night)
                 span=freqToString(service.frequency.saturday.night)
                 span=freqToString(service.frequency.sunday.night)
+    div#busStops
+        div.table-header.table-data.spacing2
+            span Stop Number
+            span Suburb
+            span Bus Stop
+            
+        for busStop in service.stops
+            div.coloured-row
+                div.stop.table-data.spacing2
+                    span=busStop.stopNumber
+                    span=busStop.suburb
+                    span=busStop.busStopName

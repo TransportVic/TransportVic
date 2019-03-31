@@ -136,3 +136,14 @@
 .coloured-row > .spacing2 > div:nth-child(3) {
     display: inline-flex;
 }
+
+div.stop {
+    display: flex;
+    justify-content: center;
+}
+
+div.stop > span:nth-child(3) {
+    display: inline-block;
+    margin-left: calc(4vh + 4vw);
+    text-align: left;
+}
