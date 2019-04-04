@@ -91,6 +91,12 @@ a.destination span:nth-child(2) {
     color: #c5c5c5;
 }
 
+a.destination span:nth-child(3) {
+    font-size: calc(0.9vw + 0.9vh);
+
+    color: #bababa;
+}
+
 div.timings {
     margin-left: auto;
 
