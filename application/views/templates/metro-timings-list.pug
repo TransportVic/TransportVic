@@ -16,6 +16,14 @@ for timing in timings
         a(href=`/metro/timings/${timing.destination.toLowerCase().replace(/ /g, '-')}`).destination
             span=timing.trainLine + ' Line Towards'
             span=timing.destination
+            if timing.runData.upService
+                if timing.runData.throughCityLoop
+                    if timing.runData.stopsViaFlindersFirst
+                        span Via Flinders St, then City Loop
+                    else
+                        span Via City Loop
+                else
+                    span Terminates at Flinders St
 
         div.timings
             -
@@ -30,10 +38,10 @@ for timing in timings
 
             div(class='trainArrival ' + headwayDevianceClass)
                 - let timeToArrival = getTimingsDifference(timing.arrivalTime, +new Date());
-                if timeToArrival.minutes == 0
-                    span='Arr' + (timing.hasExpress ? ' *' : '')
+                if new Date() >= timing.arrivalTime
+                    span='Arr' + (!!timing.runData.expressStopsCount ? ' *' : '')
                 else
-                    span=timeToArrival.minutes + (timing.hasExpress ? ' *' : '')
+                    span=timeToArrival.minutes + (!!timing.runData.expressStopsCount ? ' *' : '')
 
                 if Math.abs(timing.headwayDeviance) > 90
                     -
