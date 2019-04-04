@@ -21,29 +21,30 @@ router.get('/:fullService/:destination', (req, res) => {
     queryServiceData({
         fullService: req.params.fullService
     }, res.db, service => {
-        if (!service[0]) {
-            res.redirect('/bus/metro/' + fullService)
-        } else {
-            let mainDirection = service.filter(direction => flattenDest(direction.destination) === req.params.destination)[0];
-            let otherDirection = service.filter(e => e !== mainDirection)[0] || mainDirection;
-            let data = {service: mainDirection};
-            if (service.length == 2) {
-                data.otherDest = otherDirection.destination;
-            }
-
-            let termini = [(otherDirection || mainDirection).stops[0], mainDirection.stops[0]];
-            res.db.getCollection('bus stops').findDocuments({
-                $or: termini.map(busStop => {return {
-                    busStopCodes: busStop.busStopCode
-                }})
-            }).toArray((err, fullTermini) => {
-                let mainTerminus = fullTermini.filter(terminus => terminus.busStopCodes.includes(termini[0].busStopCode))[0];
-                let otherTerminus = fullTermini.filter(terminus => terminus !== mainTerminus)[0] || mainTerminus;
-                data.termini = [mainTerminus, otherTerminus];
-
-                res.render('service-info/metro-bus', data);
-            });
+        let mainDirection = service.filter(direction => flattenDest(direction.destination) === req.params.destination)[0];
+        if (!mainDirection) {
+            res.redirect('/bus/metro/' + req.params.fullService);
+            return;
         }
+
+        let otherDirection = service.filter(e => e !== mainDirection)[0] || mainDirection;
+        let data = {service: mainDirection};
+        if (service.length == 2) {
+            data.otherDest = otherDirection.destination;
+        }
+
+        let termini = [(otherDirection || mainDirection).stops[0], mainDirection.stops[0]];
+        res.db.getCollection('bus stops').findDocuments({
+            $or: termini.map(busStop => {return {
+                busStopCodes: busStop.busStopCode
+            }})
+        }).toArray((err, fullTermini) => {
+            let mainTerminus = fullTermini.filter(terminus => terminus.busStopCodes.includes(termini[0].busStopCode))[0];
+            let otherTerminus = fullTermini.filter(terminus => terminus !== mainTerminus)[0] || mainTerminus;
+            data.termini = [mainTerminus, otherTerminus];
+
+            res.render('service-info/metro-bus', data);
+        });
     })
 });
 
