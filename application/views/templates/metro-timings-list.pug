@@ -16,12 +16,12 @@ for timing in timings
         a(href=`/metro/timings/${timing.destination.toLowerCase().replace(/ /g, '-')}`).destination
             span=timing.trainLine + ' Line Towards'
             span=timing.destination
-            if timing.runData.upService
+            if timing.runData.runID && timing.runData.upService
                 if timing.runData.throughCityLoop
                     if timing.runData.stopsViaFlindersFirst
                         span Via Flinders St, then City Loop
                     else
-                        span Via City Loop
+                        span Via City Loop, then Flinders St
                 else
                     span Terminates at Flinders St
 
@@ -29,21 +29,21 @@ for timing in timings
             -
                 let headwayDevianceClass = 'unknown'
 
-                if (timing.headwayDeviance > 90)
+                if (timing.headwayDeviance >= 90) // >= 1.5min counts as early
                     headwayDevianceClass = 'early'
-                else if (timing.headwayDeviance < -90)
+                else if (timing.headwayDeviance <= -300) // <= 5min counts as late
                     headwayDevianceClass = 'late'
                 else if (timing.headwayDeviance !== null)
                     headwayDevianceClass = 'on-time'
 
             div(class='trainArrival ' + headwayDevianceClass)
                 - let timeToArrival = getTimingsDifference(timing.arrivalTime, +new Date());
-                if new Date() >= timing.arrivalTime
+                if timeToArrival.minutes < 1
                     span='Arr' + (!!timing.runData.expressStopsCount ? ' *' : '')
                 else
                     span=timeToArrival.minutes + (!!timing.runData.expressStopsCount ? ' *' : '')
 
-                if Math.abs(timing.headwayDeviance) > 90
+                if timing.headwayDeviance && headwayDevianceClass !== 'on-time'
                     -
                         let minutes = Math.floor(Math.abs(timing.headwayDeviance) / 60);
                         let seconds = [0].concat([...(Math.abs(timing.headwayDeviance) % 60).toFixed(0)]).slice(-2).join('');
