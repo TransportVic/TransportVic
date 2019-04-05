@@ -125,62 +125,29 @@ div.trainService:nth-child(odd) div.trainArrival.early:nth-child(odd) {
     background-color: #6fd6e7;
 }
 
-div.trainService:nth-child(odd) div.trainArrival.early:nth-child(even) {
-    background-color: #64c0cf;
-}
-
 div.trainService:nth-child(odd) div.trainArrival.on-time:nth-child(odd) {
     background-color: #60bd29;
 }
 
-div.trainService:nth-child(odd) div.trainArrival.on-time:nth-child(even) {
-    background-color: #58ad25;
-}
-
 div.trainService:nth-child(odd) div.trainArrival.late:nth-child(odd) {
-    background-color: #b23624;
-}
-
-div.trainService:nth-child(odd) div.trainArrival.late:nth-child(even) {
-    background-color: #a13121;
+    background-color: #b23624;#c93e29
 }
 
 div.trainService:nth-child(odd) div.trainArrival.unknown:nth-child(odd) {
     background-color: #9c9c9c;
 }
 
-div.trainService:nth-child(odd) div.trainArrival.unknown:nth-child(even) {
-    background-color: #a8a8a8;
-}
-
-
-
-div.trainService:nth-child(even) div.trainArrival.early:nth-child(even) {
-    background-color: #6fd6e7;
-}
 
 div.trainService:nth-child(even) div.trainArrival.early:nth-child(odd) {
     background-color: #64c0cf;
-}
-
-div.trainService:nth-child(even) div.trainArrival.on-time:nth-child(even) {
-    background-color: #60bd29;
 }
 
 div.trainService:nth-child(even) div.trainArrival.on-time:nth-child(odd) {
     background-color: #58ad25;
 }
 
-div.trainService:nth-child(even) div.trainArrival.late:nth-child(even) {
-    background-color: #b23624;
-}
-
 div.trainService:nth-child(even) div.trainArrival.late:nth-child(odd) {
-    background-color: #a13121;
-}
-
-div.trainService:nth-child(even) div.trainArrival.unknown:nth-child(even) {
-    background-color: #9c9c9c;
+    background-color: #a13121;bd3825
 }
 
 div.trainService:nth-child(even) div.trainArrival.unknown:nth-child(odd) {

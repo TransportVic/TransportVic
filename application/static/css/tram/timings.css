@@ -102,11 +102,11 @@ div.tramService:nth-child(odd) div.tramArrival.on-time:nth-child(even) {
 }
 
 div.tramService:nth-child(odd) div.tramArrival.late:nth-child(odd) {
-    background-color: #b23624;
+    background-color: #c93e29;
 }
 
 div.tramService:nth-child(odd) div.tramArrival.late:nth-child(even) {
-    background-color: #a13121;
+    background-color: #bd3825;
 }
 
 div.tramService:nth-child(odd) div.tramArrival.unknown:nth-child(odd) {
@@ -136,11 +136,11 @@ div.tramService:nth-child(even) div.tramArrival.on-time:nth-child(odd) {
 }
 
 div.tramService:nth-child(even) div.tramArrival.late:nth-child(even) {
-    background-color: #b23624;
+    background-color: #c93e29;
 }
 
 div.tramService:nth-child(even) div.tramArrival.late:nth-child(odd) {
-    background-color: #a13121;
+    background-color: #bd3825;
 }
 
 div.tramService:nth-child(even) div.tramArrival.unknown:nth-child(even) {

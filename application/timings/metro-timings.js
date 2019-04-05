@@ -36,6 +36,7 @@ function getTimings(trainStationID, db, callback) {
         let lines = [];
 
         data.departures.forEach(departure => {
+            if (departure.route_id == 99) return; // Outdated city loop line
             promises.push(new Promise(resolve => {
                 db.getCollection('train lines').findDocument({ ptvRouteID: departure.route_id }, (err, lineData) => {
                     let platform = departure.platform_number;
