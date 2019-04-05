@@ -130,7 +130,7 @@ div.trainService:nth-child(odd) div.trainArrival.on-time:nth-child(odd) {
 }
 
 div.trainService:nth-child(odd) div.trainArrival.late:nth-child(odd) {
-    background-color: #b23624;#c93e29
+    background-color: #c93e29;
 }
 
 div.trainService:nth-child(odd) div.trainArrival.unknown:nth-child(odd) {
@@ -147,7 +147,7 @@ div.trainService:nth-child(even) div.trainArrival.on-time:nth-child(odd) {
 }
 
 div.trainService:nth-child(even) div.trainArrival.late:nth-child(odd) {
-    background-color: #a13121;bd3825
+    background-color: #bd3825;
 }
 
 div.trainService:nth-child(even) div.trainArrival.unknown:nth-child(odd) {
