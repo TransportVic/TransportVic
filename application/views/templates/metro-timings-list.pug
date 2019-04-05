@@ -4,6 +4,8 @@
         return {minutes: d.getUTCMinutes() + d.getUTCHours() * 60, seconds: d.getUTCSeconds()}
     };
     
+    let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central'];
+    
 div#filterBar
     input(aria-label='Destination or Platform Number' placeholder='Destination or Platform Number')#filter
     
@@ -15,11 +17,11 @@ for timing in timings
 
         a(href=`/metro/timings/${timing.destination.toLowerCase().replace(/ /g, '-')}`).destination
             span=timing.trainLine + ' Line Towards'
-            if ['southern cross', 'parliament', 'flagstaff', 'melbourne central'].includes(timing.destination.toLowerCase())
+            if cityLoopStations.includes(timing.destination.toLowerCase())
                 span City Loop
             else
                 span=timing.destination
-            if timing.runData.runID && timing.runData.upService
+            if timing.runData.runID && cityLoopStations.concat('flinders street').includes(timing.destination.toLowerCase())
                 if timing.runData.throughCityLoop
                     if timing.runData.stopsViaFlindersFirst
                         span Via Flinders St, then City Loop

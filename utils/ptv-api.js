@@ -10,8 +10,12 @@ function getURL(request) {
 
 function makeRequest(url, callback) {
     let fullURL = getURL(url);
-    console.log(fullURL);
+
+    let start = +new Date();
     request(fullURL, (err, resp, body) => {
+        let end = +new Date();
+        let diff = end - start;
+        console.log(`${diff}ms ${fullURL}`);
         callback(err, JSON.parse(body));
     });
 }
