@@ -9,7 +9,7 @@ class TrainRun {
     constructor(runData) {
         let runID = [];
         if (runData.vehicle_descriptor)
-            runID = [...runData.vehicle_descriptor.id].map(e => parseInt(e));
+            runID = [...runData.vehicle_descriptor.id].map(e => parseInt(e)||e);
 
         this.destination = runData.destination_name;
         this.expressStopsCount = runData.express_stop_count;

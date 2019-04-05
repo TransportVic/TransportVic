@@ -21,7 +21,13 @@ for timing in timings
                 span City Loop
             else
                 span=timing.destination
-            if timing.runData.runID && cityLoopStations.concat('flinders street').includes(timing.destination.toLowerCase())
+            if cityLoopStations.includes(trainStation.stationName.slice(0, -16))
+                if !timing.runData.stopsViaFlindersFirst
+                    span Via Flinders St
+            else if trainStation.stationName.toLowerCase() == 'flinders street railway station'
+                if timing.runData.throughCityLoop
+                    span Via City Loop
+            else if timing.runData.runID && cityLoopStations.concat('flinders street').includes(timing.destination.toLowerCase())
                 if timing.runData.throughCityLoop
                     if timing.runData.stopsViaFlindersFirst
                         span Via Flinders St, then City Loop
