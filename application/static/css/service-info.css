@@ -145,6 +145,8 @@
     width: calc(100vw - (15vw + 15vh) - (5vw + 5vh) - (1vw + 1vh));
     font-size: calc(1.1vh + 1.1vw);
     text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 div.stop {
