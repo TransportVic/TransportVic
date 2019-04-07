@@ -112,7 +112,7 @@ block content
                 span=freqToString(service.frequency.sunday.night)
     div#busStops
         div.table-header.table-data.spacing2
-            span Stop Number
+            span Stop #
             span Suburb
             span Bus Stop
             
@@ -121,4 +121,6 @@ block content
                 div.stop.table-data.spacing2
                     span=busStop.stopNumber
                     span=busStop.suburb
-                    span=busStop.busStopName
+                    div.stopNameData
+                        span=busStop.busStopName.replace(/^[^\/]+\//, '')
+                        span=busStop.busStopName.replace(/\/.+$/, '')
