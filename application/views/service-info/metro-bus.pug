@@ -122,5 +122,11 @@ block content
                     span=busStop.stopNumber
                     span=busStop.suburb
                     div.stopNameData
-                        span=busStop.busStopName.replace(/^[^\/]+\//, '')
-                        span=busStop.busStopName.replace(/\/.+$/, '')
+                        -
+                            let busStopRoad = busStop.busStopName.replace(/^[^\/]+\//, '');
+                            let busStopName = busStop.busStopName.replace(/\/.+$/, '');
+                        if busStopRoad !== busStopName
+                            span=busStopRoad
+                        else
+                            span
+                        span=busStopName
