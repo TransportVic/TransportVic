@@ -125,6 +125,9 @@ block content
                         -
                             let busStopRoad = busStop.busStopName.replace(/^[^\/]+\//, '');
                             let busStopName = busStop.busStopName.replace(/\/.+$/, '');
+                            if ((busStopRoad == busStopName) && busStopName.match(/\d+[A-Z]? .+$/)) {
+                                busStopRoad = busStopName.match(/\d+[A-Z]? (.+)$/)[1];
+                            }
                         if busStopRoad !== busStopName
                             span=busStopRoad
                         else
