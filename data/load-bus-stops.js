@@ -10,8 +10,11 @@ let busStops = null;
 let promises = [];
 
 function transformBusStop(inputBusStop) {
-    let stopNameData = inputBusStop.properties.STOP_NAME.match(/([^\(]+) \((.+)+\)/);
+    let stopNameData = inputBusStop.properties.STOP_NAME.match(/^([^\/]+\/.+) \(([\w ]+)\)$/);
     if (!stopNameData) stopNameData = ['', inputBusStop.properties.STOP_NAME, '-TELEBUS'];
+    if (stopNameData[1].includes('(')) { // odd names eg Reed (west) Cres/Bond Dr (Taylors Lakes)
+        stopNameData[1] = stopNameData[1].replace(/^([\w ]+)\((\w+)\) ([\w ]+)/, '$1$3 - $2');
+    }
 
     let stopID = inputBusStop.properties.STOP_ID;
     let additionalGTFSBSCs = [];
