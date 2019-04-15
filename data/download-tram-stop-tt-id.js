@@ -52,7 +52,12 @@ database.connect({
         });
 
         Promise.all(promises).then(() => {
-            let stopData = JSON.stringify({stops: Object.values(stops), serviceByStops });
+            let stopData = Object.values(stops);
+            stopData = JSON.stringify(stopData.map(stop => {
+                stop.services = serviceByStops[stop.tramTrackerID];
+                return stop;
+            }));
+            
             fs.writeFile('./data/tramtracker-ids.json', stopData, () => {
                 console.log('Loaded data for ' + Object.values(stops).length + ' stops');
                 process.exit();
