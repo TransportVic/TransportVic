@@ -45,7 +45,7 @@ function getTrainStations(query, db, callback) {
 }
 
 function getTramStops(query, db, callback) {
-    let tramStopQueries = [{ tramTrackerID: query }];
+    let tramStopQueries = [{ tramTrackerID: query*1 }];
     if (query.length > 4) {
         tramStopQueries.push({ tramStopName: new RegExp(query, 'i') });
     }
