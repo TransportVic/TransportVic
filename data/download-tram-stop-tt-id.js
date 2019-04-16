@@ -54,10 +54,12 @@ database.connect({
         Promise.all(promises).then(() => {
             let stopData = Object.values(stops);
             stopData = JSON.stringify(stopData.map(stop => {
-                stop.services = serviceByStops[stop.tramTrackerID];
+                stop.services = serviceByStops[stop.tramTrackerID].sort((a, b) => a - b).map(e => {
+                    return e === '3' ? '3-3a' : e;
+                }).filter((e, i, a) => a.indexOf(e) === i);
                 return stop;
             }));
-            
+
             fs.writeFile('./data/tramtracker-ids.json', stopData, () => {
                 console.log('Loaded data for ' + Object.values(stops).length + ' stops');
                 process.exit();

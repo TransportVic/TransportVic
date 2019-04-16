@@ -10,6 +10,7 @@
     "emailjs": "^2.2.0",
     "express": "^4.16.4",
     "express-minify": "^1.0.0",
+    "fast-levenshtein": "^2.0.6",
     "geolib": "^2.0.24",
     "jsdom": "^13.0.0",
     "moment": "^2.23.0",

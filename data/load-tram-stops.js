@@ -27,6 +27,7 @@ function transformTramStop(inputTramStop) {
 
         tramStopNumber: stopNameData[1].toUpperCase(),
 
+        ttTramStopName: stopNameData[2].split('/')[0],
         tramStopName: stopNameData[2],
         cleanTramStopName: stopNameData[2].trim().replace(/[^\w]/g, '-').replace(/-+/g, '-').toLowerCase(),
 
@@ -34,7 +35,7 @@ function transformTramStop(inputTramStop) {
         cleanSuburb: stopNameData[3].toLowerCase().replace(/ /g, '-'),
 
         mykiZones: inputTramStop.properties.TICKETZONE.split(','),
-        routes: inputTramStop.properties.ROUTEUSSP.split(','),
+        routes: inputTramStop.properties.ROUTEUSSP.split(',').sort((a, b)=>a.match(/(\d+)/)[0]*1 - b.match(/(\d+)/)[0]*1).map(e => e.replace('/', '-')),
 
         location: {
             type: "MultiPoint",
