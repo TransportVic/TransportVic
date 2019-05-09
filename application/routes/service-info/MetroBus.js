@@ -6,14 +6,16 @@ function flattenDest(dest) {
     return dest.replace(/[^\w]/g, '-').replace(/--+/g, '-').replace(/^-*/, '').replace(/-*$/, '').toLowerCase();
 }
 
-router.get('/:fullService', (req, res) => {
+router.get('/:fullService', (req, res, next) => {
     queryServiceData(req.params, res.db, service => {
-        if (service.length == 2 && service[0].directionID == service[1].directionID)
-            service = service.sort((a,b)=>a.destination.length - b.destination.length);
-        else
-            service = service.sort((a,b)=>a.directionID - b.directionID);
+        if (service.length) {
+            if (service.length == 2 && service[0].directionID == service[1].directionID)
+                service = service.sort((a,b)=>a.destination.length - b.destination.length);
+            else
+                service = service.sort((a,b)=>a.directionID - b.directionID);
 
-        res.redirect('/bus/metro/' + req.params.fullService + '/' + flattenDest(service[0].destination));
+            res.redirect('/bus/metro/' + req.params.fullService + '/' + flattenDest(service[0].destination));
+        } else next();
     })
 });
 
