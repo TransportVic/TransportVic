@@ -51,7 +51,9 @@ function getTimings(trainStationID, db, callback) {
                         else platform = 1;
                     }
 
-                    if (new Date() - arrivalTime > 1000 * 60 * 1.5 || arrivalTime - new Date() > 1000 * 60 * 60 * 3 || platform == null) { // train arrives beyond 3hrs
+                    if (platform == null) platform = '?'
+
+                    if (new Date() - arrivalTime > 1000 * 60 * 1.5 || arrivalTime - new Date() > 1000 * 60 * 60 * 3) { // train arrives beyond 3hrs
                         resolve();
                         return;
                     }
