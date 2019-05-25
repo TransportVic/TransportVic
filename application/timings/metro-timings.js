@@ -51,7 +51,10 @@ function getTimings(trainStationID, db, callback) {
                         else platform = 1;
                     }
 
-                    if (platform == null) platform = '?'
+                    if (platform == null) {
+                        if (departure.flags.includes('RRB-RUN')) platform = 'RRB';
+                        else return resolve();
+                    }
 
                     if (new Date() - arrivalTime > 1000 * 60 * 1.5 || arrivalTime - new Date() > 1000 * 60 * 60 * 3) { // train arrives beyond 3hrs
                         resolve();

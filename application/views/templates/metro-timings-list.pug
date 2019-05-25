@@ -12,8 +12,12 @@ div#filterBar
 for timing in timings
     div.trainService(destination=timing.destination.toLowerCase() platform=timing.platform)
         span(class='trainPlatformData ' + timing.trainLine.toLowerCase().replace(/[ &]/g, '-').replace(/--+/g, '-') + '-line')
-            span Platform
-            span=timing.platform
+            if timing.platform == 'RRB'
+                span
+                span RRB
+            else
+                span Platform
+                span=timing.platform
 
         a(href=`/metro/timings/${timing.destination.toLowerCase().replace(/ /g, '-')}`).destination
             span=timing.trainLine + ' Line Towards'
@@ -35,6 +39,8 @@ for timing in timings
                         span Via City Loop, then Flinders St
                 else
                     span Terminates at Flinders St
+            if timing.platform == 'RRB'
+                    span Rail Replacement Bus
 
         div.timings
             -
