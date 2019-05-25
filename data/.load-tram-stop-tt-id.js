@@ -78,6 +78,7 @@ East Preston Tram Depot #46 - 1846, 2846
 */
 
 let ignore = [7099, 8008, 1846, 2846];
+let allTramTrackerIDs = {};
 
 database.connect({
     poolSize: 100
@@ -89,14 +90,18 @@ database.connect({
 
         promises.push(new Promise(resolve => {
             findTramStop(stop.stopName.trim(), stop.stopNumber, stop.services, stop.suburb, (err, stops) => {
-                if (!stops[0]) console.log(stop)
                 let bestStopMatch = stops[0]._id;
 
-                tramStops.updateDocument({_id: bestStopMatch}, {
-                    $set: {
-                        tramTrackerID: stop.tramTrackerID
-                    }
-                }, resolve);
+                tramStops.findDocument({_id: bestStopMatch}, (err, stopMatch) => {
+                    let tramTrackerIDs = allTramTrackerIDs[bestStopMatch.toString()] || stopMatch.tramTrackerIDs;
+                    if (!tramTrackerIDs.includes(stop.tramTrackerID))
+                        tramTrackerIDs.push(stop.tramTrackerID);
+                    allTramTrackerIDs[bestStopMatch.toString()] = tramTrackerIDs;
+                    
+                    tramStops.updateDocument({_id: bestStopMatch}, {
+                        $set: { tramTrackerIDs }
+                    }, resolve);
+                });
             });
         }));
     });
