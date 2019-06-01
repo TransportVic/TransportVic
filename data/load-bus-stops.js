@@ -10,12 +10,21 @@ let busStops = null;
 let promises = [];
 
 function transformBusStop(inputBusStop) {
+    inputBusStop.properties.STOP_NAME = inputBusStop.properties.STOP_NAME.replace(/ \(\d+\)\)$/, ')');
     let stopNameData = inputBusStop.properties.STOP_NAME.match(/^([^\/]+\/.+) \(([\w ]+)\)$/)
         || inputBusStop.properties.STOP_NAME.match(/^(.+) \(([\w ]+)\)$/);
     if (!stopNameData) stopNameData = ['', inputBusStop.properties.STOP_NAME, '-TELEBUS'];
     if (stopNameData[1].includes('(')) { // odd names eg Reed (west) Cres/Bond Dr (Taylors Lakes)
-        stopNameData[1] = stopNameData[1].replace(/^([\w ]+)\((\w+)\) ([\w ]+)/, '$1$3 - $2');
+        // console.log(inputBusStop.properties.STOP_NAME, inputBusStop.properties.STOP_ID);
+        stopNameData[1] = stopNameData[1].replace(/\(\w+\)/, '');
     }
+    if (stopNameData[1].toLowerCase().includes('railway station/')) {
+        stopNameData[1] = stopNameData[1].replace('Railway Station/', 'Station/');
+    }
+
+    if (stopNameData[1].includes('Station/')) {
+        stopNameData[1] = stopNameData[1].replace('Station/', 'Railway Station/')
+    };
 
     let stopID = inputBusStop.properties.STOP_ID;
     let additionalGTFSBSCs = [];
@@ -26,6 +35,22 @@ function transformBusStop(inputBusStop) {
         if (busStopOverrides[stopID] instanceof Array)
             additionalGTFSBSCs = busStopOverrides[stopID];
     }
+
+    // if (!inputBusStop.properties.TICKETZONE) console.log(inputBusStop.properties.STOP_NAME, inputBusStop.properties.STOP_ID);
+
+    if (inputBusStop.properties.STOP_ID == '46616') inputBusStop.properties.TICKETZONE = '2'; // this is very yag
+
+    if (inputBusStop.properties.STOP_ID == '48232') inputBusStop.properties.TICKETZONE = '1';
+    if (inputBusStop.properties.STOP_ID == '48752') inputBusStop.properties.TICKETZONE = '1,2';
+    if (inputBusStop.properties.STOP_ID == '48753') inputBusStop.properties.TICKETZONE = '1,2';
+    if (inputBusStop.properties.STOP_ID == '48754') inputBusStop.properties.TICKETZONE = '1,2';
+    if (inputBusStop.properties.STOP_ID == '48755') inputBusStop.properties.TICKETZONE = '1,2';
+
+    if (inputBusStop.properties.STOP_ID == '48730') inputBusStop.properties.TICKETZONE = '2';
+    if (inputBusStop.properties.STOP_ID == '48731') inputBusStop.properties.TICKETZONE = '2';
+
+    if (inputBusStop.properties.STOP_ID == '48742') inputBusStop.properties.TICKETZONE = '2';
+    if (inputBusStop.properties.STOP_ID == '48743') inputBusStop.properties.TICKETZONE = '1';
 
     return {
         gtfsBusStopCodes: [stopID].concat(additionalGTFSBSCs),
