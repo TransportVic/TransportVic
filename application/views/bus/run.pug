@@ -32,7 +32,18 @@ block content
         for stop in departures
             div.departure.coloured-row
                 div.stop.table-data.spacing2
-                    span=stops[stop.stopID].busStopName
+                    div.stopNameData
+                        -
+                            let busStopRoad = stops[stop.stopID].busStopName.replace(/^[^\/]+\//, '');
+                            let busStopName = stops[stop.stopID].busStopName.replace(/\/.+$/, '');
+                            if ((busStopRoad == busStopName) && busStopName.match(/\d+[A-Z]? .+$/)) {
+                                busStopRoad = busStopName.match(/\d+[A-Z]? (.+)$/)[1];
+                            }
+                        if busStopRoad !== busStopName
+                            span=busStopRoad
+                        else
+                            span
+                        span=busStopName
                     -
                         let headwayDevianceClass = 'unknown'
                         

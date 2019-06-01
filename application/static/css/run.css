@@ -83,6 +83,32 @@
     width: calc(90vw - 10vh);
 }
 
+.stopNameData {
+    width: calc(90vw - 10vh);
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    text-align: left;
+}
+
+.stopNameData > span {
+    padding-left: 2vw;
+}
+
+.stopNameData > :nth-child(1) {
+    color: #8f8f8f;
+    font-size: calc(1vh + 1vw);
+}
+
+.stopNameData > :nth-child(2) {
+    font-size: calc(1.4vh + 1.4vw);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
 div.busArrival {
     height: calc(4.5vh + 4.5vw);
     width: calc(10vw + 10vh);
