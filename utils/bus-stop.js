@@ -68,7 +68,6 @@ function updateBusStopsAsNeeded(busStops, db, callback) {
 function updateBusStopFromPTVStopID(stopID, db, callback) {
     ptvAPI.makeRequest(`/v3/stops/${stopID}/route_type/2`, (err, data) => {
         let gtfsBusStopCode = data.stop.point_id + '';
-        console.log(gtfsBusStopCode, stopID)
         db.getCollection('bus stops').findDocument({ gtfsBusStopCodes: gtfsBusStopCode }, (err, busStop) => {
             let { busStopCodes } = busStop;
             if (!busStopCodes.includes(stopID)) {

@@ -87,7 +87,6 @@ function getTimingsForBusStop(busStopCode, db, callback) {
                     db.getCollection('bus stops').findDocument({
                         busStopCodes: serviceData.stops.slice(-1)[0].busStopCode
                         }, (err, destinationBusStop) => {
-                        if (!destinationBusStop) console.log(serviceData.fullService, serviceData.stops.slice(-1)[0])
                         timings[serviceData.fullService][serviceData.destination].push({
                             service: serviceData.fullService,
                             destination: destinationBusStop,
