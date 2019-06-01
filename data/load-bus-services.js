@@ -56,7 +56,12 @@ function transformBusService(inputBusService, serviceType) {
     } else if (destination.toLowerCase().includes('clockwise')) {
         serviceVariant = 'C';
     }
-
+    if (!inputBusService.properties.OPERATOR) {
+        inputBusService.properties.OPERATOR = '??';
+    }
+    if (inputBusService.properties.ROUTESHTNM === '109 Express') {
+        return null;
+    }
     return {
         fullService: inputBusService.properties.ROUTESHTNM,
         serviceNumber: getServiceNumber(inputBusService.properties.ROUTESHTNM),
@@ -88,7 +93,7 @@ function loadRouteIDs(callback) {
 getAllBusServices(metroBusServices).forEach(e=>{
     allServices.push(findBestServices(metroBusServices.filter(f=>f.properties.ROUTESHTNM == e)).map(service => {
         return transformBusService(service, 'metro');
-    }));
+    }).filter(e => !!e));
 });
 
 database.connect({
@@ -104,7 +109,7 @@ database.connect({
                     if (direction.serviceType === 'telebus')
                         direction.gtfsID = '7-TB' + direction.serviceVariant;
 
-                    if (!routeIDs[direction.gtfsID]) console.log(direction.fullService)
+                    // if (!routeIDs[direction.gtfsID]) console.log(direction.fullService)
                     direction.ptvRouteID = routeIDs[direction.gtfsID] || routeIDs[direction.fullService];
 
                     busServices.countDocuments({ fullService: direction.fullService, destination: direction.destination }, (err, present) => {
@@ -113,7 +118,6 @@ database.connect({
                                 delete direction.ptvRouteID;
                                 delete direction.directionID;
                                 delete direction.stops;
-                                direction.skeleton = false;
                             }
 
                             busServices.updateDocument({ fullService: direction.fullService, destination: direction.destination }, {
