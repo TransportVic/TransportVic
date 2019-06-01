@@ -6,12 +6,6 @@
     background-color: #202020;
 }
 
-* {
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-}
-
 #serviceInfo {
     display: flex;
     height: calc(7vh + 6vw);

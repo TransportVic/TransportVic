@@ -1,0 +1,22 @@
+extends layout
+
+block header
+    -
+        let messages = {
+            404: 'Page Not Found',
+            500: 'Server Error'
+        }
+    title=`TransportVic - ${code}`
+    span#title=messages[code]
+    
+block css
+    link(rel='stylesheet' href='/static/css/error.css')
+
+block content
+    -
+        messages = {
+            404: 'Page Not Found...',
+            500: 'Whoops...'
+        }
+    span=code
+    span=messages[code]

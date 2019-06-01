@@ -7,7 +7,7 @@ const {updateBusStopFromPTVStopID} = require('../../../utils/bus-stop');
 const {getServiceInfo} = require('../../timings/bus-timings');
 
 let cachedRuns = new TimedCache({ defaultTtl: 1000 * 60 * 1 });
-let cachedRunInfo = new TimedCache({ defaultTtl: 100 * 60 * 1 });
+let cachedRunInfo = new TimedCache({ defaultTtl: 100 * 60 * 10 });
 
 function getRunService(runID, db, callback) {
     if (cachedRunInfo.get(runID)) {

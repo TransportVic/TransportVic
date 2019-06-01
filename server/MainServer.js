@@ -118,6 +118,20 @@ module.exports = class MainServer {
             app.use(routers[routerName], router);
         });
 
+        app.use('/500', (req, res) => {throw new Error('500')});
+
+
+        app.use((req, res, next) => {
+            next(new Error('404'));
+        });
+        app.use((err, req, res, next) => {
+            if (err.message === '404') {
+                res.render('error', {code: 404});
+            } else {
+                res.render('error', {code: 500})
+            }
+        });
+
         // app.get('/sw.js', (req, res) => {
         //     res.setHeader('Cache-Control', 'no-cache');
         //     res.sendFile(path.join(__dirname, '../application/static/sw.js'));

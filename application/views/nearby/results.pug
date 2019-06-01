@@ -41,9 +41,10 @@ for stop in allStops
         let url = '';
         if (stopType == 'busStops') url = `/bus/timings/${stop.cleanSuburb}/${stop.cleanBusStopName}`
         else if (stopType == 'trainStations') url = `/metro/timings/${stop.stationName.slice(0, -16).toLowerCase().replace(/ /g, '-')}`
+        else if (stopType == 'tramStops') url = `/tram/timings/${stop.cleanSuburb}/${stop.cleanTramStopName}`
         else url = '#'
     
-    a(href=url).stop        
+    a(href=url).stop
         div
             div(class='distanceMeter ' + getDistanceCssClass(distanceToStop))
                 span=Math.round(distanceToStop * 1000)
