@@ -72,7 +72,7 @@ div.timings {
     display: flex;
 }
 
-div.busArrival {
+a.busArrival {
     display: flex;
     flex-direction: column;
 
@@ -85,69 +85,69 @@ div.busArrival {
     color: #101010;
 }
 
-div.busService:nth-child(odd) div.busArrival.early:nth-child(odd) {
+div.busService:nth-child(odd) a.busArrival.early:nth-child(odd) {
     background-color: #6fd6e7;
 }
 
-div.busService:nth-child(odd) div.busArrival.early:nth-child(even) {
+div.busService:nth-child(odd) a.busArrival.early:nth-child(even) {
     background-color: #64c0cf;
 }
 
-div.busService:nth-child(odd) div.busArrival.on-time:nth-child(odd) {
+div.busService:nth-child(odd) a.busArrival.on-time:nth-child(odd) {
     background-color: #60bd29;
 }
 
-div.busService:nth-child(odd) div.busArrival.on-time:nth-child(even) {
+div.busService:nth-child(odd) a.busArrival.on-time:nth-child(even) {
     background-color: #58ad25;
 }
 
-div.busService:nth-child(odd) div.busArrival.late:nth-child(odd) {
+div.busService:nth-child(odd) a.busArrival.late:nth-child(odd) {
     background-color: #c93e29;
 }
 
-div.busService:nth-child(odd) div.busArrival.late:nth-child(even) {
+div.busService:nth-child(odd) a.busArrival.late:nth-child(even) {
     background-color: #bd3825;
 }
 
-div.busService:nth-child(odd) div.busArrival.unknown:nth-child(odd) {
+div.busService:nth-child(odd) a.busArrival.unknown:nth-child(odd) {
     background-color: #9c9c9c;
 }
 
-div.busService:nth-child(odd) div.busArrival.unknown:nth-child(even) {
+div.busService:nth-child(odd) a.busArrival.unknown:nth-child(even) {
     background-color: #a8a8a8;
 }
 
 
 
-div.busService:nth-child(even) div.busArrival.early:nth-child(even) {
+div.busService:nth-child(even) a.busArrival.early:nth-child(even) {
     background-color: #6fd6e7;
 }
 
-div.busService:nth-child(even) div.busArrival.early:nth-child(odd) {
+div.busService:nth-child(even) a.busArrival.early:nth-child(odd) {
     background-color: #64c0cf;
 }
 
-div.busService:nth-child(even) div.busArrival.on-time:nth-child(even) {
+div.busService:nth-child(even) a.busArrival.on-time:nth-child(even) {
     background-color: #60bd29;
 }
 
-div.busService:nth-child(even) div.busArrival.on-time:nth-child(odd) {
+div.busService:nth-child(even) a.busArrival.on-time:nth-child(odd) {
     background-color: #58ad25;
 }
 
-div.busService:nth-child(even) div.busArrival.late:nth-child(even) {
+div.busService:nth-child(even) a.busArrival.late:nth-child(even) {
     background-color: #c93e29;
 }
 
-div.busService:nth-child(even) div.busArrival.late:nth-child(odd) {
+div.busService:nth-child(even) a.busArrival.late:nth-child(odd) {
     background-color: #bd3825;
 }
 
-div.busService:nth-child(even) div.busArrival.unknown:nth-child(even) {
+div.busService:nth-child(even) a.busArrival.unknown:nth-child(even) {
     background-color: #9c9c9c;
 }
 
-div.busService:nth-child(even) div.busArrival.unknown:nth-child(odd) {
+div.busService:nth-child(even) a.busArrival.unknown:nth-child(odd) {
     background-color: #a8a8a8;
 }
 

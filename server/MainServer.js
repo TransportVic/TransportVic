@@ -108,6 +108,8 @@ module.exports = class MainServer {
             NearbyPTStops: '/nearby',
             Bookmarks: '/bookmarks',
 
+            'runs/MetroBus': '/bus/runs',
+
             'service-info/MetroBus': '/bus/metro'
         };
 

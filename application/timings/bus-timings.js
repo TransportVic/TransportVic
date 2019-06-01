@@ -94,7 +94,8 @@ function getTimingsForBusStop(busStopCode, db, callback) {
                             headwayDeviance,
                             operators: serviceData.operators,
                             serviceNumber: serviceData.serviceNumber,
-                            serviceVariant: serviceData.serviceVariant
+                            serviceVariant: serviceData.serviceVariant,
+                            runID: departure.run_id
                         });
 
                         timings[serviceData.fullService][serviceData.destination] =
@@ -147,4 +148,4 @@ function getTimings(busStopCodes, db, callback) {
     });
 }
 
-module.exports = { getTimings };
+module.exports = { getTimings, getServiceInfo };

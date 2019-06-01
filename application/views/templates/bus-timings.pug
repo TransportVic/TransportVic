@@ -40,7 +40,7 @@ for serviceNumber in services
                         else if (timing.headwayDeviance !== null)
                             headwayDevianceClass = 'on-time'
                     
-                    div(class='busArrival ' + headwayDevianceClass)
+                    a(class='busArrival ' + headwayDevianceClass href=`/bus/runs/${timing.runID}/${busStop.cleanSuburb}/${busStop.cleanBusStopName}`)
                         - let timeToArrival = getTimingsDifference(timing.arrivalTime, +new Date());
                         if timeToArrival.minutes == 0
                             span Arr
