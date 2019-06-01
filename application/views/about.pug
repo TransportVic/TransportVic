@@ -1,0 +1,14 @@
+extends layout
+
+block header
+    title TransportVic - About
+    span#title About
+    
+block css
+    link(rel='stylesheet' href='/static/css/about.css')
+
+block content
+    a(href='https://ptv.vic.gov.au')
+        div(style='background-color: #fa5757')
+            img(src='/static/images/home/button.svg' alt='Bookmarks')
+        span Timetable data sourced from PTV

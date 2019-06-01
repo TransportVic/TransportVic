@@ -1,0 +1,28 @@
+#content > a {
+    display: flex;
+    align-items: center;
+    background-color: #2a2a2a;
+}
+
+#content > a:nth-child(even) {
+    background-color: #202020;
+}
+
+#content > a > div {
+    width: calc(10vw + 10vh);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#content > a > div > img {
+    width: calc(7vw + 7vh);
+    height: calc(7vw + 7vh);
+}
+
+#content > a > span {
+    margin-left: calc(2vw + 2vh);
+    font-size: calc(2.5vw + 2.5vh);
+    width: calc(100vw - (10vw + 10vh));
+}
