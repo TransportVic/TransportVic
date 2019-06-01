@@ -222,10 +222,38 @@ function queryServiceData(query, db, callback) {
     });
 }
 
+function resetServiceDirections(serviceID, db, callback) {
+    db.getCollection('bus services').updateDocuments({
+        ptvRouteID: serviceID
+    }, {
+        $set: {
+            directionID: 0
+        }
+    }, () => {
+        let p = [];
+        let finalServices = [];
+        db.getCollection('bus services').findDocuments({ ptvRouteID: serviceID }, (err, newSkeletons) => {
+            newSkeletons.forEach(newSkeleton => {
+                p.push(new Promise(resolve => {
+                    populateService(newSkeleton, service => {
+                        db.getCollection('bus services').updateDocument({_id: newSkeleton._id}, { $set: service }, () => {
+                            finalServices.push(service);
+                            resolve();
+                        });
+                    });
+                }));
+            });
+
+            Promise.all(p).then(() => callback(finalServices));
+        });
+    });
+}
+
 module.exports = {
     getServiceNumber,
     getServiceVariant,
     adjustDestination,
     getServiceData,
-    queryServiceData
+    queryServiceData,
+    resetServiceDirections
 };

@@ -1,5 +1,5 @@
 const ptvAPI = require('../../utils/ptv-api');
-const {queryServiceData} = require('../../utils/bus-service');
+const { queryServiceData, resetServiceDirections } = require('../../utils/bus-service');
 const TimedCache = require('timed-cache');
 const EventEmitter = require('events');
 
@@ -22,12 +22,25 @@ function getServiceInfo(serviceID, directionID, db, callback) {
 
     queryServiceData({ ptvRouteID: serviceID }, db, loadedServices => {
         let serviceData = loadedServices.filter(service => service.directionID == directionID)[0];
-        services[id] = serviceData;
 
-        callback(serviceData);
+        function onComplete(service) {
+            services[id] = service;
 
-        locks[id].emit('loaded', serviceData);
-        delete locks[id];
+            callback(service);
+
+            if (locks[id]) {
+                locks[id].emit('loaded', service);
+                delete locks[id];
+            }
+        }
+
+        if (!serviceData) { // likely to be direction updated cos p  t  v
+            resetServiceDirections(serviceID, db, serviceData => {
+                onComplete(serviceData.filter(service => service.directionID == directionID)[0]);
+            });
+        } else {
+            onComplete(serviceData);
+        }
     })
 }
 
