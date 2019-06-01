@@ -208,20 +208,18 @@ function queryServiceData(query, db, callback) {
             promises.push(new Promise(resolve => {
                 if (service.skeleton) {
                     populateService(service, updatedService => {
-                        checkStopIDs(service, db, () => {
-                            finalServices.push(updatedService);
+                        finalServices.push(updatedService);
 
-                            db.getCollection('bus services').updateDocument({_id: service._id}, { $set: updatedService }, () => {
-                                let termini = [updatedService.stops[0], updatedService.stops.slice(-1)[0]];
-                                let p = [];
-                                termini.forEach(terminus => {
-                                    p.push(new Promise(r => {
-                                        updateBusStopFromPTVStopID(terminus.busStopCode, db, r);
-                                    }));
-                                })
+                        db.getCollection('bus services').updateDocument({_id: service._id}, { $set: updatedService }, () => {
+                            let termini = [updatedService.stops[0], updatedService.stops.slice(-1)[0]];
+                            let p = [];
+                            termini.forEach(terminus => {
+                                p.push(new Promise(r => {
+                                    updateBusStopFromPTVStopID(terminus.busStopCode, db, r);
+                                }));
+                            })
 
-                                Promise.all(p).then(resolve);
-                            });
+                            Promise.all(p).then(resolve);
                         });
                     });
                 } else {
@@ -271,11 +269,9 @@ function resetServiceDirections(serviceID, db, callback) {
             newSkeletons.forEach(newSkeleton => {
                 p.push(new Promise(resolve => {
                     populateService(newSkeleton, service => {
-                        checkStopIDs(service, db, () => {
-                            db.getCollection('bus services').updateDocument({_id: newSkeleton._id}, { $set: service }, () => {
-                                finalServices.push(service);
-                                resolve();
-                            });
+                        db.getCollection('bus services').updateDocument({_id: newSkeleton._id}, { $set: service }, () => {
+                            finalServices.push(service);
+                            resolve();
                         });
                     });
                 }));
@@ -292,5 +288,6 @@ module.exports = {
     adjustDestination,
     getServiceData,
     queryServiceData,
-    resetServiceDirections
+    resetServiceDirections,
+    checkStopIDs
 };
