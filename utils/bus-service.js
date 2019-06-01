@@ -232,7 +232,7 @@ function resetServiceDirections(serviceID, db, callback) {
     }, () => {
         let p = [];
         let finalServices = [];
-        db.getCollection('bus services').findDocuments({ ptvRouteID: serviceID }, (err, newSkeletons) => {
+        db.getCollection('bus services').findDocuments({ ptvRouteID: serviceID }).toArray((err, newSkeletons) => {
             newSkeletons.forEach(newSkeleton => {
                 p.push(new Promise(resolve => {
                     populateService(newSkeleton, service => {
