@@ -27,8 +27,6 @@ function transformBusStop(inputBusStop) {
             additionalGTFSBSCs = busStopOverrides[stopID];
     }
 
-    if (stopNameData[1].trim() === '191 Waiora Rd') console.log(stopNameData)
-
     return {
         gtfsBusStopCodes: [stopID].concat(additionalGTFSBSCs),
         busStopName: stopNameData[1].trim(),
