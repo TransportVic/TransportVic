@@ -8,6 +8,11 @@ block css
     link(rel='stylesheet' href='/static/css/run.css')
     link(rel='stylesheet' href='/static/css/bus/operator-colours.css')
 
+block scripts
+    - let stopIndex = departures.indexOf(departures.filter(d => stops[d.stopID].cleanBusStopName == busStop.cleanBusStopName)[0]);
+    script=`window.anchorStop = ${stopIndex}`
+    script(src='/static/scripts/run.js')
+
 block content        
     -
         function getTimingsDifference(a, b) {

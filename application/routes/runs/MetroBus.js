@@ -49,7 +49,8 @@ function getRunData(data, db, callback) {
 
                         return transformed;
                     }),
-                    service: busService
+                    service: busService,
+                    busStop
                 };
 
                 cachedRuns.put(runID, finalData);
