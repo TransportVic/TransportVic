@@ -17,11 +17,12 @@ function getRunService(runID, db, callback) {
 
     ptvAPI.makeRequest(`/v3/runs/${runID}/route_type/2`, (err, data) => {
         let runService = data.run.route_id,
-            runDirection = data.run.direction_id;
+            runDirection = data.run.direction_id,
+            dest = data.run.final_stop_id;
 
         getServiceInfo(runService, runDirection, db, service => {
-            cachedRunInfo.put(runID, service);
-            callback(service);
+            cachedRunInfo.put(runID, {service, dest});
+            callback({service, dest});
         });
     });
 }
@@ -36,8 +37,11 @@ function getRunData(data, db, callback) {
             return;
         }
 
-        getRunService(runID, db, busService => {
-            ptvAPI.makeRequest(`/v3/pattern/run/${runID}/route_type/2?stop_id=${busService.stops.slice(-2)[0].busStopCode}`, (err, data) => {
+        getRunService(runID, db, data => {
+            let busService = data.service,
+                destStop = data.dest;
+            let fromStop = busService.stops[busService.stops.indexOf(busService.stops.filter(s => s.busStopCode == destStop)[0]) - 1].busStopCode;
+            ptvAPI.makeRequest(`/v3/pattern/run/${runID}/route_type/2?stop_id=${fromStop}`, (err, data) => {
                 let finalData = {
                     departures: data.departures.map(departure => {
                         let transformed = {
