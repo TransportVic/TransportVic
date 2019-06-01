@@ -13,11 +13,6 @@ function populateBusStopData(busStop, callback) {
         let stopData = data.stop;
         busStop.busStopCodes.push(stopData.stop_id);
 
-        if (busStop.busStopName === 'Monash University/Wellington Rd') {
-            if (!busStop.busStopCodes.includes(33430))
-                busStop.busStopCodes.push(33430);
-        }
-
         if (busStop.suburb == '-TELEBUS') {
             busStop.busStopName = stopData.stop_name.trim();
             busStop.cleanBusStopName = busStop.busStopName.replace(/[^\w]/g, '-').replace(/-+/g, '-').toLowerCase();
@@ -70,8 +65,25 @@ function updateBusStopsAsNeeded(busStops, db, callback) {
     Promise.all(promises).then(() => callback(finalBusStops));
 }
 
+function updateBusStopFromPTVStopID(stopID, db, callback) {
+    ptvAPI.makeRequest(`/v3/stops/${stopID}/route_type/2`, (err, data) => {
+        let gtfsBusStopCode = data.stop.point_id + '';
+        db.getCollection('bus stops').findDocument({ gtfsBusStopCodes: gtfsBusStopCode }, (err, busStop) => {
+            let { busStopCodes } = busStop;
+            if (!busStopCodes.includes(stopID)) {
+                busStopCodes.push(stopID);
+            }
+
+            db.getCollection('bus stops').updateDocument({ _id: busStop._id }, {
+                $set: { busStopCodes }
+            }, callback);
+        });
+    });
+}
+
 module.exports = {
     getBusStop,
     updateBusStopsAsNeeded,
-    hashBusStop
+    hashBusStop,
+    updateBusStopFromPTVStopID
 };

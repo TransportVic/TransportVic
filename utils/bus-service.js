@@ -1,7 +1,7 @@
 const ptvAPI = require('./ptv-api');
 const EventEmitter = require('events');
 const safeRegex = require('safe-regex');
-const { updateBusStopsAsNeeded } = require('./bus-stop');
+const { updateBusStopFromPTVStopID } = require('./bus-stop');
 const { getFirstBus, getLastBus, getFrequencies,
     getNextWeekday, getNextSaturday, getNextSunday } = require('./service-stats');
 
@@ -179,14 +179,14 @@ function queryServiceData(query, db, callback) {
 
                         db.getCollection('bus services').updateDocument({_id: service._id}, { $set: updatedService }, () => {
                             let termini = [updatedService.stops[0], updatedService.stops.slice(-1)[0]];
-                            db.getCollection('bus stops').findDocuments({
-                                $or: termini.map(busStop => {return {
-                                    busStopName: new RegExp(busStop.busStopName.replace(/([*+?])/g, '\\$1'), 'i'),
-                                    suburb: busStop.suburb
-                                }})
-                            }).toArray((err, termini) => {
-                                updateBusStopsAsNeeded(termini, db, resolve);
-                            });
+                            let p = [];
+                            termini.forEach(terminus => {
+                                p.push(new Promise(r => {
+                                    updateBusStopFromPTVStopID(terminus.busStopCode, db, r);
+                                }));
+                            })
+
+                            Promise.all(p).then(resolve);
                         });
                     });
                 } else {
