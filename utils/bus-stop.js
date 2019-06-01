@@ -76,7 +76,7 @@ function updateBusStopFromPTVStopID(stopID, db, callback) {
 
             db.getCollection('bus stops').updateDocument({ _id: busStop._id }, {
                 $set: { busStopCodes }
-            }, callback);
+            }, () => callback(busStop));
         });
     });
 }

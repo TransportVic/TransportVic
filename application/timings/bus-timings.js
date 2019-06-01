@@ -142,7 +142,15 @@ function getTimings(busStopCodes, db, callback) {
 
     Promise.all(promises).then(() => {
         let finalTimings = {};
-        allTimings.forEach(timing => finalTimings = Object.assign(finalTimings, timing));
+        allTimings.forEach(busStopTimings => {
+            Object.keys(busStopTimings).forEach(service => {
+                if (finalTimings[service]) {
+                    finalTimings[service] = Object.assign(finalTimings[service], busStopTimings[service]);
+                } else {
+                    finalTimings[service] = busStopTimings[service];
+                }
+            });
+        });
 
         callback(finalTimings);
     });

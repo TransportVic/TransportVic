@@ -1,0 +1,62 @@
+extends ../layout
+
+block header
+    title='TransportVic - Bus ' + service.fullService + ' Stopping Pattern'
+    span#title='Bus ' + service.fullService + ' Stopping Pattern'
+    
+block css
+    link(rel='stylesheet' href='/static/css/run.css')
+    link(rel='stylesheet' href='/static/css/bus/operator-colours.css')
+
+block content        
+    -
+        function getTimingsDifference(a, b) {
+            let d = new Date(Math.abs(a - b));
+            let sign = a > b ? 1 : -1;
+            return {minutes: d.getUTCMinutes() + d.getUTCHours() * 60, seconds: d.getUTCSeconds(), sign}
+        };
+    div#serviceInfo
+        a(class=service.operators[0].toLowerCase().replace(/[^\w]/g, '-'))#serviceNumber
+            span=service.fullService
+        div.coloured-row#towards
+            span Towards
+            span=service.destination
+    div#stops
+        div.table-header.table-data.spacing1
+            span Bus Stop
+        for stop in departures
+            div.departure.coloured-row
+                div.stop.table-data.spacing2
+                    span=stops[stop.stopID].busStopName
+                    -
+                        let headwayDevianceClass = 'unknown'
+                        
+                        if (stop.headwayDeviance > 90)
+                            headwayDevianceClass = 'early'
+                        else if (stop.headwayDeviance < -90)
+                            headwayDevianceClass = 'late'
+                        else if (stop.headwayDeviance !== null)
+                            headwayDevianceClass = 'on-time'
+                    
+                    
+                    div(class='busArrival ' + headwayDevianceClass)
+                        - let timeToArrival = getTimingsDifference(stop.arrivalTime, +new Date());
+                        - let arrivalTime = [0].concat([...(stop.arrivalTime.getHours()+'')]).slice(-2).join('') + ':' + [0].concat([...(stop.arrivalTime.getMinutes()+'')]).slice(-2).join('');
+                        if timeToArrival.sign > 0
+                            div.timeToArrival
+                                if timeToArrival.minutes == 0
+                                    span Arr
+                                else
+                                    span=timeToArrival.minutes
+                            div.arrivalData
+                                if stop.headwayDeviance !== null && stop.headwayDeviance !== 0
+                                    -
+                                        let minutes = Math.floor(Math.abs(stop.headwayDeviance) / 60);
+                                        let seconds = [0].concat([...(Math.abs(stop.headwayDeviance) % 60).toFixed(0)]).slice(-2).join('');
+                                    span.headwayDeviance=(stop.headwayDeviance > 0 ? '+' : '-') + ' ' + minutes + ':' + seconds
+                                else
+                                    span.headwayDeviance -
+                                span.arrivalTime=arrivalTime
+                        else
+                            div.arrivalTimeOnly
+                                span=arrivalTime

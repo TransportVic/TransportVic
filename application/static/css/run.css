@@ -1,0 +1,159 @@
+* > .coloured-row:nth-child(even) {
+    background-color: #2a2a2a;
+}
+
+* > .coloured-row:nth-child(odd) {
+    background-color: #202020;
+}
+
+* {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+#serviceInfo {
+    display: flex;
+    height: calc(7vh + 6vw);
+}
+
+#serviceNumber {
+    width: calc(9vh + 9vw);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#serviceNumber > span {
+    font-size: calc(3vh + 3vw);
+    margin-top: calc(-1vh - 0.6vw);
+}
+
+#towards {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+
+    width: 100%;
+}
+
+#towards span {
+    margin-left: calc(1vw + 1vh);
+}
+
+#towards span:nth-child(1) {
+    font-size: calc(0.7vw + 0.7vh);
+
+    color: #8f8f8f;
+}
+
+#towards span:nth-child(2) {
+    font-size: calc(1.6vw + 1.6vh);
+    margin-top: calc(-0.4vw - 0.4vh);
+
+    color: #c5c5c5;
+}
+
+.table-header {
+    background-color: #171717;
+}
+
+.table-data {
+    height: calc(4.5vh + 4.5vw);
+    display: flex;
+    align-items: center;
+    font-size: calc(1.6vh + 1.6vw);
+    justify-content: flex-start;
+}
+
+.table-data > * {
+    text-align: center;
+    width: 30vw;
+}
+
+.table-data > span {
+    margin-top: calc(-0.2vh - 0.1vw);
+}
+
+.table-data > span {
+    text-align: left;
+    padding-left: 2vw;
+    width: calc(90vw - 10vh);
+}
+
+div.busArrival {
+    height: calc(4.5vh + 4.5vw);
+    width: calc(10vw + 10vh);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-evenly;
+    color: #101010;
+}
+
+.timeToArrival {
+    font-size: calc(2.4vw + 2.4vh);
+    text-align: left;
+    width: calc(3vw + 3vh);
+}
+
+.arrivalTimeOnly {
+    font-size: calc(2.4vw + 2.4vh);
+}
+
+.arrivalData {
+    height: calc(4.5vh + 4.5vw);
+    width: calc(3vw + 3vh);
+    text-align: right;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.headwayDeviance {
+    font-size: calc(1.2vw + 1.2vh);
+}
+
+.arrivalTime {
+    font-size: calc(1.2vw + 1.2vh);
+}
+
+
+
+.departure:nth-child(odd) div.busArrival.early {
+    background-color: #6fd6e7;
+}
+
+.departure:nth-child(odd) div.busArrival.on-time {
+    background-color: #60bd29;
+}
+
+.departure:nth-child(odd) div.busArrival.late {
+    background-color: #c93e29;
+}
+
+.departure:nth-child(odd) div.busArrival.unknown {
+    background-color: #9c9c9c;
+}
+
+
+
+.departure:nth-child(even) div.busArrival.early {
+    background-color: #64c0cf;
+}
+
+.departure:nth-child(even) div.busArrival.on-time {
+    background-color: #58ad25;
+}
+
+.departure:nth-child(even) div.busArrival.late {
+    background-color: #bd3825;
+}
+
+.departure:nth-child(even) div.busArrival.unknown {
+    background-color: #a8a8a8;
+}

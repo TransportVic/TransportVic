@@ -104,6 +104,39 @@ function populateService(skeleton, callback) {
 
 }
 
+function checkStopIDs(service, db, callback) {
+    let promises = [];
+    let busStops = db.getCollection('bus stops');
+    let finalStops = [];
+
+    service.stops.forEach((stop, i) => {
+        promises.push(new Promise(resolve => {
+            busStops.findDocument({
+                busStopCodes: stop.busStopCode
+            }, (err, busStop) => {
+                function done(busStop) {
+                    finalStops[i] = Object.assign(stop, {
+                        cleanSuburb: busStop.cleanSuburb,
+                        cleanBusStopName: busStop.cleanBusStopName
+                    });
+                    resolve();
+                }
+
+                if (busStop) done(busStop);
+                else updateBusStopFromPTVStopID(stop.busStopCode, db, done);
+            });
+        }));
+    });
+
+    Promise.all(promises).then(() => {
+        db.getCollection('bus services').updateDocument({ _id: service._id }, {
+            $set: {
+                stops: finalStops
+            }
+        }, () => callback());
+    });
+}
+
 function getServiceData(serviceNumber, db, callback) {
     if (serviceNumber.match(/[a-z]/i) && safeRegex(serviceNumber))
         serviceNumber = new RegExp(serviceNumber, 'i');
@@ -175,18 +208,20 @@ function queryServiceData(query, db, callback) {
             promises.push(new Promise(resolve => {
                 if (service.skeleton) {
                     populateService(service, updatedService => {
-                        finalServices.push(updatedService);
+                        checkStopIDs(service, db, () => {
+                            finalServices.push(updatedService);
 
-                        db.getCollection('bus services').updateDocument({_id: service._id}, { $set: updatedService }, () => {
-                            let termini = [updatedService.stops[0], updatedService.stops.slice(-1)[0]];
-                            let p = [];
-                            termini.forEach(terminus => {
-                                p.push(new Promise(r => {
-                                    updateBusStopFromPTVStopID(terminus.busStopCode, db, r);
-                                }));
-                            })
+                            db.getCollection('bus services').updateDocument({_id: service._id}, { $set: updatedService }, () => {
+                                let termini = [updatedService.stops[0], updatedService.stops.slice(-1)[0]];
+                                let p = [];
+                                termini.forEach(terminus => {
+                                    p.push(new Promise(r => {
+                                        updateBusStopFromPTVStopID(terminus.busStopCode, db, r);
+                                    }));
+                                })
 
-                            Promise.all(p).then(resolve);
+                                Promise.all(p).then(resolve);
+                            });
                         });
                     });
                 } else {
@@ -236,9 +271,11 @@ function resetServiceDirections(serviceID, db, callback) {
             newSkeletons.forEach(newSkeleton => {
                 p.push(new Promise(resolve => {
                     populateService(newSkeleton, service => {
-                        db.getCollection('bus services').updateDocument({_id: newSkeleton._id}, { $set: service }, () => {
-                            finalServices.push(service);
-                            resolve();
+                        checkStopIDs(service, db, () => {
+                            db.getCollection('bus services').updateDocument({_id: newSkeleton._id}, { $set: service }, () => {
+                                finalServices.push(service);
+                                resolve();
+                            });
                         });
                     });
                 }));
