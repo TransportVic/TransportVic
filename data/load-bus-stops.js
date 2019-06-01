@@ -100,7 +100,7 @@ let transformedStops = Object.values(mergeBusStops(metroBusStops.concat(Object.v
     if (acc[busStop.busStopName + busStop.suburb]) {
         let svc = acc[busStop.busStopName + busStop.suburb];
 
-        svc.gtfsBusStopCodes.push(busStop.gtfsBusStopCodes[0]);
+        svc.gtfsBusStopCodes = svc.gtfsBusStopCodes.concat(busStop.gtfsBusStopCodes);
         svc.routes = svc.routes.concat(busStop.routes).filter((e, i, a) => a.indexOf(e) == i).sort((a, b) => a*1 - b*1);
         svc.location.coordinates = svc.location.coordinates.concat(busStop.location.coordinates);
 
@@ -128,7 +128,7 @@ database.connect({
                         delete stop.busStopCodes;
                     }
 
-                    busStops.updateDocument({ busStopName: stop.busStopName, suburb: stop.suburb }, {
+                    busStops.updateDocument({ gtfsBusStopCodes: stop.gtfsBusStopCodes[0] }, {
                         $set: stop
                     }, resolve);
                 } else {
