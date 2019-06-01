@@ -10,7 +10,8 @@ let busStops = null;
 let promises = [];
 
 function transformBusStop(inputBusStop) {
-    let stopNameData = inputBusStop.properties.STOP_NAME.match(/^([^\/]+\/.+) \(([\w ]+)\)$/);
+    let stopNameData = inputBusStop.properties.STOP_NAME.match(/^([^\/]+\/.+) \(([\w ]+)\)$/)
+        || inputBusStop.properties.STOP_NAME.match(/^(.+) \(([\w ]+)\)$/);
     if (!stopNameData) stopNameData = ['', inputBusStop.properties.STOP_NAME, '-TELEBUS'];
     if (stopNameData[1].includes('(')) { // odd names eg Reed (west) Cres/Bond Dr (Taylors Lakes)
         stopNameData[1] = stopNameData[1].replace(/^([\w ]+)\((\w+)\) ([\w ]+)/, '$1$3 - $2');
@@ -26,13 +27,15 @@ function transformBusStop(inputBusStop) {
             additionalGTFSBSCs = busStopOverrides[stopID];
     }
 
+    if (stopNameData[1].trim() === '191 Waiora Rd') console.log(stopNameData)
+
     return {
         gtfsBusStopCodes: [stopID].concat(additionalGTFSBSCs),
         busStopName: stopNameData[1].trim(),
         cleanBusStopName: stopNameData[1].trim().replace(/[^\w]/g, '-').replace(/-+/g, '-').toLowerCase(),
 
-        suburb: stopNameData[2],
-        cleanSuburb: stopNameData[2].toLowerCase().replace(/ /g, '-'),
+        suburb: stopNameData[2].trim(),
+        cleanSuburb: stopNameData[2].trim().toLowerCase().replace(/ /g, '-'),
 
         mykiZones: inputBusStop.properties.TICKETZONE.split(','),
         routes: inputBusStop.properties.ROUTEUSSP.split(','),
