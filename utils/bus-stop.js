@@ -1,5 +1,7 @@
 const crypto = require('crypto');
 const ptvAPI = require('./ptv-api');
+const EventEmitter = require('events');
+// const TimedCache = require('timed-cache');
 
 function hashBusStop(busStop) {
     let hash = crypto.createHash('sha1');
@@ -8,7 +10,22 @@ function hashBusStop(busStop) {
     return hash.digest('hex').slice(0, 6);
 }
 
+let busStopLocks = {};
+let ptvBusStopLocks = {};
+
 function populateBusStopData(busStop, callback) {
+    let id = busStop.cleanSuburb + busStop.cleanBusStopName;
+
+    if (busStopLocks[id]) {
+        busStopLocks[id].on('loaded', busStopData => {
+            callback(busStopData);
+        });
+        return;
+    }
+
+    busStopLocks[id] = new EventEmitter();
+    busStopLocks[id].setMaxListeners(30);
+
     ptvAPI.makeRequest(`/v3/stops/${busStop.gtfsBusStopCodes[0]}/route_type/2?gtfs=true` + (busStop.suburb == '-TELEBUS' ? '&stop_location=true' : ''), (err, data) => {
         let stopData = data.stop;
         busStop.busStopCodes.push(stopData.stop_id);
@@ -21,6 +38,9 @@ function populateBusStopData(busStop, callback) {
 
             busStop.bookmarkCode = hashBusStop(busStop);
         }
+
+        busStopLocks[id].emit('loaded', busStop);
+        delete busStopLocks[id];
 
         callback(busStop);
     });
@@ -66,6 +86,16 @@ function updateBusStopsAsNeeded(busStops, db, callback) {
 }
 
 function updateBusStopFromPTVStopID(stopID, db, callback) {
+    if (ptvBusStopLocks[stopID]) {
+        ptvBusStopLocks[stopID].on('loaded', busStopData => {
+            callback(busStopData);
+        });
+        return;
+    }
+
+    ptvBusStopLocks[stopID] = new EventEmitter();
+    ptvBusStopLocks[stopID].setMaxListeners(30);
+
     ptvAPI.makeRequest(`/v3/stops/${stopID}/route_type/2`, (err, data) => {
         let gtfsBusStopCode = data.stop.point_id + '';
         db.getCollection('bus stops').findDocument({ gtfsBusStopCodes: gtfsBusStopCode }, (err, busStop) => {
@@ -76,7 +106,12 @@ function updateBusStopFromPTVStopID(stopID, db, callback) {
 
             db.getCollection('bus stops').updateDocument({ _id: busStop._id }, {
                 $set: { busStopCodes }
-            }, () => callback(busStop));
+            }, () => {
+                ptvBusStopLocks[stopID].emit('loaded', busStop);
+                delete ptvBusStopLocks[stopID];
+
+                callback(busStop);
+            });
         });
     });
 }

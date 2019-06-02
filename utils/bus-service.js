@@ -4,6 +4,7 @@ const safeRegex = require('safe-regex');
 const { updateBusStopFromPTVStopID } = require('./bus-stop');
 const { getFirstBus, getLastBus, getFrequencies,
     getNextWeekday, getNextSaturday, getNextSunday } = require('./service-stats');
+const TimedCache = require('timed-cache');
 
 function getServiceNumber(service) {
     if (service.toLowerCase().startsWith('telebus'))
@@ -40,6 +41,8 @@ function adjustDestination(dest) {
 
 let serviceLocks = {};
 let directionLocks = {};
+
+let serviceCache = new TimedCache({ defaultTtl: 1000 * 60 * 5 });
 
 function populateService(skeleton, callback) {
 
@@ -83,6 +86,7 @@ function populateService(skeleton, callback) {
             serviceLocks[id].emit('loaded', skeleton);
             delete serviceLocks[id];
 
+            serviceCache.put(id, skeleton);
             callback(skeleton);
         });
     }
@@ -93,6 +97,10 @@ function populateService(skeleton, callback) {
         serviceLocks[id].on('loaded', updatedService => {
             callback(updatedService);
         });
+        return;
+    }
+    if (serviceCache.get(id)) {
+        callback(serviceCache.get(id));
         return;
     }
 
