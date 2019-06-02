@@ -237,7 +237,7 @@ function queryServiceData(query, db, callback) {
     db.getCollection('bus services').findDocuments(query).toArray((err, services) => {
         services.forEach(service => {
             promises.push(new Promise(resolve => {
-                if (service.skeleton) {
+                if (service.skeleton || !service.stops.length) {
                     populateService(service, updatedService => {
                         finalServices.push(updatedService);
 
