@@ -44,33 +44,33 @@ let directionLocks = {};
 
 let serviceCache = new TimedCache({ defaultTtl: 1000 * 60 * 5 });
 
-function populateService(skeleton, callback) {
-
-    function getDirectionID(cb) {
-        if (directionLocks[id]) {
-            directionLocks[id].on('loaded', directionID => {
-                cb(directionID);
-            });
-            return;
-        }
-
-        directionLocks[id] = new EventEmitter();
-        directionLocks[id].setMaxListeners(30);
-
-        ptvAPI.makeRequest('/v3/directions/route/' + ptvRouteID, (err, data) => {
-            let directionID = data.directions.map(e => {
-                e.direction_name = adjustDestination(e.direction_name);
-                return e;
-            }).filter(service => skeleton.destination.includes(service.direction_name) || service.direction_name.includes(skeleton.destination))[0].direction_id;
-
-            skeleton.directionID = directionID;
-            directionLocks[id].emit('loaded', directionID);
-            delete directionLocks[id];
-
-            cb();
+function getDirectionID(skeleton, cb) {
+    let {ptvRouteID} = skeleton;
+    if (directionLocks[ptvRouteID]) {
+        directionLocks[ptvRouteID].on('loaded', directionID => {
+            cb(directionID);
         });
+        return;
     }
 
+    directionLocks[ptvRouteID] = new EventEmitter();
+    directionLocks[ptvRouteID].setMaxListeners(30);
+
+    ptvAPI.makeRequest('/v3/directions/route/' + ptvRouteID, (err, data) => {
+        let directionID = data.directions.map(e => {
+            e.direction_name = adjustDestination(e.direction_name);
+            return e;
+        }).filter(service => skeleton.destination.includes(service.direction_name) || service.direction_name.includes(skeleton.destination))[0].direction_id;
+
+        skeleton.directionID = directionID;
+        directionLocks[ptvRouteID].emit('loaded', directionID);
+        delete directionLocks[ptvRouteID];
+
+        cb(skeleton);
+    });
+}
+
+function populateService(skeleton, callback) {
     function loadStops() {
         ptvAPI.makeRequest('/v3/stops/route/' + ptvRouteID + '/route_type/2?direction_id=' + skeleton.directionID, (err, data) => {
             skeleton.stops = data.stops.sort((a, b) => a.stop_sequence - b.stop_sequence).filter(busStop => busStop.stop_sequence !== 0).map(busStop => {
@@ -108,7 +108,7 @@ function populateService(skeleton, callback) {
     serviceLocks[id].setMaxListeners(30);
 
     let directionID = skeleton.directionID || 0;
-    if (directionID) loadStops(); else getDirectionID(loadStops);
+    if (directionID) loadStops(); else getDirectionID(skeleton, loadStops);
 
 }
 
@@ -207,6 +207,29 @@ function getFirstLastBus(service, db, callback) {
     });
 }
 
+function queryServiceDataWithoutUpdate(query, db, callback) {
+    let finalServices = [];
+    let promises = [];
+
+    db.getCollection('bus services').findDocuments(query).toArray((err, services) => {
+        services.forEach(service => {
+            promises.push(new Promise(resolve => {
+                if (service.directionID) {
+                    finalServices.push(service);
+                    resolve();
+                } else {
+                    getDirectionID(service, updatedService => {
+                        finalServices.push(updatedService);
+                        resolve();
+                    });
+                }
+            }));
+        });
+
+        Promise.all(promises).then(() => callback(finalServices));
+    });
+}
+
 function queryServiceData(query, db, callback) {
     let finalServices = [];
     let promises = [];
@@ -296,6 +319,7 @@ module.exports = {
     adjustDestination,
     getServiceData,
     queryServiceData,
+    queryServiceDataWithoutUpdate,
     resetServiceDirections,
     checkStopIDs
 };

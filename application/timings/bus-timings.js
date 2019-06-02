@@ -1,5 +1,5 @@
 const ptvAPI = require('../../utils/ptv-api');
-const { queryServiceData, resetServiceDirections } = require('../../utils/bus-service');
+const { queryServiceDataWithoutUpdate, resetServiceDirections } = require('../../utils/bus-service');
 const TimedCache = require('timed-cache');
 const EventEmitter = require('events');
 
@@ -20,7 +20,7 @@ function getServiceInfo(serviceID, directionID, db, callback) {
     locks[id] = new EventEmitter();
     locks[id].setMaxListeners(30);
 
-    queryServiceData({ ptvRouteID: serviceID }, db, loadedServices => {
+    queryServiceDataWithoutUpdate({ ptvRouteID: serviceID }, db, loadedServices => {
         let serviceData = loadedServices.filter(service => service.directionID == directionID)[0];
 
         function onComplete(service) {
@@ -53,8 +53,8 @@ function getTimingsForBusStop(busStopCode, db, callback) {
     let promises = [];
     let timings = {};
 
-    ptvAPI.makeRequest('/v3/departures/route_type/2/stop/' + busStopCode + '?max_results=6', (err, data) => {
-        let {departures} = data;
+    ptvAPI.makeRequest('/v3/departures/route_type/2/stop/' + busStopCode + '?max_results=6&expand=run', (err, data) => {
+        let {departures, runs} = data;
 
         departures = departures.sort((a, b) => a.direction_id - b.direction_id);
 
@@ -70,13 +70,16 @@ function getTimingsForBusStop(busStopCode, db, callback) {
                     let arrivalTime = departure.estimated_departure_utc || departure.scheduled_departure_utc;
                     arrivalTime = new Date(arrivalTime);
 
+                    let runData = runs[departure.run_id];
+                    let destination = runData.destination_name.match(/^([^/]+)/)[1];
+
                     if (new Date() - arrivalTime > 1000 * 60 * 1 || arrivalTime - new Date() > 1000 * 60 * 60 * 2) { // bus arrives beyond 2hrs
                         resolve();
                         return;
                     }
 
                     timings[serviceData.fullService] = timings[serviceData.fullService] || {};
-                    timings[serviceData.fullService][serviceData.destination] = timings[serviceData.fullService][serviceData.destination] || [];
+                    timings[serviceData.fullService][destination] = timings[serviceData.fullService][destination] || [];
 
                     let headwayDeviance = null
 
@@ -85,9 +88,9 @@ function getTimingsForBusStop(busStopCode, db, callback) {
                     }
 
                     db.getCollection('bus stops').findDocument({
-                        busStopCodes: serviceData.stops.slice(-1)[0].busStopCode
+                        busStopCodes: runData.final_stop_id
                         }, (err, destinationBusStop) => {
-                        timings[serviceData.fullService][serviceData.destination].push({
+                        timings[serviceData.fullService][destination].push({
                             service: serviceData.fullService,
                             destination: destinationBusStop,
                             arrivalTime,
@@ -98,8 +101,8 @@ function getTimingsForBusStop(busStopCode, db, callback) {
                             runID: departure.run_id
                         });
 
-                        timings[serviceData.fullService][serviceData.destination] =
-                            timings[serviceData.fullService][serviceData.destination].sort((a,b) => a.arrivalTime - b.arrivalTime);
+                        timings[serviceData.fullService][destination] =
+                            timings[serviceData.fullService][destination].sort((a,b) => a.arrivalTime - b.arrivalTime);
 
                         resolve();
                     });
