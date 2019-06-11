@@ -54,7 +54,7 @@ function transformBusStop(inputBusStop) {
 
     return {
         gtfsBusStopCodes: [stopID].concat(additionalGTFSBSCs),
-        busStopName: stopNameData[1].trim(),
+        busStopName: stopNameData[1].trim().replace(/  +/g, ' '),
         cleanBusStopName: stopNameData[1].trim().replace(/[^\w]/g, '-').replace(/-+/g, '-').toLowerCase(),
 
         suburb: stopNameData[2].trim(),
