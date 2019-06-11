@@ -3,7 +3,7 @@ const express = require('express');
 const router = new express.Router();
 const TimedCache = require('timed-cache');
 
-const {updateBusStopFromPTVStopID} = require('../../../utils/bus-stop');
+const {getStopFromPTVStopID} = require('../../../utils/bus-stop');
 const {getServiceInfo} = require('../../timings/bus-timings');
 
 let cachedRuns = new TimedCache({ defaultTtl: 1000 * 60 * 1 });
@@ -76,15 +76,10 @@ router.get('/:runID/:cleanSuburb/:cleanBusStopName', (req, res) => {
                 res.db.getCollection('bus stops').findDocument({
                     busStopCodes: dep.stopID
                 }, (err, busStop) => {
-                    if (busStop) {
+                    getStopFromPTVStopID(dep.stopID, res.db, busStop => {
                         busStops[dep.stopID] = busStop;
                         resolve();
-                    } else {
-                        updateBusStopFromPTVStopID(dep.stopID, res.db, busStop => {
-                            busStops[dep.stopID] = busStop;
-                            resolve();
-                        })
-                    }
+                    });
                 });
             }));
         });
