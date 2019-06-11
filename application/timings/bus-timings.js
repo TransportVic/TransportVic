@@ -1,5 +1,6 @@
 const ptvAPI = require('../../utils/ptv-api');
 const { queryServiceDataWithoutUpdate, resetServiceDirections } = require('../../utils/bus-service');
+const { getStopFromPTVStopID } = require('../../utils/bus-stop');
 const TimedCache = require('timed-cache');
 const EventEmitter = require('events');
 
@@ -87,9 +88,7 @@ function getTimingsForBusStop(busStopCode, db, callback) {
                         headwayDeviance = (new Date(departure.scheduled_departure_utc) - new Date(departure.estimated_departure_utc)) / 1000;
                     }
 
-                    db.getCollection('bus stops').findDocument({
-                        busStopCodes: runData.final_stop_id
-                        }, (err, destinationBusStop) => {
+                    getStopFromPTVStopID(runData.final_stop_id, db, destinationBusStop => {
                         timings[serviceData.fullService][destination].push({
                             service: serviceData.fullService,
                             destination: destinationBusStop,

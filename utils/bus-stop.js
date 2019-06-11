@@ -129,9 +129,17 @@ function updateBusStopFromPTVStopID(stopID, db, callback) {
     });
 }
 
+function getStopFromPTVStopID(stopID, db, callback) {
+    db.getCollection('bus stops').findDocument({ busStopCodes: stopID }, (err, busStop) => {
+        if (busStop) callback(busStop);
+        else updateBusStopFromPTVStopID(stopID, db, callback);
+    })
+}
+
 module.exports = {
     getBusStop,
     updateBusStopsAsNeeded,
     hashBusStop,
-    updateBusStopFromPTVStopID
+    updateBusStopFromPTVStopID,
+    getStopFromPTVStopID
 };
