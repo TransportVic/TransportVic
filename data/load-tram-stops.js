@@ -69,16 +69,17 @@ function mergeTramStops(allTramStops) {
 }
 
 let transformedStops = Object.values(mergeTramStops(metroTramStops).map(transformTramStop).reduce((acc, tramStop) => {
-    if (acc[tramStop.tramStopName + tramStop.tramStopNumber]) {
-        let svc = acc[tramStop.tramStopName + tramStop.tramStopNumber];
+    let key = tramStop.tramStopName + tramStop.suburb;
+    if (acc[key]) {
+        let svc = acc[key];
 
         svc.gtfsTramStopCodes.push(tramStop.gtfsTramStopCodes[0]);
         svc.routes = svc.routes.concat(tramStop.routes).filter((e, i, a) => a.indexOf(e) == i).sort((a, b) => a*1 - b*1);
         svc.location.coordinates = svc.location.coordinates.concat(tramStop.location.coordinates);
 
-        acc[tramStop.tramStopName + tramStop.tramStopNumber] = svc;
+        acc[key] = svc;
     } else
-        acc[tramStop.tramStopName + tramStop.tramStopNumber] = tramStop;
+        acc[key] = tramStop;
 
     return acc;
 }, {}));

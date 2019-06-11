@@ -55,8 +55,10 @@ function getTimingsForTramStop(tramStopID, db, callback) {
                         headwayDeviance = (new Date(departure.scheduled_departure_utc) - new Date(departure.estimated_departure_utc)) / 1000;
                     }
 
+                    let lastStop = serviceData.stops.slice(-1)[0];
                     db.getCollection('tram stops').findDocument({
-                        tramStopCodes: serviceData.stops.slice(-1)[0].tramStopCode
+                        cleanTramStopName: lastStop.tramStopName.trim().replace(/[^\w]/g, '-').replace(/-+/g, '-').toLowerCase(),
+                        cleanSuburb: lastStop.suburb.trim().replace(/[^\w]/g, '-').replace(/-+/g, '-').toLowerCase()
                     }, (err, destinationTramStop) => {
                         timings[serviceData.serviceNumber][serviceData.destination].push({
                             service: serviceData.serviceNumber === '3-3a' ? '3' : serviceData.serviceNumber,
