@@ -31,8 +31,8 @@ function transformTramStop(inputTramStop) {
         tramStopName: stopNameData[2],
         cleanTramStopName: stopNameData[2].trim().replace(/[^\w]/g, '-').replace(/-+/g, '-').toLowerCase(),
 
-        suburb: stopNameData[3],
-        cleanSuburb: stopNameData[3].toLowerCase().replace(/ /g, '-'),
+        suburb: [stopNameData[3]],
+        cleanSuburb: [stopNameData[3].toLowerCase().replace(/ /g, '-')],
 
         mykiZones: inputTramStop.properties.TICKETZONE.split(','),
         routes: inputTramStop.properties.ROUTEUSSP.split(',').sort((a, b)=>a.match(/(\d+)/)[0]*1 - b.match(/(\d+)/)[0]*1).map(e => e.replace('/', '-')),
@@ -49,37 +49,56 @@ function transformTramStop(inputTramStop) {
     }
 }
 
-function mergeTramStops(allTramStops) {
+function merge(finalStops, tramStop) {
+    finalStops[tramStop.properties.STOP_ID].properties.ROUTEUSSP += ',' + tramStop.properties.ROUTEUSSP;
+    finalStops[tramStop.properties.STOP_ID].properties.STOP_NAME =
+        [finalStops[tramStop.properties.STOP_ID].properties.STOP_NAME, tramStop.properties.STOP_NAME]
+        .sort((a, b) => b.length - a.length)[0];
+
+    finalStops[tramStop.properties.STOP_ID];
+}
+
+function iterateAndMerge(allTramStops, getter) {
     let final = {};
 
     allTramStops.forEach(tramStop => {
-        if (Object.keys(final).includes(tramStop.properties.STOP_ID)) {
-            final[tramStop.properties.STOP_ID].properties.ROUTEUSSP += ',' + tramStop.properties.ROUTEUSSP;
-            final[tramStop.properties.STOP_ID].properties.STOP_NAME =
-                [final[tramStop.properties.STOP_ID].properties.STOP_NAME, tramStop.properties.STOP_NAME]
-                .sort((a, b) => b.length - a.length)[0];
-
-            final[tramStop.properties.STOP_ID];
+        if (Object.keys(final).includes(getter(tramStop))) {
+            merge(final, tramStop)
         } else {
-            final[tramStop.properties.STOP_ID] = tramStop;
+            final[getter(tramStop)] = tramStop;
         }
     });
 
     return Object.values(final);
+
 }
 
+function mergeTramStops(allTramStops) {
+    let mergedByStopID = iterateAndMerge(allTramStops, tramStop => tramStop.properties.STOP_ID);
+
+    return mergedByStopID;
+}
+
+let stopKeys = {};
+
 let transformedStops = Object.values(mergeTramStops(metroTramStops).map(transformTramStop).reduce((acc, tramStop) => {
-    let key = tramStop.tramStopName + tramStop.suburb;
-    if (acc[key]) {
-        let svc = acc[key];
+    let suburbKey = tramStop.tramStopName + tramStop.suburb;
+    let stopKey = tramStop.tramStopName + tramStop.tramStopNumber;
+
+    if (acc[suburbKey] || acc[stopKeys[stopKey]]) {
+        let svc = acc[suburbKey] || acc[stopKeys[stopKey]];
 
         svc.gtfsTramStopCodes.push(tramStop.gtfsTramStopCodes[0]);
         svc.routes = svc.routes.concat(tramStop.routes).filter((e, i, a) => a.indexOf(e) == i).sort((a, b) => a*1 - b*1);
         svc.location.coordinates = svc.location.coordinates.concat(tramStop.location.coordinates);
+        svc.suburb = svc.suburb.concat(tramStop.suburb);
+        svc.cleanSuburb = svc.cleanSuburb.concat(tramStop.cleanSuburb);
 
-        acc[key] = svc;
-    } else
-        acc[key] = tramStop;
+        acc[suburbKey] = svc;
+    } else {
+        acc[suburbKey] = tramStop;
+        stopKeys[stopKey] = suburbKey;
+    }
 
     return acc;
 }, {}));
