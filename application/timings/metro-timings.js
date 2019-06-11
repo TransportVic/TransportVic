@@ -5,6 +5,11 @@ let timingsCache = new TimedCache({ defaultTtl: 1000 * 60 * 1 });
 
 let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central'];
 
+let burnleyGroup = [1, 2, 7, 9]; // alamein, belgrave, glen waverley, lilydale
+let caulfieldGroup = [4, 6, 11, 12]; // cranbourne, frankston, pakenham, sandringham
+let northenGroup = [3, 14, 15, 16]; // craigieburn, sunbury, upfield, werribee
+let cliftonHillGroup = [5, 8]; // mernda, hurstbridge
+
 class TrainRun {
     constructor(runData) {
         let runID = [];
@@ -18,6 +23,36 @@ class TrainRun {
         this.throughCityLoop = runID[1] > 4 || cityLoopStations.includes(this.destination.toLowerCase());
         this.stopsViaFlindersFirst = runID[1] <= 4;
         this.upService = !(runID[3] % 2);
+
+        this.cityStations = [];
+
+        let routeID = runData.route_id;
+
+        // assume up trains
+        if (this.stopsViaFlindersFirst && this.throughCityLoop) { // flinders then loop
+            if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID))
+                this.cityStations = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR'];
+            else if (northenGroup.includes(routeID))
+                this.cityStations = ['SSS', 'FSS', 'PAR', 'MCE', 'FGS'];
+        } else if (!this.stopsViaFlindersFirst && this.throughCityLoop) { // loop then flinders
+            if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID))
+                this.cityStations = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS'];
+            else if (northenGroup.includes(routeID))
+                this.cityStations = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS'];
+        } else if (this.stopsViaFlindersFirst && !this.throughCityLoop) { // loop then flinders
+            if (routeID == 6)
+                this.cityStations = ['RMD', 'FSS', 'SSS']
+            else if (burnleyGroup.concat(caulfieldGroup).includes(routeID))
+                this.cityStations = ['RMD', 'FSS'];
+            else if (cliftonHillGroup.includes(routeID))
+                this.cityStations = ['JLI', 'FSS']
+            else if (northenGroup.includes(routeID) || routeID == 17)
+                this.cityStations = ['NME', 'SSS', 'FSS'];
+        }
+
+        if (!this.upService) { // down trains; away from city
+            this.cityStations.reverse();
+        }
 
         this.runID = runID.join('');
     }
@@ -57,8 +92,7 @@ function getTimings(trainStationID, db, callback) {
                     }
 
                     if (new Date() - arrivalTime > 1000 * 60 * 1.5 || arrivalTime - new Date() > 1000 * 60 * 60 * 3) { // train arrives beyond 3hrs
-                        resolve();
-                        return;
+                        return resolve();
                     }
 
                     let headwayDeviance = null

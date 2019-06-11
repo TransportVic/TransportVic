@@ -25,22 +25,25 @@ for timing in timings
                 span City Loop
             else
                 span=timing.destination
-            if cityLoopStations.includes(trainStation.stationName.slice(0, -16))
-                if !timing.runData.stopsViaFlindersFirst
-                    span Via Flinders St
-            else if trainStation.stationName.toLowerCase() == 'flinders street railway station'
-                if timing.runData.throughCityLoop
-                    span Via City Loop
-            else if timing.runData.runID && cityLoopStations.concat('flinders street').includes(timing.destination.toLowerCase())
-                if timing.runData.throughCityLoop
-                    if timing.runData.stopsViaFlindersFirst
-                        span Via Flinders St, then City Loop
-                    else
-                        span Via City Loop, then Flinders St
-                else
-                    span Terminates at Flinders St
+            //- if cityLoopStations.includes(trainStation.stationName.slice(0, -16).toLowerCase())
+            //-     if !timing.runData.stopsViaFlindersFirst
+            //-         span Via Flinders St
+            //- else if trainStation.stationName.toLowerCase() == 'flinders street railway station'
+            //-     if timing.runData.throughCityLoop
+            //-         span Via City Loop
+            //- else if timing.runData.runID && cityLoopStations.concat('flinders street').includes(timing.destination.toLowerCase())
+            //-     if timing.runData.throughCityLoop
+            //-         if timing.runData.stopsViaFlindersFirst
+            //-             span Via Flinders St, then City Loop
+            //-         else
+            //-             span Via City Loop, then Flinders St
+            //-     else
+            //-         span Terminates at Flinders St
             if timing.platform == 'RRB'
-                    span Rail Replacement Bus
+                span Rail Replacement Bus
+            
+            if timing.runData.upService || cityLoopStations.includes(trainStation.stationName.slice(0, -16).toLowerCase())
+                span=timing.runData.cityStations.join(', ')
 
         div.timings
             -
