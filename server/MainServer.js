@@ -118,8 +118,12 @@ module.exports = class MainServer {
             app.use(routers[routerName], router);
         });
 
-        app.use('/500', (req, res) => {throw new Error('500')});
+        app.get('/sw.js', (req, res) => {
+            res.setHeader('Cache-Control', 'no-cache');
+            res.sendFile(path.join(__dirname, '../application/static/app-content/sw.js'));
+        });
 
+        app.use('/500', (req, res) => {throw new Error('500')});
 
         app.use((req, res, next) => {
             next(new Error('404'));
@@ -135,11 +139,6 @@ module.exports = class MainServer {
                 }
             }
         });
-
-        // app.get('/sw.js', (req, res) => {
-        //     res.setHeader('Cache-Control', 'no-cache');
-        //     res.sendFile(path.join(__dirname, '../application/static/sw.js'));
-        // });
     }
 
 }

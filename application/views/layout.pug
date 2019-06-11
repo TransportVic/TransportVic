@@ -28,11 +28,11 @@ html(lang='en-GB')
         meta(property='twitter:description' content='A transport app for Victoria')
         meta(property='twitter:image' content='https://vic.transportsg.me/static/images/favicon512.png')
 
-        link(rel='icon' type='image/png' href='/static/images/favicon192.png')
-        link(rel='shortcut icon' type='image/png' href='/static/images/favicon512.png')
-        link(rel='apple-touch-icon' type='image/png' href='/static/images/favicon512.png')
+        link(rel='icon' type='image/png' href='/static/images/favicon/favicon192.png')
+        link(rel='shortcut icon' type='image/png' href='/static/images/favicon/favicon512.png')
+        link(rel='apple-touch-icon' type='image/png' href='/static/images/favicon/favicon512.png')
         link(rel='stylesheet' href='/static/css/style.css')
-        link(rel='manifest' href='/static/manifest.json')
+        link(rel='manifest' href='/static/app-content/manifest.json')
 
         block head
     body
@@ -45,9 +45,8 @@ html(lang='en-GB')
             block content
                 
         script(src='/static/scripts/helper.js')
-        script(src='/static/scripts/sw.js' async)
-        script(src='/static/scripts/header-magic.js' async)
         block scripts
+        script(src='/static/scripts/sw-load.js' async)
         
         style#disruption
         block css
