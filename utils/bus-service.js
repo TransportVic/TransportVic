@@ -5,6 +5,7 @@ const { updateBusStopFromPTVStopID } = require('./bus-stop');
 const { getFirstBus, getLastBus, getFrequencies,
     getNextWeekday, getNextSaturday, getNextSunday } = require('./service-stats');
 const TimedCache = require('timed-cache');
+const levenshtein = require('fast-levenshtein');
 
 function getServiceNumber(service) {
     if (service.toLowerCase().startsWith('telebus'))
@@ -58,11 +59,14 @@ function getDirectionID(skeleton, cb) {
 
     ptvAPI.makeRequest('/v3/directions/route/' + ptvRouteID, (err, data) => {
         let directionID = data.directions.map(e => {
-            e.direction_name = adjustDestination(e.direction_name);
+            let directionName = adjustDestination(e.direction_name);
+            e.distance = levenshtein.get(skeleton.destination, directionName);
+
             return e;
-        }).filter(service => skeleton.destination.includes(service.direction_name) || service.direction_name.includes(skeleton.destination))[0].direction_id;
+        }).sort((a, b) => a.distance - b.distance)[0].direction_id;
 
         skeleton.directionID = directionID;
+
         directionLocks[ptvRouteID].emit('loaded', directionID);
         delete directionLocks[ptvRouteID];
 
@@ -71,7 +75,7 @@ function getDirectionID(skeleton, cb) {
 }
 
 function populateService(skeleton, callback) {
-    function loadStops() {
+    function loadStops(skeleton) {
         ptvAPI.makeRequest('/v3/stops/route/' + ptvRouteID + '/route_type/2?direction_id=' + skeleton.directionID, (err, data) => {
             skeleton.stops = data.stops.sort((a, b) => a.stop_sequence - b.stop_sequence).filter(busStop => busStop.stop_sequence !== 0).map(busStop => {
                 return {
@@ -219,8 +223,12 @@ function queryServiceDataWithoutUpdate(query, db, callback) {
                     resolve();
                 } else {
                     getDirectionID(service, updatedService => {
-                        finalServices.push(updatedService);
-                        resolve();
+                        db.getCollection('bus services').updateDocument({
+                            _id: service._id
+                        }, {$set: updatedService}, () => {
+                            finalServices.push(updatedService);
+                            resolve();
+                        });
                     });
                 }
             }));
