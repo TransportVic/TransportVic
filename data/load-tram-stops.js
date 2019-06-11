@@ -91,8 +91,8 @@ let transformedStops = Object.values(mergeTramStops(metroTramStops).map(transfor
         svc.gtfsTramStopCodes.push(tramStop.gtfsTramStopCodes[0]);
         svc.routes = svc.routes.concat(tramStop.routes).filter((e, i, a) => a.indexOf(e) == i).sort((a, b) => a*1 - b*1);
         svc.location.coordinates = svc.location.coordinates.concat(tramStop.location.coordinates);
-        svc.suburb = svc.suburb.concat(tramStop.suburb);
-        svc.cleanSuburb = svc.cleanSuburb.concat(tramStop.cleanSuburb);
+        svc.suburb = svc.suburb.concat(tramStop.suburb).filter((e, i, a) => a.indexOf(e) == i);
+        svc.cleanSuburb = svc.cleanSuburb.concat(tramStop.cleanSuburb).filter((e, i, a) => a.indexOf(e) == i);
 
         acc[suburbKey] = svc;
     } else {

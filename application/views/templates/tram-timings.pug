@@ -16,7 +16,7 @@ for serviceNumber in services
         div.tramService
             a(class='tramServiceNumber tram-' + destinationTimings[0].service)
                 span=destinationTimings[0].service
-            a(href=`/tram/timings/${destinationTimings[0].destination.cleanSuburb}/${destinationTimings[0].destination.cleanTramStopName}`).destination
+            a(href=`/tram/timings/${destinationTimings[0].destination.cleanSuburb[0]}/${destinationTimings[0].destination.cleanTramStopName}`).destination
                 span Towards
                 span=destinationName
                 

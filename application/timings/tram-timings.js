@@ -58,7 +58,7 @@ function getTimingsForTramStop(tramStopID, db, callback) {
                     let lastStop = serviceData.stops.slice(-1)[0];
                     db.getCollection('tram stops').findDocument({
                         cleanTramStopName: lastStop.tramStopName.trim().replace(/[^\w]/g, '-').replace(/-+/g, '-').toLowerCase(),
-                        cleanSuburb: lastStop.suburb.trim().replace(/[^\w]/g, '-').replace(/-+/g, '-').toLowerCase()
+                        suburb: lastStop.suburb
                     }, (err, destinationTramStop) => {
                         timings[serviceData.serviceNumber][serviceData.destination].push({
                             service: serviceData.serviceNumber === '3-3a' ? '3' : serviceData.serviceNumber,

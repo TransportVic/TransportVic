@@ -11,7 +11,7 @@ for stop in allStops
         let url = '';
         if (stopType == 'Bus stop') url = `/bus/timings/${stop.cleanSuburb}/${stop.cleanBusStopName}`
         else if (stopType == 'Train station') url = `/metro/timings/${stop.stationName.slice(0, -16).toLowerCase().replace(/ /g, '-')}`
-        else if (stopType == 'Tram stop') url = `/tram/timings/${stop.cleanSuburb}/${stop.cleanTramStopName}`
+        else if (stopType == 'Tram stop') url = `/tram/timings/${stop.cleanSuburb[0]}/${stop.cleanTramStopName}`
         else url = '#'
         
         let imageURL = '';
