@@ -46,11 +46,11 @@ div#results {
 }
 
 .busStop .leftContainer {
-  background-color: #3c3eaa;
+  background-color: #d7832c;
 }
 
 .busStop:nth-child(even) .leftContainer {
-  background-color: #353799;
+  background-color: #c47625;
 }
 
 .trainStation .leftContainer {
@@ -70,28 +70,28 @@ div#results {
 }
 
 .leftContainer img {
-  width: calc(3vw + 3vh);
-  height: calc(3vw + 3vh);
+    width: calc(3vw + 3vh);
+    height: calc(3vw + 3vh);
 }
 
 .resultDetails {
-  width: calc(95vw - 5vh);
-  display: flex;
-  align-items: left;
-  justify-content: center;
-  flex-direction: column;
-  margin-left: calc(1vw + 1vh);
-  font-size: calc(2vh + 1.2vw);
+    width: calc(95vw - 5vh);
+    display: flex;
+    align-items: left;
+    justify-content: center;
+    flex-direction: column;
+    margin-left: calc(1vw + 1vh);
+    font-size: calc(2vh + 1.2vw);
 }
 
 .resultDetails > span:nth-child(1) {
-  color: #8f8f8f;
-  font-size: calc(1.6vh + 0.9vw);
+    color: #8f8f8f;
+    font-size: calc(1.6vh + 0.9vw);
 }
 
 .resultDetails > span:nth-child(2) {
-  font-size: calc(2vh + 1.2vw);
-  margin-top: calc(-0.4vh - 0.2vw);
+    font-size: calc(2vh + 1.2vw);
+    margin-top: calc(-0.4vh - 0.2vw);
 }
 
 .left-container span {

@@ -128,7 +128,11 @@ module.exports = class MainServer {
             if (err.message === '404') {
                 res.render('error', {code: 404});
             } else {
-                res.render('error', {code: 500})
+                res.render('error', {code: 500});
+
+                if (process.env['NODE_ENV'] !== 'prod') {
+                    console.log(err);
+                }
             }
         });
 

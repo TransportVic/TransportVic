@@ -10,45 +10,50 @@ a.stop > div {
     display: flex;
 }
 
-.distanceMeter {
+.leftContainer {
     order: 0;
     width: calc(5.2vw + 5.2vh);
     height: calc(7vw + 7vh);
     display: inline-flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
 
     font-size: calc(2vw + 2vh);
     color: #d2d2d2;
 }
 
-.distanceMeter span:nth-child(2) {
-    font-size: calc(0.6vw + 0.6vh);
+.leftContainer img {
+    width: calc(3vw + 3vh);
+    height: calc(3vw + 3vh);
 }
 
-.nearby {
-    background-color: #4ebe45;
+.leftContainer span {
+    font-size: calc(0.8vw + 0.8vh);
 }
 
-.stop:nth-child(even) .nearby {
-    background-color: #43a93b;
+.bus-stop .leftContainer {
+  background-color: #d7832c;
 }
 
-.close {
-    background-color: #d7832c;
+.bus-stop:nth-child(even) .leftContainer {
+  background-color: #c47625;
 }
 
-.stop:nth-child(even) .close {
-    background-color: #c47625;
+.train-station .leftContainer {
+    background-color: #3483db;
 }
 
-.far {
-    background-color: #c63d3d;
+.train-station:nth-child(even) .leftContainer {
+    background-color: #2370c5;
 }
 
-.stop:nth-child(even) .far {
-    background-color: #b43535;
+.tram-stop .leftContainer {
+    background-color: #1a942a;
+}
+
+.tram-stop:nth-child(even) .leftContainer {
+    background-color: #20b734;
 }
 
 .stopInfo {

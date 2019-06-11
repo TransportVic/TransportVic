@@ -4,51 +4,26 @@
         if (distance >= 0.1 && distance < 0.3) return 'close';
         else return 'far';
     }
-    function distance(lat1, lon1, lat2, lon2) {
-        var p = 0.017453292519943295;    // Math.PI / 180
-        var c = Math.cos;
-        var a = 0.5 - c((lat2 - lat1) * p)/2 +
-              c(lat1 * p) * c(lat2 * p) *
-              (1 - c((lon2 - lon1) * p))/2;
-
-        return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
-    }
-    function getClosestDistance(positions) {
-        let userLat = position.latitude, userLong = position.longitude;
-        let distances = positions.map(position => distance(position[1], position[0], userLat, userLong));
-        
-        return distances.sort((a, b) => a - b)[0];
-    }
-    allStops = allStops.map(stop => {
-        let stopPositions = stop.location.coordinates;
-        let distanceToStop = getClosestDistance(stopPositions);
-        stop.distanceToStop = distanceToStop;
-        
-        stop.name = ['busStopName', 'tramStopName', 'stationName'].map(e => stop[e]).filter(Boolean)[0];
-        
-        return stop;
-    }).sort((a, b) => a.distanceToStop - b.distanceToStop);
-    
-    let stopNames = {
-        busStops: 'Bus stop',
-        trainStations: 'Train station',
-        tramStops: 'Tram stop'
-    };
 
 for stop in allStops
     -
         let {stopType, distanceToStop} = stop;
         let url = '';
-        if (stopType == 'busStops') url = `/bus/timings/${stop.cleanSuburb}/${stop.cleanBusStopName}`
-        else if (stopType == 'trainStations') url = `/metro/timings/${stop.stationName.slice(0, -16).toLowerCase().replace(/ /g, '-')}`
-        else if (stopType == 'tramStops') url = `/tram/timings/${stop.cleanSuburb}/${stop.cleanTramStopName}`
+        if (stopType == 'Bus stop') url = `/bus/timings/${stop.cleanSuburb}/${stop.cleanBusStopName}`
+        else if (stopType == 'Train station') url = `/metro/timings/${stop.stationName.slice(0, -16).toLowerCase().replace(/ /g, '-')}`
+        else if (stopType == 'Tram stop') url = `/tram/timings/${stop.cleanSuburb}/${stop.cleanTramStopName}`
         else url = '#'
-    
-    a(href=url).stop
+        
+        let imageURL = '';
+        if (stopType == 'Bus stop') imageURL = `/static/images/bus-icon.svg`
+        else if (stopType == 'Train station') imageURL = `/static/images/metro-icon.svg`
+        else if (stopType == 'Tram stop') imageURL = `/static/images/tram-icon.svg`
+        
+    a(href=url class='stop ' + stopType.toLowerCase().replace(' ', '-'))
         div
-            div(class='distanceMeter ' + getDistanceCssClass(distanceToStop))
-                span=Math.round(distanceToStop * 1000)
-                span metres
+            div.leftContainer
+                img(src=imageURL)
+                span=Math.round(distanceToStop * 1000) + ' metres'
             div.stopInfo
-                span=stopNames[stop.stopType] + ' in ' + stop.suburb
+                span=stopType + ' in ' + stop.suburb
                 span=stop.name
