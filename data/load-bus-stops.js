@@ -130,8 +130,9 @@ database.connect({
                     }
 
                     stop.skeleton = dbBusStop.busStopCodes.length < stop.gtfsBusStopCodes.length;
+                    let id = dbBusStop._id;
 
-                    busStops.updateDocument({ _id: stop._id }, {
+                    busStops.updateDocument({ _id: id }, {
                         $set: stop
                     }, resolve);
                 } else {

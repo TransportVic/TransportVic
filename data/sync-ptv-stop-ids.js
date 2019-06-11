@@ -14,7 +14,7 @@ function updateStopData(position, ptvStopID, stopName, callback) {
                     type: 'Point',
                     coordinates: [position.lon, position.lat]
                 },
-                $maxDistance: 90
+                $maxDistance: 10
             }
         }
     }).toArray((err, foundBusStops) => {

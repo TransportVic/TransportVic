@@ -32,7 +32,8 @@ function populateBusStopData(busStop, callback) {
         promises.push(new Promise(resolve => {
             ptvAPI.makeRequest(`/v3/stops/${gtfsBusStopCode}/route_type/2?gtfs=true` + (busStop.suburb == '-TELEBUS' ? '&stop_location=true' : ''), (err, data) => {
                 let stopData = data.stop;
-                busStop.busStopCodes.push(stopData.stop_id);
+                if (!busStop.busStopCodes.includes(stopData.stop_id))
+                    busStop.busStopCodes.push(stopData.stop_id);
 
                 if (busStop.suburb == '-TELEBUS') {
                     busStop.busStopName = stopData.stop_name.trim();
