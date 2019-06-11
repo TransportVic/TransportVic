@@ -26,24 +26,36 @@ function populateBusStopData(busStop, callback) {
     busStopLocks[id] = new EventEmitter();
     busStopLocks[id].setMaxListeners(30);
 
-    ptvAPI.makeRequest(`/v3/stops/${busStop.gtfsBusStopCodes[0]}/route_type/2?gtfs=true` + (busStop.suburb == '-TELEBUS' ? '&stop_location=true' : ''), (err, data) => {
-        let stopData = data.stop;
-        busStop.busStopCodes.push(stopData.stop_id);
+    let promises = [];
 
-        if (busStop.suburb == '-TELEBUS') {
-            busStop.busStopName = stopData.stop_name.trim();
-            busStop.cleanBusStopName = busStop.busStopName.replace(/[^\w]/g, '-').replace(/-+/g, '-').toLowerCase();
-            busStop.suburb = stopData.stop_location.suburb;
-            busStop.cleanSuburb = busStop.suburb.toLowerCase();
+    for (gtfsBusStopCode of busStop.gtfsBusStopCodes) {
+        promises.push(new Promise(resolve => {
+            ptvAPI.makeRequest(`/v3/stops/${gtfsBusStopCode}/route_type/2?gtfs=true` + (busStop.suburb == '-TELEBUS' ? '&stop_location=true' : ''), (err, data) => {
+                let stopData = data.stop;
+                busStop.busStopCodes.push(stopData.stop_id);
 
-            busStop.bookmarkCode = hashBusStop(busStop);
-        }
+                if (busStop.suburb == '-TELEBUS') {
+                    busStop.busStopName = stopData.stop_name.trim();
+                    busStop.cleanBusStopName = busStop.busStopName.replace(/[^\w]/g, '-').replace(/-+/g, '-').toLowerCase();
+                    busStop.suburb = stopData.stop_location.suburb;
+                    busStop.cleanSuburb = busStop.suburb.toLowerCase();
+
+                    busStop.bookmarkCode = hashBusStop(busStop);
+                }
+
+                resolve();
+            });
+        }));
+    }
+
+    Promise.all(promises).then(() => {
+        busStop.skeleton = false;
 
         busStopLocks[id].emit('loaded', busStop);
         delete busStopLocks[id];
 
         callback(busStop);
-    });
+    })
 }
 
 function getBusStop(properties, db, callback) {
@@ -58,7 +70,7 @@ function getBusStop(properties, db, callback) {
 }
 
 function updateBusStopIfNeeded(busStop, db, callback) {
-    if (!busStop.busStopCodes.length) {
+    if (busStop.skeleton) { // change to skeleton?
         populateBusStopData(busStop, updatedBusStop => {
             db.getCollection('bus stops').updateDocument({_id: busStop._id}, { $set: updatedBusStop }, () => {
                 callback(updatedBusStop);

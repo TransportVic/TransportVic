@@ -18,11 +18,11 @@ function transformBusStop(inputBusStop) {
         // console.log(inputBusStop.properties.STOP_NAME, inputBusStop.properties.STOP_ID);
         stopNameData[1] = stopNameData[1].replace(/\(\w+\)/, '');
     }
-    if (stopNameData[1].toLowerCase().includes('railway station/')) {
+    if (stopNameData[1].includes('Railway Station/')) {
         stopNameData[1] = stopNameData[1].replace('Railway Station/', 'Station/');
     }
 
-    if (stopNameData[1].includes('Station/')) {
+    if (stopNameData[1].includes('Station/') && !stopNameData[1].includes('Bus Station/')) {
         stopNameData[1] = stopNameData[1].replace('Station/', 'Railway Station/')
     };
 
@@ -71,7 +71,8 @@ function transformBusStop(inputBusStop) {
             ]
         },
         busStopCodes: [],
-        lastUpdated: new Date()
+        lastUpdated: new Date(),
+        skeleton: true
     }
 }
 
@@ -121,14 +122,16 @@ database.connect({
         promises.push(new Promise(resolve => {
             stop.bookmarkCode = hashBusStop(stop);
 
-            busStops.countDocuments({ busStopName: stop.busStopName, suburb: stop.suburb }, (err, present) => {
+            busStops.findDocument({ busStopName: stop.busStopName, suburb: stop.suburb }, (err, dbBusStop) => {
+                let present = !!dbBusStop;
                 if (present) {
-
                     if (new Date() - (stop.lastUpdated || new Date()) < 1000 * 60 * 60 * 24 * 7) { // last update less than a week
                         delete stop.busStopCodes;
                     }
 
-                    busStops.updateDocument({ gtfsBusStopCodes: stop.gtfsBusStopCodes[0] }, {
+                    stop.skeleton = dbBusStop.busStopCodes.length < stop.gtfsBusStopCodes.length;
+
+                    busStops.updateDocument({ _id: stop._id }, {
                         $set: stop
                     }, resolve);
                 } else {

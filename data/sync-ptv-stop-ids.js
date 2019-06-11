@@ -14,7 +14,7 @@ function updateStopData(position, ptvStopID, stopName, callback) {
                     type: 'Point',
                     coordinates: [position.lon, position.lat]
                 },
-                $maxDistance: 100
+                $maxDistance: 90
             }
         }
     }).toArray((err, foundBusStops) => {
@@ -26,10 +26,6 @@ function updateStopData(position, ptvStopID, stopName, callback) {
         let busStop = foundBusStops.sort((a, b) => a.levDistance - b.levDistance)[0];
 
         if (!busStop) {
-            if (ptvStopID == 19820) {
-                console.log(position, ptvStopID);
-                console.log(foundBusStops)
-            }
             callback();
             return;
         }
@@ -41,7 +37,8 @@ function updateStopData(position, ptvStopID, stopName, callback) {
 
         busStops.updateDocument({ _id: busStop._id }, {
             $set: {
-                busStopCodes: busStop.busStopCodes.concat([ptvStopID])
+                busStopCodes: busStop.busStopCodes.concat([ptvStopID]),
+                skeleton: (busStop.busStopCodes.length < busStop.gtfsBusStopCodes.length)
             }
         }, () => callback());
     });
