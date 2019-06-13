@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const ptvAPI = require('./ptv-api');
 const EventEmitter = require('events');
-// const TimedCache = require('timed-cache');
+const TimedCache = require('timed-cache');
 
 function hashBusStop(busStop) {
     let hash = crypto.createHash('sha1');
@@ -98,11 +98,17 @@ function updateBusStopsAsNeeded(busStops, db, callback) {
     Promise.all(promises).then(() => callback(finalBusStops));
 }
 
+let ptvIDStopsCache = new TimedCache({ defaultTtl: 1000 * 60 * 5 });
+
 function updateBusStopFromPTVStopID(stopID, db, callback) {
     if (ptvBusStopLocks[stopID]) {
         ptvBusStopLocks[stopID].on('loaded', busStopData => {
             callback(busStopData);
         });
+        return;
+    }
+    if (ptvIDStopsCache.get(stopID)) {
+        callback(ptvIDStopsCache.get(stopID));
         return;
     }
 
@@ -122,6 +128,7 @@ function updateBusStopFromPTVStopID(stopID, db, callback) {
             }, () => {
                 ptvBusStopLocks[stopID].emit('loaded', busStop);
                 delete ptvBusStopLocks[stopID];
+                ptvIDStopsCache.put(stopID, busStop);
 
                 callback(busStop);
             });

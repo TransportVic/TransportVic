@@ -49,7 +49,8 @@ function getDirectionID(skeleton, cb) {
     let {ptvRouteID} = skeleton;
     if (directionLocks[ptvRouteID]) {
         directionLocks[ptvRouteID].on('loaded', directionID => {
-            cb(directionID);
+            skeleton.directionID = directionID;
+            cb(skeleton);
         });
         return;
     }
@@ -112,7 +113,7 @@ function populateService(skeleton, callback) {
     serviceLocks[id].setMaxListeners(30);
 
     let directionID = skeleton.directionID || 0;
-    if (directionID) loadStops(); else getDirectionID(skeleton, loadStops);
+    if (directionID) loadStops(skeleton); else getDirectionID(skeleton, loadStops);
 
 }
 
