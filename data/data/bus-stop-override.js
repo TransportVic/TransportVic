@@ -1,6 +1,21 @@
 module.exports = {
     6475: null,
     9488: null,
+    50835: {
+        "type": "Feature",
+        "properties": {
+            "STOP_ID": "50835",
+            "STOP_NAME": "Carlton Gardens/Victoria St (Carlton)",
+            "LATITUDE": -37.80748,
+            "LONGITUDE": 144.971176,
+            "TICKETZONE": "1",
+            "ROUTEUSSP": "402"
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [144.971176, -37.80748]
+        }
+    },
     51597: {
         "type": "Feature",
         "properties": {
