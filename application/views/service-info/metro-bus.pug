@@ -36,11 +36,36 @@ block content
                 let otherURL = `/bus/timings/${termini[1].cleanSuburb}/${termini[1].cleanBusStopName}`;
                 if (!otherDest) {
                     otherURL = ownURL;
+                    if (service.stops.length > 5) {
+                        let middleStop = service.stops[Math.floor(service.stops.length / 2)];
+                        let cleanSuburb = middleStop.suburb.toLowerCase().replace(/ /g, '-');
+                        let cleanBusStopName = middleStop.busStopName.toLowerCase().replace(/ /g, '-');
+                        ownURL = `/bus/timings/${cleanSuburb}/${cleanBusStopName}`;
+                    } else {
+                        let lastStop = service.stops[service.stops.length - 1];
+                        let cleanSuburb = lastStop.suburb.toLowerCase().replace(/ /g, '-');
+                        let cleanBusStopName = lastStop.busStopName.toLowerCase().replace(/ /g, '-');
+                        ownURL = `/bus/timings/${cleanSuburb}/${cleanBusStopName}`;
+                    }
                 }
             a(href=otherURL).coloured-row
-                span=otherDest
+                if otherDest
+                    span=otherDest
+                else
+                    span=service.destination
             a(href=ownURL).coloured-row
-                span=service.otherDest || service.destination
+                if otherDest
+                    span=service.destination
+                else
+                    if service.stops.length > 5
+                        -
+                            let middleStop = service.stops[Math.floor(service.stops.length / 2)];
+                            let middleRoad = middleStop.busStopName.replace(/^[^/]+\//, '');
+                        span=middleRoad + ' (Loop)'
+                    else
+                        
+                        - let lastStopName = service.stops[service.stops.length - 1].busStopName.replace(/\/.+$/, '')
+                        span=lastStopName
                 
     div#serviceTimings
         div#keyTimings
