@@ -21,6 +21,7 @@ function transformTrainStation(inputTrainStation) {
 
     return {
         stationName: stationNameData[1],
+        cleanStationName: stationNameData[1].slice(0, -16).toLowerCase().replace(/  */g, '-'),
         suburb: stationNameData[2],
         mykiZones: inputTrainStation.properties.TICKETZONE.split(','),
         trainLines: inputTrainStation.properties.ROUTEUSSP.split(','),

@@ -38,11 +38,14 @@ function updateTrainStationsAsNeeded(trainStations, db, callback) {
 }
 
 function getTrainStation(stationName, db, callback) {
-    db.getCollection('train stations').findDocument({ stationName }, (err, trainStation) => {
-        if (!trainStation) {
-            callback(null);
-            return;
-        }
+    db.getCollection('train stations').findDocument({
+        $or: [
+            {stationName},
+            {cleanStationName: stationName}
+        ]
+     }, (err, trainStation) => {
+        if (!trainStation)
+            return callback(null);
 
         updateTrainStationIfNeeded(trainStation, db, callback);
     });
