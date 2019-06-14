@@ -42,7 +42,7 @@ for timing in timings
             if timing.platform == 'RRB'
                 span Rail Replacement Bus
             
-            if timing.runData.upService || cityLoopStations.includes(trainStation.stationName.slice(0, -16).toLowerCase())
+            if timing.runData.upService || cityLoopStations.concat('flinders street').includes(trainStation.stationName.slice(0, -16).toLowerCase())
                 span=timing.runData.cityStations.join(', ')
 
         div.timings
