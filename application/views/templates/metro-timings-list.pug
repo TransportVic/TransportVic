@@ -29,7 +29,11 @@ for timing in timings
             if timing.platform == 'RRB'
                 span Rail Replacement Bus
             
-            if (timing.runData.upService || cityLoopStations.concat('flinders street').includes(trainStation.stationName.slice(0, -16).toLowerCase())) && timing.platform !== 'RRB'
+            -
+                let cityStations = cityLoopStations.concat('flinders street');
+                let currentStationName = trainStation.stationName.slice(0, -16).toLowerCase();
+                let destinationStation = timing.destination.toLowerCase()
+            if ((timing.runData.upService && cityStations.includes(destinationStation)) || cityStations.includes(currentStationName)) && timing.platform !== 'RRB'
                 span=timing.runData.cityStations.join(', ')
 
         div.timings
