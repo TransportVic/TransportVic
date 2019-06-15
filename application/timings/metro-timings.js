@@ -1,4 +1,5 @@
 const ptvAPI = require('../../utils/ptv-api');
+const trainLine = require('../../utils/train-line');
 const TimedCache = require('timed-cache');
 
 let timingsCache = new TimedCache({ defaultTtl: 1000 * 60 * 1 });
@@ -76,25 +77,25 @@ function getTimings(trainStationID, db, callback) {
         data.departures.forEach(departure => {
             if (departure.route_id == 99) return; // Outdated city loop line
             promises.push(new Promise(resolve => {
-                db.getCollection('train lines').findDocument({ ptvRouteID: departure.route_id }, (err, lineData) => {
+                trainLine.getTrainLine(departure.route_id, db, lineData => {
                     let platform = departure.platform_number;
                     let runData = new TrainRun(data.runs[departure.run_id]);
                     let destination = runData.destination;
                     let directionID = data.runs[departure.run_id].direction_id;
-                    let arrivalTime = new Date(departure.estimated_departure_utc || departure.scheduled_departure_utc);
+                    let departureTime = new Date(departure.estimated_departure_utc || departure.scheduled_departure_utc);
                     let reachedPlatform = departure.at_platform;
 
-                    if (departure.route_id === 13) {
+                    if (departure.route_id === 13) { // stony point platforms
                         if (trainStationID === 1073) platform = 3;
                         else platform = 1;
                     }
 
-                    if (platform == null) {
+                    if (platform == null) { // show replacement bus
                         if (departure.flags.includes('RRB-RUN')) platform = 'RRB';
                         else return resolve();
                     }
 
-                    if (new Date() - arrivalTime > 1000 * 60 * 1.5 || arrivalTime - new Date() > 1000 * 60 * 60 * 3) { // train arrives beyond 3hrs
+                    if (new Date() - departureTime > 1000 * 60 * 1.5 || departureTime - new Date() > 1000 * 60 * 60 * 3) { // train arrives beyond 3hrs
                         return resolve();
                     }
 
@@ -109,13 +110,13 @@ function getTimings(trainStationID, db, callback) {
                         destination,
                         directionID,
                         platform,
-                        arrivalTime,
+                        departureTime,
                         headwayDeviance,
                         reachedPlatform,
                         runData
                     });
 
-                    timings = timings.sort((a, b) => a.arrivalTime - b.arrivalTime);
+                    timings = timings.sort((a, b) => a.departureTime - b.departureTime);
 
                     if (!lines.includes(lineData.lineName)) lines.push(lineData.lineName);
 
