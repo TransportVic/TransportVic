@@ -1,3 +1,9 @@
+/*
+
+note: eventually when GTFS timetable is loaded take average freq at all stations/stops
+
+*/
+
 const ptvAPI = require('./ptv-api');
 const EventEmitter = require('events');
 
