@@ -21,8 +21,8 @@ class TrainRun {
         this.expressStopsCount = runData.express_stop_count;
         this.trainType = (runData.vehicle_descriptor || {}).description;
 
-        this.throughCityLoop = runID[1] > 4 || cityLoopStations.includes(this.destination.toLowerCase());
-        this.stopsViaFlindersFirst = runID[1] <= 4;
+        this.throughCityLoop = runID[1] > 5 || cityLoopStations.includes(this.destination.toLowerCase());
+        this.stopsViaFlindersFirst = runID[1] <= 5;
         this.upService = !(runID[3] % 2);
 
         this.cityStations = [];
