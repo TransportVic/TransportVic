@@ -11,7 +11,7 @@ div#filterBar
     
 for timing in timings
     div.trainService(destination=timing.destination.toLowerCase() platform=timing.platform)
-        - let {cleanLineName} = timing.trainLine;
+        - let {cleanLineName} = timing.lineData;
         a(class=`trainPlatformData ${cleanLineName}-line` href=`/metro/${cleanLineName}`)
             if timing.platform == 'RRB'
                 span
@@ -21,7 +21,7 @@ for timing in timings
                 span=timing.platform
 
         a(href=`/metro/timings/${timing.destination.toLowerCase().replace(/ /g, '-')}`).destination
-            span=timing.trainLine + ' Line Towards'
+            span=timing.lineData.lineName + ' Line Towards'
             if cityLoopStations.includes(timing.destination.toLowerCase())
                 span City Loop
             else
@@ -43,7 +43,7 @@ for timing in timings
                 else if (timing.headwayDeviance !== null)
                     headwayDevianceClass = 'on-time'
 
-            div(class='trainArrival ' + headwayDevianceClass)
+            a(class='trainArrival ' + headwayDevianceClass href=`/metro/runs/${timing.ptvRunNumber}/${trainStation.cleanStationName}`)
                 - let timeToDeparture = getTimingsDifference(timing.departureTime, +new Date());
                 if timeToDeparture.minutes < 1
                     span='Arr' + (!!timing.runData.expressStopsCount ? ' *' : '')

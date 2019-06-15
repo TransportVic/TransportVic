@@ -106,14 +106,15 @@ function getTimings(trainStationID, db, callback) {
                     }
 
                     timings.push({
-                        trainLine: lineData.lineName,
+                        lineData,
                         destination,
                         directionID,
                         platform,
                         departureTime,
                         headwayDeviance,
                         reachedPlatform,
-                        runData
+                        runData,
+                        ptvRunNumber: departure.run_id
                     });
 
                     timings = timings.sort((a, b) => a.departureTime - b.departureTime);

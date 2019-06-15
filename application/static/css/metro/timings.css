@@ -103,7 +103,7 @@ div.timings {
     display: flex;
 }
 
-div.trainArrival {
+a.trainArrival {
     display: flex;
     flex-direction: column;
 
@@ -116,41 +116,41 @@ div.trainArrival {
     color: #101010;
 }
 
-div.trainArrival.regular {
+a.trainArrival.regular {
     width: calc(2.6vw + 2.6vh);
     font-size: calc(1.05vw + 1.05vh);
 }
 
-div.trainService:nth-child(odd) div.trainArrival.early:nth-child(odd) {
+div.trainService:nth-child(odd) a.trainArrival.early:nth-child(odd) {
     background-color: #6fd6e7;
 }
 
-div.trainService:nth-child(odd) div.trainArrival.on-time:nth-child(odd) {
+div.trainService:nth-child(odd) a.trainArrival.on-time:nth-child(odd) {
     background-color: #60bd29;
 }
 
-div.trainService:nth-child(odd) div.trainArrival.late:nth-child(odd) {
+div.trainService:nth-child(odd) a.trainArrival.late:nth-child(odd) {
     background-color: #c93e29;
 }
 
-div.trainService:nth-child(odd) div.trainArrival.unknown:nth-child(odd) {
+div.trainService:nth-child(odd) a.trainArrival.unknown:nth-child(odd) {
     background-color: #9c9c9c;
 }
 
 
-div.trainService:nth-child(even) div.trainArrival.early:nth-child(odd) {
+div.trainService:nth-child(even) a.trainArrival.early:nth-child(odd) {
     background-color: #64c0cf;
 }
 
-div.trainService:nth-child(even) div.trainArrival.on-time:nth-child(odd) {
+div.trainService:nth-child(even) a.trainArrival.on-time:nth-child(odd) {
     background-color: #58ad25;
 }
 
-div.trainService:nth-child(even) div.trainArrival.late:nth-child(odd) {
+div.trainService:nth-child(even) a.trainArrival.late:nth-child(odd) {
     background-color: #bd3825;
 }
 
-div.trainService:nth-child(even) div.trainArrival.unknown:nth-child(odd) {
+div.trainService:nth-child(even) a.trainArrival.unknown:nth-child(odd) {
     background-color: #a8a8a8;
 }
 
