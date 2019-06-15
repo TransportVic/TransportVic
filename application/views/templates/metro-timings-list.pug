@@ -11,7 +11,8 @@ div#filterBar
     
 for timing in timings
     div.trainService(destination=timing.destination.toLowerCase() platform=timing.platform)
-        span(class='trainPlatformData ' + timing.trainLine.toLowerCase().replace(/[ &]/g, '-').replace(/--+/g, '-') + '-line')
+        - let cleanLineName = timing.trainLine.toLowerCase().replace(/[ &]/g, '-').replace(/--+/g, '-');
+        a(class=`trainPlatformData ${cleanLineName}-line` href=`/metro/${cleanLineName}`)
             if timing.platform == 'RRB'
                 span
                 span RRB

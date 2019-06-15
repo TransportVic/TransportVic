@@ -38,7 +38,7 @@ div.trainService:nth-child(even) {
     background-color: #202020;
 }
 
-span.trainPlatformData {
+a.trainPlatformData {
     width: calc(5vw + 5vh);
     height: calc(7vw + 7vh);
 
@@ -50,17 +50,17 @@ span.trainPlatformData {
     color: #d2d2d2;
 }
 
-span.trainPlatformData span {
+a.trainPlatformData span {
     width: calc(5vw + 5vh);
     text-align: center;
 }
 
-span.trainPlatformData span:nth-child(1) {
+a.trainPlatformData span:nth-child(1) {
     font-size: calc(1vw + 1vh);
     margin-top: calc(-0.5vw - 0.5vh);
 }
 
-span.trainPlatformData span:nth-child(2) {
+a.trainPlatformData span:nth-child(2) {
     font-size: calc(2.5vw + 2.5vh);
     margin-top: calc(-0.5vw - 0.5vh);
 }
