@@ -1,0 +1,118 @@
+extends ../layout
+
+block head
+    title='TransportVic - ' + lineData.lineName + ' Line'
+    
+block header
+    img#page-icon(src='/static/images/magnifying-glass.svg')
+    span#title=lineData.lineName + ' Line'
+    
+block css
+    link(rel='stylesheet' href='/static/css/service-info.css')
+    link(rel='stylesheet' href='/static/css/metro/line-colours.css')
+
+block content
+    div#serviceSummary
+        -
+            let url = `/metro/${data.cleanLineName}/`;
+            url += {up: 'down', down: 'up'}[data.direction]
+        a(class=lineData.cleanLineName + '-line' href=url)#serviceNumber
+            span#lineName=lineData.lineName
+            
+        div#terminals
+            - let firstStopIndex = data.direction == 'down' ? 0 : lineData.stations.length - 1;
+            - let lastStopIndex = lineData.stations.length - firstStopIndex - 1;
+            a(href=`/metro/timings/${lineData.stations[firstStopIndex].cleanStationName}`).coloured-row
+                span=lineData.stations[firstStopIndex].stationName.slice(0, -16)
+            a(href=`/metro/timings/${lineData.stations[lastStopIndex].cleanStationName}`).coloured-row
+                span=lineData.stations[lastStopIndex].stationName.slice(0, -16)
+    
+    div#serviceTimings
+        -
+            let directions = Object.keys(lineData.directions).sort((a, b) => b - a);
+            let directionID = directions[data.direction == 'down' ? 0 : 1];
+            let directionName = lineData.directions[directionID];
+        div#keyTimings
+            div.table-header.table-data.spacing1
+                span Days
+                span First Train
+                span Last Train
+            div.coloured-row.table-data.spacing1
+                span Weekdays
+                span=lineData.firstLastService[directionName].weekday.firstService || '-'
+                span=lineData.firstLastService[directionName].weekday.lastService || '-'
+            div.coloured-row.table-data.spacing1
+                span Saturday
+                span=lineData.firstLastService[directionName].saturday.firstService || '-'
+                span=lineData.firstLastService[directionName].saturday.lastService || '-'
+            div.coloured-row.table-data.spacing1
+                span Sundays / PH
+                span=lineData.firstLastService[directionName].sunday.firstService || '-'
+                span=lineData.firstLastService[directionName].sunday.lastService || '-'
+    
+        div#frequency
+            -
+                function freqToString(freq) {
+                    let {min, max} = freq;
+                    if (!min) return '-';
+                    if (min == max) return min + ' mins';
+                    return `${min}-${max} mins`
+                }
+    
+            div.table-header.table-data.spacing1
+                span Time
+                span Weekdays
+                span Saturdays
+                span Sundays
+            div.coloured-row.table-data.spacing1
+                div.freqTime
+                    span 0000 - 0630
+                    span Early Morning
+                span=freqToString(lineData.frequency[directionName].weekday.earlyMorning)
+                span=freqToString(lineData.frequency[directionName].saturday.earlyMorning)
+                span=freqToString(lineData.frequency[directionName].sunday.earlyMorning)
+            div.coloured-row.table-data.spacing1
+                div.freqTime
+                    span 0630 - 1000
+                    span Morning Peak
+                span=freqToString(lineData.frequency[directionName].weekday.morningPeak)
+                span=freqToString(lineData.frequency[directionName].saturday.morningPeak)
+                span=freqToString(lineData.frequency[directionName].sunday.morningPeak)
+            div.coloured-row.table-data.spacing1
+                div.freqTime
+                    span 1000 - 1630
+                    span Off Peak
+                span=freqToString(lineData.frequency[directionName].weekday.offPeak)
+                span=freqToString(lineData.frequency[directionName].saturday.offPeak)
+                span=freqToString(lineData.frequency[directionName].sunday.offPeak)
+            div.coloured-row.table-data.spacing1
+                div.freqTime
+                    span 1630 - 2030
+                    span Evening Peak
+                span=freqToString(lineData.frequency[directionName].weekday.eveningPeak)
+                span=freqToString(lineData.frequency[directionName].saturday.eveningPeak)
+                span=freqToString(lineData.frequency[directionName].sunday.eveningPeak)
+            div.coloured-row.table-data.spacing1
+                div.freqTime
+                    span 2030 - 2400
+                    span Night
+                span=freqToString(lineData.frequency[directionName].weekday.night)
+                span=freqToString(lineData.frequency[directionName].saturday.night)
+                span=freqToString(lineData.frequency[directionName].sunday.night)
+    div#stations
+        div.table-header.table-data.spacing2
+            span Stop #
+            span Suburb
+            span Station Name
+    
+        -
+            if (data.direction == 'up')
+                lineData.stations.reverse()
+        for station in lineData.stations
+            div.coloured-row
+                div.stop.table-data.spacing2
+                    span=station.stopNumber
+                    span=station.suburb
+                    div.stopNameData
+                        span
+                        span=station.stationName

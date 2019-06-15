@@ -77,9 +77,11 @@ function loadStops(skeleton, callback) {
 
     ptvAPI.makeRequest('/v3/stops/route/' + id + '/route_type/0?direction_id=' + downDirection, (err, data) => {
         skeleton.stations = data.stops.sort((a, b) => a.stop_sequence - b.stop_sequence).map(trainStation => {
+            trainStation.stop_name = trainStation.stop_name.replace('Station', 'Railway Station');
             return {
                 stationID: trainStation.stop_id,
                 stationName: trainStation.stop_name,
+                cleanStationName: trainStation.stop_name.slice(0, -16).toLowerCase().replace(/ /g, '-'),
                 suburb: trainStation.stop_suburb,
                 stopNumber: trainStation.stop_sequence
             }
@@ -119,7 +121,7 @@ function loadTrainLineDataIfNeeded(trainLine, db, callback) {
                 promises.push(new Promise(resolve => {
                     let firstStop = (isUp ? service.stations[service.stations.length - 1] // last station
                                     : service.stations[upDirection == 1 ? 5 : 0]).stationID; // first stn out of loop
-                    
+
                     getFrequency(service.ptvRouteID, 0, firstStop, directionID, db, frequency => {
                         getFirstLastService(service.ptvRouteID, 0, firstStop, directionID, db, firstLastService => {
                             service.frequency[directionName] = frequency;
@@ -134,7 +136,7 @@ function loadTrainLineDataIfNeeded(trainLine, db, callback) {
             Promise.all(promises).then(() => {
                 onCompleted(service);
             })
-        }
+        } else onCompleted(service)
     }
 
     if (!Object.keys(trainLine.directions).length)
@@ -144,7 +146,7 @@ function loadTrainLineDataIfNeeded(trainLine, db, callback) {
             });
         });
     else if (!trainLine.stations.length)
-        loadStops(_, updatedTrainLine => {
+        loadStops(trainLine, updatedTrainLine => {
             onBasicCompleted(updatedTrainLine);
         });
     else
