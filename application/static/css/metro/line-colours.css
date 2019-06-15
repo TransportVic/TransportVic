@@ -47,27 +47,27 @@ div.trainService:nth-child(even) .hurstbridge-line {
 }
 
 .upfield-line {
-    background-color: #cace29;
+    background-color: #a2a500;
 }
 
 div.trainService:nth-child(even) .upfield-line {
-    background-color: #aaad23;
+    background-color: #7d7f00;
 }
 
 .craigieburn-line {
-    background-color: #cace29;
+    background-color: #a2a500;
 }
 
 div.trainService:nth-child(even) .craigieburn-line {
-    background-color: #aaad23;
+    background-color: #7d7f00;
 }
 
 .sunbury-line {
-    background-color: #cace29;
+    background-color: #a2a500;
 }
 
 div.trainService:nth-child(even) .sunbury-line {
-    background-color: #aaad23;
+    background-color: #7d7f00;
 }
 
 .werribee-line {
