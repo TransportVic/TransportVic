@@ -30,7 +30,9 @@ function getDepartures(routeID, routeType, stopID, directionID, time, callback) 
 
     ptvAPI.makeRequest(key, (err, data) => {
         let {departures} = data;
-        departures = departures.map(departure => {
+        departures = departures.filter(departure => {
+            return new Date(time) - new Date(departure.scheduled_departure_utc) < 0;
+        }).map(departure => {
             return new Date(departure.scheduled_departure_utc);
         }).sort((a, b) => a - b);
 
@@ -56,7 +58,10 @@ function getFirstService(routeID, routeType, stopID, directionID, day, callback)
 function getLastService(routeID, routeType, stopID, directionID, day, callback) {
     getDepartures(routeID, routeType, stopID, directionID, day, departures => {
         if (!departures[0]) callback(null);
-        callback(pad2(departures.slice(-1)[0].getHours()) + '' + pad2(departures.slice(-1)[0].getMinutes()));
+        let hours = departures.slice(-1)[0].getHours();
+        if (hours <= 3)
+            hours += 24;
+        callback(pad2(hours) + '' + pad2(departures.slice(-1)[0].getMinutes()));
     });
 }
 
@@ -108,7 +113,7 @@ function getTimeInDay(day, hours, minutes) {
 function nextDay(x) {
     let now = new Date();
     now.setDate(now.getDate() + (x + (7 - now.getDay())) % 7);
-    now.setHours(0,0,0,0);
+    now.setHours(3,0,0,0);
     return now;
 }
 

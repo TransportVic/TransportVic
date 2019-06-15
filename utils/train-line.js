@@ -8,8 +8,14 @@ let directionLocks = {};
 
 let stopsCache = new TimedCache({ defaultTtl: 1000 * 60 * 5 });
 
-function getTrainLine(routeID, db, callback) {
-    db.getCollection('train lines').findDocument({ ptvRouteID: routeID }, (err, lineData) => {
+function getTrainLine(key, db, callback) {
+    db.getCollection('train lines').findDocument({
+        $or: [
+            { ptvRouteID: key },
+            { cleanLineName: key },
+            { lineName: key }
+        ]
+    }, (err, lineData) => {
         callback(lineData);
     });
 }
@@ -105,12 +111,15 @@ function loadTrainLineDataIfNeeded(trainLine, db, callback) {
             let directions = Object.keys(service.directions).sort((a, b) => b - a);
             let promises = [];
 
-            directions.forEach((directionID, isDown) => {
+            let upDirection = directions[1];
+
+            directions.forEach((directionID, isUp) => {
                 let directionName = service.directions[directionID];
 
                 promises.push(new Promise(resolve => {
-                    let firstStop = (isDown ? service.stations[service.stations.length - 1] // last station
-                                    : service.stations[directionID === 1 ? 5 : 0]).stationID; // first stn out of loop
+                    let firstStop = (isUp ? service.stations[service.stations.length - 1] // last station
+                                    : service.stations[upDirection == 1 ? 5 : 0]).stationID; // first stn out of loop
+                    
                     getFrequency(service.ptvRouteID, 0, firstStop, directionID, db, frequency => {
                         getFirstLastService(service.ptvRouteID, 0, firstStop, directionID, db, firstLastService => {
                             service.frequency[directionName] = frequency;

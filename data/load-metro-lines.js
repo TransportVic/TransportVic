@@ -14,6 +14,7 @@ function transformTrainLine(inputTrainLine) {
 
     return {
         lineName: inputTrainLine.route_name,
+        cleanLineName: inputTrainLine.route_name.toLowerCase().replace(/[ &]/g, '-').replace(/--+/g, '-'),
         ptvRouteID: inputTrainLine.route_id,
 
         stations: [],

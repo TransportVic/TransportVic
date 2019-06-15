@@ -110,7 +110,8 @@ module.exports = class MainServer {
 
             'runs/MetroBus': '/bus/runs',
 
-            'service-info/MetroBus': '/bus/metro'
+            'service-info/MetroBus': '/bus/metro',
+            'service-info/MetroTrain': '/metro'
         };
 
         Object.keys(routers).forEach(routerName => {
