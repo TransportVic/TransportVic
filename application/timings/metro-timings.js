@@ -7,7 +7,7 @@ let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne 
 
 let burnleyGroup = [1, 2, 7, 9]; // alamein, belgrave, glen waverley, lilydale
 let caulfieldGroup = [4, 6, 11, 12]; // cranbourne, frankston, pakenham, sandringham
-let northenGroup = [3, 14, 15, 16]; // craigieburn, sunbury, upfield, werribee
+let northenGroup = [3, 14, 15, 16, 17]; // craigieburn, sunbury, upfield, werribee, williamstown
 let cliftonHillGroup = [5, 8]; // mernda, hurstbridge
 
 class TrainRun {
@@ -29,31 +29,29 @@ class TrainRun {
         let routeID = runData.route_id;
 
         // assume up trains
-        if (this.stopsViaFlindersFirst && this.throughCityLoop) { // flinders then loop
-            if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID))
-                this.cityStations = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR'];
-            else if (northenGroup.includes(routeID))
+        if (northenGroup.includes(routeID)) {
+            if (this.stopsViaFlindersFirst && !this.throughCityLoop)
                 this.cityStations = ['NME', 'SSS', 'FSS'];
-        } else if (!this.stopsViaFlindersFirst && this.throughCityLoop) { // loop then flinders
-            if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID))
-                this.cityStations = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS'];
-            else if (northenGroup.includes(routeID))
-                this.cityStations = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS'];
-        } else if (this.stopsViaFlindersFirst && !this.throughCityLoop) { // direct to flinders
-            if (routeID == 6) // frankston
-                this.cityStations = ['RMD', 'FSS', 'SSS']
-            else if (burnleyGroup.concat(caulfieldGroup).includes(routeID))
-                this.cityStations = ['RMD', 'FSS'];
-            else if (cliftonHillGroup.includes(routeID))
-                this.cityStations = ['JLI', 'FSS']
-            else if (northenGroup.includes(routeID) || routeID == 17) // williamstown too
+            else if (this.stopsViaFlindersFirst && this.throughCityLoop)
                 this.cityStations = ['SSS', 'FSS', 'PAR', 'MCE', 'FGS'];
+            else if (!this.stopsViaFlindersFirst && this.throughCityLoop)
+                this.cityStations = ['FGS', 'MCE', 'PAR', 'FSS', 'SSS'];
+        } else {
+            if (this.stopsViaFlindersFirst && this.throughCityLoop) { // flinders then loop
+                if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID))
+                    this.cityStations = ['FSS', 'SSS', 'FGS', 'MCE', 'PAR'];
+            } else if (!this.stopsViaFlindersFirst && this.throughCityLoop) { // loop then flinders
+                if (burnleyGroup.concat(caulfieldGroup).concat(cliftonHillGroup).includes(routeID))
+                    this.cityStations = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS'];
+            } else if (this.stopsViaFlindersFirst && !this.throughCityLoop) { // direct to flinders
+                if (routeID == 6) // frankston
+                    this.cityStations = ['RMD', 'FSS', 'SSS']
+                else if (burnleyGroup.concat(caulfieldGroup).includes(routeID))
+                    this.cityStations = ['RMD', 'FSS'];
+                else if (cliftonHillGroup.includes(routeID))
+                    this.cityStations = ['JLI', 'FSS']
+            }
         }
-/*
-nth grp: 0-4 direct flinders, down train
-fgs; mce; par; fss; sss; nme
-*/
-
 
         if (!this.upService) { // down trains; away from city
             this.cityStations.reverse();
