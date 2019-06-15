@@ -99,7 +99,7 @@ function getTimings(trainStationID, db, callback) {
                         return resolve();
                     }
 
-                    let headwayDeviance = null
+                    let headwayDeviance = null;
 
                     if (departure.estimated_departure_utc) {
                         headwayDeviance = (new Date(departure.scheduled_departure_utc) - new Date(departure.estimated_departure_utc)) / 1000;

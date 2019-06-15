@@ -2,8 +2,7 @@ const ptvAPI = require('./ptv-api');
 const EventEmitter = require('events');
 const safeRegex = require('safe-regex');
 const { updateBusStopFromPTVStopID } = require('./bus-stop');
-const { getFirstBus, getLastBus, getFrequencies,
-    getNextWeekday, getNextSaturday, getNextSunday } = require('./service-stats');
+const { getFrequency, getFirstLastService } = require('./service-stats');
 const TimedCache = require('timed-cache');
 const levenshtein = require('fast-levenshtein');
 
@@ -157,61 +156,6 @@ function getServiceData(serviceNumber, db, callback) {
     queryServiceData({ fullService: serviceNumber }, db, callback);
 }
 
-function loadFrequency(service, db, callback) {
-    let promises = [];
-
-    let freqFunc = getFrequencies.bind(null, service.ptvRouteID, 2, service.stops[0].busStopCode, service.directionID);
-    let days = {
-        weekday: getNextWeekday(),
-        saturday: getNextSaturday(),
-        sunday: getNextSunday()
-    };
-
-    let frequencies = {};
-
-    Object.keys(days).forEach(day => {
-        promises.push(new Promise(resolve => {
-            freqFunc(days[day], frequency => {
-                frequencies[day] = frequency;
-                resolve();
-            });
-        }));
-    });
-
-    Promise.all(promises).then(() => {
-        callback(frequencies);
-    });
-}
-
-function getFirstLastBus(service, db, callback) {
-    let promises = [];
-
-    let firstBusFunc = getFirstBus.bind(null, service.ptvRouteID, 2, service.stops[0].busStopCode, service.directionID);
-    let lastBusFunc = getLastBus.bind(null, service.ptvRouteID, 2, service.stops[0].busStopCode, service.directionID);
-    let days = {
-        weekday: getNextWeekday(),
-        saturday: getNextSaturday(),
-        sunday: getNextSunday()
-    };
-
-    let buses = {};
-
-    Object.keys(days).forEach(day => {
-        promises.push(new Promise(resolve => {
-            firstBusFunc(days[day], firstBus => {
-                lastBusFunc(days[day], lastBus => {
-                    buses[day] = {firstBus, lastBus};
-                    resolve();
-                });
-            });
-        }));
-    });
-
-    Promise.all(promises).then(() => {
-        callback(buses);
-    });
-}
-
 function queryServiceDataWithoutUpdate(query, db, callback) {
     let finalServices = [];
     let promises = [];
@@ -274,8 +218,10 @@ function queryServiceData(query, db, callback) {
             finalServices.forEach(service => {
                 promises2.push(new Promise(resolve => {
                     if (!service.frequency)
-                        loadFrequency(service, db, frequency => {
-                            getFirstLastBus(service, db, firstLastBus => {
+                        getFrequency(service.ptvRouteID, 2, service.stops[0].busStopCode,
+                            service.directionID, db, frequency => {
+                            getFirstLastService(service.ptvRouteID, 2, service.stops[0].busStopCode,
+                                service.directionID, db, firstLastBus => {
                                 service.frequency = frequency;
                                 service.firstLastBus = firstLastBus;
 

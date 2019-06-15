@@ -40,14 +40,14 @@ function pad2(d) {
     return [0, 0].concat([...d.toString()]).slice(-2).join('');
 }
 
-function getFirstBus(routeID, routeType, stopID, directionID, day, callback) {
+function getFirstService(routeID, routeType, stopID, directionID, day, callback) {
     getDepartures(routeID, routeType, stopID, directionID, day, departures => {
         if (!departures[0]) callback(null);
         else callback(pad2(departures[0].getHours()) + '' + pad2(departures[0].getMinutes()));
     });
 }
 
-function getLastBus(routeID, routeType, stopID, directionID, day, callback) {
+function getLastService(routeID, routeType, stopID, directionID, day, callback) {
     getDepartures(routeID, routeType, stopID, directionID, day, departures => {
         if (!departures[0]) callback(null);
         callback(pad2(departures.slice(-1)[0].getHours()) + '' + pad2(departures.slice(-1)[0].getMinutes()));
@@ -121,12 +121,70 @@ function getNextSunday() {
     return nextDay(0);
 }
 
+function getFrequency(ptvRouteID, routeType, firstStopCode, directionID, db, callback) {
+    let promises = [];
+
+    let freqFunc = getFrequencies.bind(null, ptvRouteID, routeType, firstStopCode, directionID);
+    let days = {
+        weekday: getNextWeekday(),
+        saturday: getNextSaturday(),
+        sunday: getNextSunday()
+    };
+
+    let frequencies = {};
+
+    Object.keys(days).forEach(day => {
+        promises.push(new Promise(resolve => {
+            freqFunc(days[day], frequency => {
+                frequencies[day] = frequency;
+                resolve();
+            });
+        }));
+    });
+
+    Promise.all(promises).then(() => {
+        callback(frequencies);
+    });
+}
+
+function getFirstLastService(ptvRouteID, routeType, firstStopCode, directionID, db, callback) {
+    let promises = [];
+
+    let firstServiceFunc = getFirstService.bind(null, ptvRouteID, routeType, firstStopCode, directionID);
+    let lastServiceFunc = getLastService.bind(null, ptvRouteID, routeType, firstStopCode, directionID);
+    let days = {
+        weekday: getNextWeekday(),
+        saturday: getNextSaturday(),
+        sunday: getNextSunday()
+    };
+
+    let firstLastServices = {};
+
+    Object.keys(days).forEach(day => {
+        promises.push(new Promise(resolve => {
+            firstServiceFunc(days[day], firstService => {
+                lastServiceFunc(days[day], lastService => {
+                    firstLastServices[day] = {firstService, lastService};
+                    resolve();
+                });
+            });
+        }));
+    });
+
+    Promise.all(promises).then(() => {
+        callback(firstLastServices);
+    });
+}
+
 module.exports = {
-    getFirstBus,
-    getLastBus,
+    getFirstService,
+    getLastService,
     getFrequencies,
 
     getNextWeekday,
     getNextSaturday,
-    getNextSunday
+    getNextSunday,
+
+    getFirstLastService,
+    getFrequency
 }
