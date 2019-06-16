@@ -4,7 +4,7 @@ const router = new express.Router();
 const TimedCache = require('timed-cache');
 
 const {getStopFromPTVStopID} = require('../../../utils/bus-stop');
-const {getServiceInfo} = require('../../timings/bus-timings');
+const {queryServiceData} = require('../../../utils/bus-service');
 
 let cachedRuns = new TimedCache({ defaultTtl: 1000 * 60 * 1 });
 let cachedRunInfo = new TimedCache({ defaultTtl: 100 * 60 * 10 });
@@ -21,9 +21,9 @@ function getRunService(runID, db, callback) {
             dest = data.run.final_stop_id,
             destName = data.run.destination_name.match(/^([^/]+)/)[1];
 
-        getServiceInfo(runService, runDirection, db, service => {
-            cachedRunInfo.put(runID, {service, dest, destName});
-            callback({service, dest, destName});
+        queryServiceData({ ptvRouteID: runService, directionID: runDirection}, db, service => {
+            cachedRunInfo.put(runID, {service: service[0], dest, destName});
+            callback({service: service[0], dest, destName});
         });
     });
 }

@@ -46,16 +46,19 @@ let serviceCache = new TimedCache({ defaultTtl: 1000 * 60 * 5 });
 
 function getDirectionID(skeleton, cb) {
     let {ptvRouteID} = skeleton;
-    if (directionLocks[ptvRouteID]) {
-        directionLocks[ptvRouteID].on('loaded', directionID => {
+
+    let id = ptvRouteID + '-' + skeleton.destination;
+
+    if (directionLocks[id]) {
+        directionLocks[id].on('loaded', directionID => {
             skeleton.directionID = directionID;
             cb(skeleton);
         });
         return;
     }
 
-    directionLocks[ptvRouteID] = new EventEmitter();
-    directionLocks[ptvRouteID].setMaxListeners(30);
+    directionLocks[id] = new EventEmitter();
+    directionLocks[id].setMaxListeners(30);
 
     ptvAPI.makeRequest('/v3/directions/route/' + ptvRouteID, (err, data) => {
         let directionID = data.directions.map(e => {
@@ -67,8 +70,8 @@ function getDirectionID(skeleton, cb) {
 
         skeleton.directionID = directionID;
 
-        directionLocks[ptvRouteID].emit('loaded', directionID);
-        delete directionLocks[ptvRouteID];
+        directionLocks[id].emit('loaded', directionID);
+        delete directionLocks[id];
 
         cb(skeleton);
     });
