@@ -42,26 +42,40 @@ function getRunData(data, db, callback) {
             let busService = data.service,
                 destStop = data.dest,
                 {destName} = data;
-            let fromStop = busService.stops[busService.stops.indexOf(busService.stops.filter(s => s.busStopCode == destStop)[0]) - 1].busStopCode;
-            ptvAPI.makeRequest(`/v3/pattern/run/${runID}/route_type/2?stop_id=${fromStop}`, (err, data) => {
-                let finalData = {
-                    departures: data.departures.map(departure => {
-                        let transformed = {
-                            stopID: departure.stop_id,
-                            arrivalTime: new Date(departure.estimated_departure_utc || departure.scheduled_departure_utc),
-                            headwayDeviance: !!departure.estimated_departure_utc ?
-                                (new Date(departure.scheduled_departure_utc) - new Date(departure.estimated_departure_utc)) / 1000 : null
-                        };
+            let secondLastStop = busService.stops[busService.stops.indexOf(busService.stops.filter(s => s.busStopCode == destStop)[0]) - 1].busStopCode;
+            let departureURL = `/v3/departures/route_type/2/stop/${busStop.busStopCodes[0]}/route/${busService.ptvRouteID}?direction_id=${busService.directionID}&max_results=30`;
+            ptvAPI.makeRequest(departureURL, (err, data) => {
+                let departure = data.departures.filter(d => d.run_id == runID)[0];
+                let timeOffset = 0;
+                ptvAPI.makeRequest(`/v3/pattern/run/${runID}/route_type/2?stop_id=${secondLastStop}`, (err, data) => {
+                    if (departure) {
+                        let patternDeparture = data.departures.filter(d => d.stop_id == busStop.busStopCodes[0])[0];
+                        if (patternDeparture.estimated_departure_utc && departure.estimated_departure_utc) {
+                            timeOffset = +new Date(new Date(patternDeparture.estimated_departure_utc) - new Date(departure.estimated_departure_utc));
+                        }
+                    }
+                    let finalData = {
+                        departures: data.departures.map(departure => {
+                            let arrivalTime = +new Date(departure.estimated_departure_utc || departure.scheduled_departure_utc);
+                            arrivalTime = new Date(arrivalTime - timeOffset);
 
-                        return transformed;
-                    }),
-                    service: busService,
-                    busStop,
-                    destName
-                };
+                            let transformed = {
+                                stopID: departure.stop_id,
+                                arrivalTime,
+                                headwayDeviance: !!departure.estimated_departure_utc ?
+                                    (new Date(departure.scheduled_departure_utc) - arrivalTime) / 1000 : null
+                            };
 
-                cachedRuns.put(runID, finalData);
-                callback(finalData);
+                            return transformed;
+                        }),
+                        service: busService,
+                        busStop,
+                        destName
+                    };
+
+                    cachedRuns.put(runID, finalData);
+                    callback(finalData);
+                });
             });
         });
     });
