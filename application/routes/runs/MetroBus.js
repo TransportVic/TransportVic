@@ -47,17 +47,25 @@ function getRunData(data, db, callback) {
             ptvAPI.makeRequest(departureURL, (err, data) => {
                 let departure = data.departures.filter(d => d.run_id == runID)[0];
                 let timeOffset = 0;
+                let timeOffsetPerStop = 0;
+                let index = 0;
+
                 ptvAPI.makeRequest(`/v3/pattern/run/${runID}/route_type/2?stop_id=${secondLastStop}`, (err, data) => {
                     if (departure) {
                         let patternDeparture = data.departures.filter(d => d.stop_id == busStop.busStopCodes[0])[0];
                         if (patternDeparture.estimated_departure_utc && departure.estimated_departure_utc) {
                             timeOffset = +new Date(new Date(patternDeparture.estimated_departure_utc) - new Date(departure.estimated_departure_utc));
+                            index = data.departures.indexOf(patternDeparture);
+
+                            let numberOfStops = (data.departures.length - 1) - index;
+                            timeOffsetPerStop = timeOffset / numberOfStops;
                         }
                     }
                     let finalData = {
-                        departures: data.departures.map(departure => {
-                            let arrivalTime = +new Date(departure.estimated_departure_utc || departure.scheduled_departure_utc);
-                            arrivalTime = new Date(arrivalTime - timeOffset);
+                        departures: data.departures.map((departure, i, a) => {
+                            let arrivalTime = new Date(departure.estimated_departure_utc || departure.scheduled_departure_utc);
+                            let change = timeOffsetPerStop * Math.abs(a.length - 1 - i);
+                            arrivalTime = new Date(+arrivalTime - change);
 
                             let transformed = {
                                 stopID: departure.stop_id,
