@@ -52,3 +52,13 @@ window.search = {};
 
 search.hash = (location.hash.match(/#(\w+[=]\w+&?)+/)||[]).slice(1).map(e=>e.split('=')).reduce((a, e) => {a[e[0]] = e[1]; return a;}, {});
 search.query = (location.search.match(/\?(\w+[=]\w+&?)+/)||[]).slice(1).map(e=>e.split('=')).reduce((a, e) => {a[e[0]] = e[1]; return a;}, {});
+
+$.ready(() => {
+    if (navigator.userAgent.toLowerCase().includes('mobile')) {
+        window.scrollTo(0, 0);
+
+        let height = window.innerHeight,
+            width = window.innerWidth;
+        $('meta[name=viewport]').setAttribute('content', `initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=${width}px, height=${height}px`)
+    }
+})
