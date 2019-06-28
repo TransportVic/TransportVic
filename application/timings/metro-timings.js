@@ -13,6 +13,8 @@ let cliftonHillGroup = [5, 8]; // mernda, hurstbridge
 
 class TrainRun {
     constructor(runData) {
+        let routeID = runData.route_id;
+
         let runID = [];
         if (runData.vehicle_descriptor)
             runID = [...runData.vehicle_descriptor.id].map(e => parseInt(e)||e);
@@ -22,12 +24,13 @@ class TrainRun {
         this.trainType = (runData.vehicle_descriptor || {}).description;
 
         this.throughCityLoop = runID[1] > 5 || cityLoopStations.includes(this.destination.toLowerCase());
+        if (routeID == 6 && this.destination.toLowerCase() == 'southern cross') {
+            this.throughCityLoop = false;
+        }
         this.stopsViaFlindersFirst = runID[1] <= 5;
         this.upService = !(runID[3] % 2);
 
         this.cityStations = [];
-
-        let routeID = runData.route_id;
 
         // assume up trains
         if (northenGroup.includes(routeID)) {

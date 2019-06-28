@@ -22,7 +22,7 @@ for timing in timings
 
         a(href=`/metro/timings/${timing.destination.toLowerCase().replace(/ /g, '-')}`).destination
             span=timing.lineData.lineName + ' Line Towards'
-            if cityLoopStations.includes(timing.destination.toLowerCase())
+            if cityLoopStations.includes(timing.destination.toLowerCase()) && timing.runData.throughCityLoop
                 span City Loop
             else
                 span=timing.destination
