@@ -6,6 +6,8 @@
     
     let cityLoopStations = ['southern cross', 'parliament', 'flagstaff', 'melbourne central'];
     
+    let caulfieldGroup = [4, 6, 11, 12]; // cranbourne, frankston, pakenham, sandringham
+    
 div#filterBar
     input(aria-label='Destination or Platform Number' placeholder='Destination or Platform Number')#filter
     
@@ -34,6 +36,12 @@ for timing in timings
                 let currentStationName = trainStation.stationName.slice(0, -16).toLowerCase();
                 let destinationStation = timing.destination.toLowerCase()
             if ((timing.runData.upService && cityStations.includes(destinationStation)) || cityStations.includes(currentStationName)) && timing.platform !== 'RRB'
+                if cityStations.includes(currentStationName) && !timing.runData.throughCityLoop
+                    // problem only seems to affect down via loop then flinders services
+                    // services that have started entering loop, but not yet passed flinders for new run id. yet api already returns new id from flinders; making it seem like a direct to/from flinders
+                    if caulfieldGroup.includes(timing.runData.routeID)
+                        - timing.runData.cityStations = ['PAR', 'MCE', 'FSG', 'SSS', 'FSS'];
+                        
                 span=timing.runData.cityStations.join(', ')
 
         div.timings

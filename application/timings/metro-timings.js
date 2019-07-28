@@ -61,6 +61,7 @@ class TrainRun {
             this.cityStations.reverse();
         }
 
+        this.routeID = routeID;
         this.runID = runID.join('');
     }
 }
