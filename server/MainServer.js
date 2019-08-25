@@ -10,6 +10,10 @@ const fs = require('fs');
 const DatabaseConnection = require('../application/database/DatabaseConnection');
 
 const config = require('../config.json');
+let BusTracker
+if (config.busTrackerPath)
+  BusTracker = require(path.join(config.busTrackerPath, 'server.js'))
+
 
 module.exports = class MainServer {
 
@@ -77,8 +81,9 @@ module.exports = class MainServer {
             res.setHeader('Strict-Transport-Security', 'max-age=31536000');
             let secureDomain = `http${config.useHTTPS ? 's' : ''}://${config.websiteDNSName}:*`;
             secureDomain += ` http${config.useHTTPS ? 's' : ''}://bus.${config.websiteDNSName}:*`
+            secureDomain += ' https://*.mapbox.com/'
 
-            res.setHeader('Content-Security-Policy', `default-src ${secureDomain}; script-src 'unsafe-inline' ${secureDomain}; style-src 'unsafe-inline' ${secureDomain}`);
+            res.setHeader('Content-Security-Policy', `default-src blob: data: ${secureDomain}; script-src 'unsafe-inline' blob: ${secureDomain}; style-src 'unsafe-inline' ${secureDomain}`);
             res.setHeader('X-Frame-Options', 'SAMEORIGIN');
             res.setHeader('X-Xss-Protection', '1; mode=block');
             res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -123,6 +128,10 @@ module.exports = class MainServer {
             res.setHeader('Cache-Control', 'no-cache');
             res.sendFile(path.join(__dirname, '../application/static/app-content/sw.js'));
         });
+
+        if (BusTracker) {
+            app.use('/tracker', BusTracker)
+        }
 
         app.use('/500', (req, res) => {throw new Error('500')});
 
